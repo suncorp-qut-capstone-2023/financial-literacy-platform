@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "2.0.0",
+    "title": "2023 Capstone IFB398",
+    "description": "This API has been created to support Capstone Project in IFB398, Capstone Unit. It exposes a number of REST endpoints. The API endpoints and their usage are described in detail below."
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Enter JWT Bearer token **_only_**"
+      }
+    },
+    "schemas": {
+      "MissingAuthHeader": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "message": {
+            "type": "string",
+            "example": "Authorization header ('Bearer token') not found"
+          }
+        }
+      },
+      "TokenExpired": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "message": {
+            "type": "string",
+            "example": "JWT token has expired"
+          }
+        }
+      },
+      "InvalidJWT": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid JWT token"
+          }
+        }
+      },
+      "MalformedAuthHeader": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "message": {
+            "type": "string",
+            "example": "Authorization header is malformed"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/aboutus": {
+      "get": {
+        "tags": ["Administration"],
+        "description": "A route to assist in automating some of the marking process for this assignment.",
+        "responses": {
+          "200": {
+            "description": "An object containing your name and student number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "John Smith"
+                    },
+                    "company": {
+                      "type": "string",
+                      "example": "example corp."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
