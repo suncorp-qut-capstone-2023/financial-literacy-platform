@@ -68,7 +68,7 @@ router.post('/login', function(req, res, next){
         return
     }
     // Query DB for request
-    req.db.from('users').select('*').where({email}).then(
+    req.db.from('users').select('*').where('email','=',email).then(
         (users) => {
             // If user not found in DB
             if(users.length === 0){
