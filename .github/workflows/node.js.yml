@@ -3,6 +3,8 @@
 
 name: Node.js CI/CD
 
+run-name: Deployment of Swagger doc to Heroku App
+
 on:
   push:
     branches: [ "backend-main" ]
@@ -21,21 +23,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      working-directory: ./api
     - name: Use Node.js ${{ matrix.node-version }}
+      working-directory: ./api
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+      working-directory: ./api
     - run: npm run build --if-present
+      working-directory: ./api
     - run: npm test
+      working-directory: ./api
 
   deploy: ## <-- Deployment to Heroku App
       needs: build
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
+          working-directory: ./api
         - uses: akhileshns/heroku-deploy@v3.12.12
+          working-directory: ./api
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
             heroku_app_name: "jcmg-api"

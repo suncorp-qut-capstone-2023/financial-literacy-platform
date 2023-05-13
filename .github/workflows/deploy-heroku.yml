@@ -1,5 +1,7 @@
 name: Deploy
 
+run-name: Deploy to Heroku
+
 on:
   push:
     branches: [ "backend-main" ]
@@ -10,8 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        working-directory: ./api
         
       - name: Deploy to App
+        working-directory: ./api
         uses: akhileshns/heroku-deploy@v3.12.14 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
