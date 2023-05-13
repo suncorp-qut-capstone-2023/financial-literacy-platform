@@ -40,10 +40,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-          working-directory: ./api
         - uses: akhileshns/heroku-deploy@v3.12.12
-          working-directory: ./api
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
             heroku_app_name: "jcmg-api"
             heroku_email: "n11012595@qut.edu.au"
+            appdir: "api"
