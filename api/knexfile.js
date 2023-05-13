@@ -13,11 +13,11 @@
 module.exports = {
     client: 'mysql2',
     connection : {
-        host:'localhost',
-        port: 3306,
-        database: 'jcmg',
-        user:'root',
-        password: 'your-sql-password-here',
+        host: process.env.SQL_HOST,
+        port: process.env.SQL_PORT,
+        database: process.env.SQL_DATABASE,
+        user: process.env.SQL_USER,
+        password: process.env.SQL_PASSWORD,
         dateStrings: true
     }
 };
