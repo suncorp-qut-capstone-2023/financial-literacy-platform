@@ -15,7 +15,7 @@ jobs:
         
       - name: Deploy to App
         working-directory: ./api
-        uses: akhileshns/heroku-deploy@v3.12.14 # This is the action
+      - uses: akhileshns/heroku-deploy@v3.12.14 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "jcmg-api" #Must be unique in Heroku
