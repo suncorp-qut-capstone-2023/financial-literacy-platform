@@ -34,7 +34,7 @@ jobs:
         cache-dependency-path: './api/package-lock.json'
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    # - run: npm test # TODO: I removed this since we dont have testing yet
       
 
   deploy: ## <-- Deployment to Heroku App
