@@ -25,6 +25,7 @@ const app = express();
 // define routers
 const aboutUsRouter = require('./routes/aboutus.ts');
 const usersRouter = require('./routes/users.ts');
+const learningModulesRouter = require('./routes/learningModules.ts');
 
 // database connection
 app.use((req,res,next) => {
@@ -75,10 +76,11 @@ app.get('/api/docs', swaggerUI.setup(swaggerDocument));
 // Setup routes
 app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
+app.use('/api/learningModules', learningModulesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    console.log(req);
+    //console.log(req);
     next(createError(404));
 });
 

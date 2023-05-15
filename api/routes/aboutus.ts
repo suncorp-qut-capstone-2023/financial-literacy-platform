@@ -12,8 +12,8 @@ router.get("/about", function (req, res, next) {
             members: [
                 {
                     name: "Jason Finsalyne",
-                    student_id: "n1xxxxxx",
-                    email: "n1xxxxxx@qut.edu.au"
+                    student_id: "n10592024",
+                    email: "n10592024@qut.edu.au"
                 },
                 {
                     name: "Christopher Mai",

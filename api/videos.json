@@ -1,0 +1,123 @@
+{
+    "available_courses": [
+        {
+            "course_id": 1,
+            "course_name": "C# course",
+            "category_type": "basic/intermediate/advance",
+            "material": [
+                {
+                    "material_id": 1,
+                    "material_type": "presentations/workshops/open_discussions",
+                    "material_video": "http://127.0.0.1:443/api/learningModules/1/video"
+                }, 
+                {
+                    "material_id": 2,
+                    "material_type": "presentations/workshops/open_discussions",
+                    "material_video": "http://127.0.0.1:443/api/learningModules/2/video"
+                }
+            ],
+            "lectures": [
+                {
+                    "lectures_id": 1,
+                    "lecture_date_and_time": {
+                        "@type": "ISODate",
+                        "value": "2022-10-31T09:00:00.594Z"
+                    },
+                    "lectures_type": "unknown"
+                }
+            ],
+            "quiz": {
+                "quiz_id": 1,
+                "description": "tralalalala lores ipstum",
+                "max_tries": 3,
+                "attached_files": {
+                    "file_name": "C#_quiz",
+                    "file_url": "https://www.hostinger.in/tutorials/what-is-a-url" 
+                }
+            }        
+        },
+        {
+            "course_id": 2,
+            "course_name": "R course",
+            "category_type": "basic/intermediate/advance",
+            "material": [
+                {
+                    "material_id": 3,
+                    "material_type": "presentations/workshops/open_discussions",
+                    "material_video": "http://127.0.0.1:443/api/learningModules/2/video"
+                }, 
+                {
+                    "material_id": 4,
+                    "material_type": "presentations/workshops/open_discussions",
+                    "material_video": "http://127.0.0.1:443/api/learningModules/2/video"
+                }
+            ],
+            "lectures": [
+                {
+                    "lectures_id": 2,
+                    "lecture_date_and_time": {
+                        "@type": "ISODate",
+                        "value": "2022-10-31T09:00:00.594Z"
+                    },
+                    "lectures_type": "unknown"
+                }
+            ],
+            "quiz": {
+                "quiz_id": 2,
+                "description": "lorem ipsum",
+                "max_tries": 3,
+                "attached_files": {
+                    "file_name": "R_quiz",
+                    "file_url": "https://www.hostinger.in/tutorials/what-is-a-url" 
+                }
+            } 
+        }
+
+    ],
+    "user_register_to_courses" : [
+        {
+            "user_id":1,
+            "course_id": 1,
+            "quiz_submission": [
+                {
+                    "quiz_submission_no": 1,
+                    "quiz_id": 1,
+                    "grade": "A",
+                    "grade_details": "it was perfect. no more comment.",
+                    "status": "pass",
+                    "rating": 10,
+                    "feedback": "you have passed all quizes question flawlessly. You are as good as Steve Jobs."
+                }
+            ]
+        },
+        {
+            "user_id":2,
+            "course_id": 1,
+            "quiz_submission": [
+                {
+                    "quiz_submission_no": 2,
+                    "quiz_id": 1,
+                    "grade": "F",
+                    "grade_details": "Please study harder. You only have one correct answer per 10 questions",
+                    "status": "not pass",
+                    "rating": 2,
+                    "feedback": "Sorry. You need to study more."
+                },
+                {
+                    "quiz_submission_no": 3,
+                    "quiz_id": 1,
+                    "grade": "B",
+                    "grade_details": "Great progess!",
+                    "status": "pass",
+                    "rating": 8,
+                    "feedback": "You study hard for the second quiz! good improvement."
+                }
+            ]
+        },
+        {
+            "user_id":1,
+            "course_id": 2,
+            "quiz_submission": [ ]
+        }
+    ]
+}
