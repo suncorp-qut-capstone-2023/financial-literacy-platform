@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const auth = require('../authorize.ts');
+const auth = require('../authorize.js');
 
 function validDate(date){
     let valid = false;
@@ -28,8 +28,8 @@ router.post('/register', function(req, res, next) {
         res.status(400).json({
             error: true,
             message: "Request body incomplete, both email and password are required"
-        })
-        return
+        });
+        return;
     }
 
     // Query DB for request
@@ -40,8 +40,8 @@ router.post('/register', function(req, res, next) {
                 res.status(409).json({
                     error: true,
                     message: 'User already exists'
-                })
-                return
+                });
+                return;
             }
 
             // Add new user to DB with encrypted password
@@ -64,8 +64,8 @@ router.post('/login', function(req, res, next){
 
     // Verify input
     if(!email || !pass){
-        res.status(400).json({error: true, message: "Request body incomplete, both email and password are required"})
-        return
+        res.status(400).json({error: true, message: "Request body incomplete, both email and password are required"});
+        return;
     }
     // Query DB for request
     req.db.from('users').select('*').where('email','=',email).then(
@@ -75,8 +75,8 @@ router.post('/login', function(req, res, next){
                 res.status(401).json({
                     error: true,
                     message: "Incorrect email or password"
-                })
-                return
+                });
+                return;
             }
             else{
                 return bcrypt.compare(pass, users[0].password_hash, null).then(
@@ -85,8 +85,8 @@ router.post('/login', function(req, res, next){
                             res.status(401).json({
                                 error: true,
                                 message: "Incorrect email or password"
-                            })
-                            return
+                            });
+                            return;
                         }
                         // Return JWT token for valid login
                         const expiresIn = 60*60*24
@@ -111,8 +111,8 @@ router.get('/api/user/:email/profile', auth, function(req, res, next){
         res.status(400).json({
             error: true,
             message: "Invalid query parameters. Query parameters are not permitted."
-        })
-        return
+        });
+        return;
     }
 
     if(!req.isAuthorized){
@@ -123,8 +123,8 @@ router.get('/api/user/:email/profile', auth, function(req, res, next){
                     res.status(404).json({
                         error: true,
                         message: "User not found"
-                    })
-                    return
+                    });
+                    return;
                 }
                 res.status(200).json({
                     email: data[0].email,
@@ -143,16 +143,16 @@ router.get('/api/user/:email/profile', auth, function(req, res, next){
                     res.status(404).json({
                         error: true,
                         message: "User not found"
-                    })
-                    return
+                    });
+                    return;
                 }
                 if(jwtVerify.email !== email){
                     res.status(200).json({
                         email: data[0].email,
                         firstName: data[0].first_name,
                         lastName: data[0].last_name
-                    })
-                    return
+                    });
+                    return;
                 }
                 res.status(200).json({
                     email: data[0].email,

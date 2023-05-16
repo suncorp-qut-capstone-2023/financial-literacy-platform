@@ -23,9 +23,9 @@ const swaggerDocument = require("./swagger.json")
 const app = express();
 
 // define routers
-const aboutUsRouter = require('./routes/aboutus.ts');
-const usersRouter = require('./routes/users.ts');
-const learningModulesRouter = require('./routes/learningModules.ts');
+const aboutUsRouter = require('./routes/aboutus.js');
+const usersRouter = require('./routes/users.js');
+const learningModulesRouter = require('./routes/learningModules.js');
 
 // database connection
 app.use((req,res,next) => {
