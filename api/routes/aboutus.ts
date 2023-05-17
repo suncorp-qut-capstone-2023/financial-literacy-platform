@@ -12,13 +12,13 @@ router.get("/about", function (req, res, next) {
             members: [
                 {
                     name: "Jason Finsalyne",
-                    student_id: "n1xxxxxx",
-                    email: "n1xxxxxx@qut.edu.au"
+                    student_id: "n10592024",
+                    email: "n10592024@qut.edu.au"
                 },
                 {
                     name: "Christopher Mai",
-                    student_id: "n1xxxxxx",
-                    email: "n1xxxxxx@qut.edu.au"
+                    student_id: "n9712364",
+                    email: "n9712364@qut.edu.au"
                 },
                 {
                     name: "Meet Vadher",
@@ -27,8 +27,8 @@ router.get("/about", function (req, res, next) {
                 },
                 {
                     name: "Geoffrey Beckett",
-                    student_id: "n1xxxxxx",
-                    email: "n1xxxxxx@qut.edu.au"
+                    student_id: "n11066148",
+                    email: "geoffrey.beckett@connect.qut.edu.au"
                 }
             ],
         })
