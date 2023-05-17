@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "mysql2": "^3.3.1",
     "nodemon": "^2.0.22",
     "pug": "^3.0.2",
+    "swagger-autogen": "^2.23.1",
     "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
