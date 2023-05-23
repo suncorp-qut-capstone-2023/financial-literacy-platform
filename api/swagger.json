@@ -69,88 +69,127 @@
     }
   },
   "paths": {
-      "/api/learningModules/{video_ID}/video": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "video_ID",
-              "in": "path",
-              "required": true,
+    "/api/learningmodules/media": {
+      "get": {
+        "summary": "Get media content",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "query",
+            "description": "ID of the image",
+            "required": false,
+            "schema": {
               "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "404": {
-              "description": "Not Found"
+          },
+          {
+            "name": "video",
+            "in": "query",
+            "description": "ID of the video",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
-      "/api/learningModules/{material_ID}/material": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "material_ID",
-              "in": "path",
-              "required": true,
+      }
+    },
+    "/api/learningmodules": {
+      "get": {
+        "summary": "View all available learning modules",
+        "parameters": [
+          {
+            "name": "course",
+            "in": "query",
+            "description": "ID of the course",
+            "required": false,
+            "schema": {
               "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "404": {
-              "description": "Not Found"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
-      "/api/learningModules/viewAll": {
-        "get": {
-          "description": "",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "OK"
+      }
+    },
+    "/api/learningmodules/{moduleID}/viewContent": {
+      "get": {
+        "summary": "View content of a learning module",
+        "parameters": [
+          {
+            "name": "moduleID",
+            "in": "path",
+            "description": "ID of the learning module",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
-      "/api/learningModules/{moduleID}/viewContent": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "moduleID",
-              "in": "path",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "authorization",
-              "in": "header",
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "401": {
-              "description": "Unauthorized"
-            },
-            "404": {
-              "description": "Not Found"
-            }
-          }
-        }
-      },
+      }
+    },
     "/api/about": {
       "get": {
         "tags": ["Administration"],
