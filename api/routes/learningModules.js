@@ -9,52 +9,31 @@ const path = require("path");
 
 // TODO(): Write a handler for Json files so we dont have to for loop through it.
 
-//[url][port]/[filename]/video
-router.get("/:video_ID/video", (req, res) => {
-  const video_ID = req.params.video_ID;
+router.get("/media", (req, res) => {
+  const image = req.query.image;
+  const video = req.query.video;
 
-  const videoName = "../api/assets/video" + video_ID + ".mp4";
+  if(!image && !video || image && video) {
+    return res.status(400).json({
+      error: true,
+      message: "Bad request, please specify an image ID OR video ID",
+    })
+  }
 
-  console.log("result: " + fs.existsSync(path.resolve(videoName)) + "\n\n");
-
-  if (fs.existsSync(path.resolve(videoName))) {
-    return res.sendFile(path.resolve(videoName));
+  const fileType = image ? 'image' : 'video'
+  const fileId = image ?? video;
+  const fileExt = image ? 'jpeg' : 'mp4';
+  
+  const filePath = `../api/assets/${fileType}${fileId}.${fileExt}`;
+  
+  if(fs.existsSync(path.resolve(filePath))) {
+    return res.sendFile(path.resolve(filePath));
   } else {
     return res.status(404).json({
       error: true,
-      message: "Module video not found",
-    });
+      message: "Module file not found",
+    })
   }
-});
-
-
-// We dont know the course id when looking for the Material id.
-// We also dont need a local variable videoURL, it can be returned as a result of the if statement
-router.get("/:material_ID/material", (req, res) => {
-  const material_ID = req.params.material_ID;
-
-  let videoURL = "";
-
-  // TODO(Geoff): Look for ways to not use a nested.
-  // Nested for loops is not best practice.
-  // theres nothing stopping this for loop. Imagine what 10000 courses would be like.
-
-  videos.available_courses.forEach(course => {
-    course.material.forEach(material => {
-      if (material.material_id == material_ID) {
-        return res.status(200).json({
-          video_url: material.material_video
-        });
-      }
-    });
-  });
-
-  return res.status(404).json({
-    error: true,
-    message: "Module video not found",
-  });
-
-
 });
 
 /* View all available learning modules */
