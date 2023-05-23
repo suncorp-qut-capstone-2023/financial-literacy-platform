@@ -69,88 +69,178 @@
     }
   },
   "paths": {
-      "/api/learningModules/{video_ID}/video": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "video_ID",
-              "in": "path",
-              "required": true,
+    "/api/learningmodules/{courseID}/media": {
+      "get": {
+        "summary": "Get media content by course ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
               "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "404": {
-              "description": "Not Found"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "description": "ID of the image",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "video",
+            "in": "query",
+            "description": "ID of the video",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
-      "/api/learningModules/{material_ID}/material": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "material_ID",
-              "in": "path",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "404": {
-              "description": "Not Found"
+      }
+    },
+    "/api/learningmodules": {
+      "get": {
+        "summary": "View all available learning modules",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
             }
           }
         }
-      },
-      "/api/learningModules/viewAll": {
-        "get": {
-          "description": "",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "OK"
+      }
+    },
+    "/api/learningmodules/course": {
+      "get": {
+        "summary": "Get course information by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
-      "/api/learningModules/{moduleID}/viewContent": {
-        "get": {
-          "description": "",
-          "parameters": [
-            {
-              "name": "moduleID",
-              "in": "path",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "authorization",
-              "in": "header",
+      }
+    },
+    "/:moduleID/viewContent": {
+      "get": {
+        "summary": "View content of a learning module by ID",
+        "parameters": [
+          {
+            "name": "moduleID",
+            "in": "path",
+            "description": "ID of the learning module",
+            "required": true,
+            "schema": {
               "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "401": {
-              "description": "Unauthorized"
-            },
-            "404": {
-              "description": "Not Found"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "JWT Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
-      },
+      }
+    },
     "/api/about": {
       "get": {
         "tags": ["Administration"],
