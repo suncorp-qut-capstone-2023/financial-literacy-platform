@@ -58,25 +58,31 @@ router.get("/:courseID/media", (req, res) => {
 
 /* View all available learning modules */
 router.get("", function (req, res, next) {
-  // TODO: Should this courseID arguemnt be its own path? like learningmodules/course?ID=1
-  const courseId = req.query.course;
+  // TODO(): Handle if query params are added
+  return res.json({
+    "available courses": videos.available_courses,
+  });
+});
 
-  if(!courseId) {
-    return res.json({
-      "available courses": videos.available_courses,
-    });
-  }
-  
+router.get("/course", function (req, res, next) {
+  const courseId = req.query.id;
   const filteredCourse = videos.available_courses.find((c) => {
     return c.course_id === Number(courseId);
   });
 
-  if (filteredCourse){
-    return res.json({
-      course: filteredCourse
+  if (!filteredCourse){
+    return res.status(400).json({
+      error: true,
+      message: "Malformed request, please query a valid course ID."
     });
   }
 
+  if (filteredCourse){
+    return res.json({
+      id: filteredCourse
+    });
+  }
+// TODO(): This is not reached.
   return res.status(404).json({
     error: true,
     message: "Course not found"
