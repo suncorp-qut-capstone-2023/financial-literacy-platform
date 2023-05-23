@@ -37,12 +37,31 @@ router.get("/media", (req, res) => {
 });
 
 /* View all available learning modules */
-router.get("/viewAll", function (req, res, next) {
+router.get("", function (req, res, next) {
+  // TODO: Should this courseID arguemnt be its own path? like learningmodules/course?ID=1
+  const courseId = req.query.course;
 
-
-  return res.json({
-    "available courses": videos.available_courses,
+  if(!courseId) {
+    return res.json({
+      "available courses": videos.available_courses,
+    });
+  }
+  
+  const filteredCourse = videos.available_courses.find((c) => {
+    return c.course_id === Number(courseId);
   });
+
+  if (filteredCourse){
+    return res.json({
+      course: filteredCourse
+    });
+  }
+
+  return res.status(404).json({
+    error: true,
+    message: "Course not found"
+  })
+
 });
 
 /* View content of learning module */
