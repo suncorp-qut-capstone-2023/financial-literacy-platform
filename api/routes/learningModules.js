@@ -8,10 +8,19 @@ const fs = require("fs");
 const path = require("path");
 
 // TODO(): Write a handler for Json files so we dont have to for loop through it.
-
-router.get("/media", (req, res) => {
+// TODO: Check good practice for variable names. (filewide)
+router.get("/:courseID/media", (req, res) => {
+  const courseID = req.params.courseID;
   const image = req.query.image;
   const video = req.query.video;
+
+
+  if(!courseID) {
+    return res.status(400).json({
+      error: true,
+      message: "Bad request please specify a course ID"
+    });
+  }
 
   if(!image && !video || image && video) {
     return res.status(400).json({
@@ -20,12 +29,23 @@ router.get("/media", (req, res) => {
     })
   }
 
+  const filteredCourse = videos.available_courses.find((c) => {
+    return c.course_id === Number(courseID);
+  });
+
+  if(!filteredCourse) {
+    return res.status(404).json({
+      error: true,
+      message: "Bad request please specify a valid course ID"
+    });
+  }
+
   const fileType = image ? 'image' : 'video'
   const fileId = image ?? video;
   const fileExt = image ? 'jpeg' : 'mp4';
   
-  const filePath = `../api/assets/${fileType}${fileId}.${fileExt}`;
-  
+  const filePath = `../api/assets/course${courseID}/${fileType}${fileId}.${fileExt}`;
+
   if(fs.existsSync(path.resolve(filePath))) {
     return res.sendFile(path.resolve(filePath));
   } else {
