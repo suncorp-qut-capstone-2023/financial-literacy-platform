@@ -69,9 +69,9 @@
     }
   },
   "paths": {
-    "/api/learningmodules/{courseID}/media": {
+    "/api/learningModules/{courseID}/media": {
       "get": {
-        "summary": "Get media content by course ID",
+        "summary": "Get media file by course ID",
         "parameters": [
           {
             "name": "courseID",
@@ -85,7 +85,7 @@
           {
             "name": "image",
             "in": "query",
-            "description": "ID of the image",
+            "description": "Image ID",
             "required": false,
             "schema": {
               "type": "string"
@@ -94,7 +94,7 @@
           {
             "name": "video",
             "in": "query",
-            "description": "ID of the video",
+            "description": "Video ID",
             "required": false,
             "schema": {
               "type": "string"
@@ -112,7 +112,6 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-
               }
             }
           },
@@ -120,14 +119,60 @@
             "description": "Not Found",
             "content": {
               "application/json": {
-
               }
             }
           }
         }
       }
     },
-    "/api/learningmodules": {
+    "/api/learningModules/{courseID}/quiz": {
+      "get": {
+        "summary": "Get quiz by course ID and quiz ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the quiz",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules": {
       "get": {
         "summary": "View all available learning modules",
         "responses": {
@@ -140,9 +185,9 @@
         }
       }
     },
-    "/api/learningmodules/course": {
+    "/api/learningModules/course": {
       "get": {
-        "summary": "Get course information by ID",
+        "summary": "Get course by ID",
         "parameters": [
           {
             "name": "id",
@@ -165,7 +210,6 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-
               }
             }
           },
@@ -173,7 +217,6 @@
             "description": "Not Found",
             "content": {
               "application/json": {
-
               }
             }
           }

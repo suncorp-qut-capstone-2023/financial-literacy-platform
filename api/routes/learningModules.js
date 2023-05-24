@@ -80,7 +80,7 @@ router.get("/:courseID/quiz", (req, res) => {
 
   const filteredCourseQuizzes = course_information.available_courses.find((c) => {
     return c['course_id'] === Number(courseID);
-  })['quiz'];
+  });
 
   if(!filteredCourseQuizzes) {
     return res.status(404).json({
@@ -89,7 +89,7 @@ router.get("/:courseID/quiz", (req, res) => {
     });
   }
 
-  const filteredQuiz = filteredCourseQuizzes.find((q) => {
+  const filteredQuiz = filteredCourseQuizzes['quiz'].find((q) => {
     return q['quiz_id'] === Number(id);
   });
 
