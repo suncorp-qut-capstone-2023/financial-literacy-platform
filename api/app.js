@@ -23,7 +23,7 @@ const swaggerDocument = require("./swagger.json")
 const app = express();
 
 // define routers
-const aboutUsRouter = require('./routes/aboutus.js');
+const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
 const learningModulesRouter = require('./routes/learningModules.js');
 

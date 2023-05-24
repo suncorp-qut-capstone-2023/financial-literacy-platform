@@ -112,9 +112,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequest"
-                }
+
               }
             }
           },
@@ -122,9 +120,7 @@
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
+
               }
             }
           }
@@ -169,9 +165,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequest"
-                }
+
               }
             }
           },
@@ -179,62 +173,7 @@
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/:moduleID/viewContent": {
-      "get": {
-        "summary": "View content of a learning module by ID",
-        "parameters": [
-          {
-            "name": "moduleID",
-            "in": "path",
-            "description": "ID of the learning module",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "description": "JWT Bearer token",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unauthorized"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
+
               }
             }
           }

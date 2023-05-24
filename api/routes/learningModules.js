@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const auth = require("../authorize.js");
-const videos = require("../videos.json");
+const course_information = require("../course-information.json");
 const fs = require("fs");
 const path = require("path");
 
@@ -29,7 +29,7 @@ router.get("/:courseID/media", (req, res) => {
     })
   }
 
-  const filteredCourse = videos.available_courses.find((c) => {
+  const filteredCourse = course_information.available_courses.find((c) => {
     return c.course_id === Number(courseID);
   });
 
@@ -52,21 +52,73 @@ router.get("/:courseID/media", (req, res) => {
     return res.status(404).json({
       error: true,
       message: "Module file not found",
-    })
+    });
   }
 });
+
+//TODO(): for presentation, must log in to see quiz answers.
+router.get("/:courseID/quiz", (req, res) => {
+  // TODO: dummy boolean remove when implemented logging in token
+  const loggedIn = true;
+
+  const courseID = req.params['courseID'];
+  const id = req.query.id;
+
+  if(!courseID) {
+    return res.status(400).json({
+      error: true,
+      message: "Bad request please specify a course ID"
+    });
+  }
+
+  if(!id) {
+    return res.status(400).json({
+      error: true,
+      message: "Bad request, please specify a quiz ID",
+    })
+  }
+
+  const filteredCourseQuizzes = course_information.available_courses.find((c) => {
+    return c['course_id'] === Number(courseID);
+  })['quiz'];
+
+  if(!filteredCourseQuizzes) {
+    return res.status(404).json({
+      error: true,
+      message: "Bad request please specify a valid course ID"
+    });
+  }
+
+  const filteredQuiz = filteredCourseQuizzes.find((q) => {
+    return q['quiz_id'] === Number(id);
+  });
+
+  if(!filteredQuiz) {
+    return res.status(404).json({
+      error: true,
+      message: "Bad request please specify a valid quiz ID"
+    });
+  }
+
+  if(!loggedIn) {
+    delete filteredQuiz["quiz_answers"];
+  }
+
+  return res.json({ filteredQuiz });
+});
+
 
 /* View all available learning modules */
 router.get("", function (req, res, next) {
   // TODO(): Handle if query params are added
   return res.json({
-    "available courses": videos.available_courses,
+    "available courses": course_information.available_courses,
   });
 });
 
 router.get("/course", function (req, res, next) {
   const courseId = req.query.id;
-  const filteredCourse = videos.available_courses.find((c) => {
+  const filteredCourse = course_information.available_courses.find((c) => {
     return c.course_id === Number(courseId);
   });
 
@@ -90,28 +142,5 @@ router.get("/course", function (req, res, next) {
 
 });
 
-/* View content of learning module */
-router.get("/:moduleID/viewContent", auth, function (req, res, next) {
-  
-  const module_ID = req.params.moduleID;
-
-  let found = false;
-
-  foundCourse = videos.available_courses.find(c => c.course_id == module_ID);
-  found = !!foundCourse;
-
-  if (found) {
-    return res.status(200).json({
-      module_information: foundCourse
-    });
-  }
-
-  if (!found) {
-    res.status(404).json({
-      error: true,
-      message: "Module not found",
-    });
-  }
-});
 
 module.exports = router;
