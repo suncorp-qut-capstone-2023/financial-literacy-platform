@@ -27,12 +27,11 @@ jobs:
 
     steps:
     # checkout code
-    - name: Checkout code
     - uses: actions/checkout@v3
     
     # setup env variables
     - name: Set up Enviroment variables
-    - run: |
+      run: |
         echo "SQL_DATABASE=${{ github.SQL_DATABASE }}" >> $GITHUB_ENV
         echo "SQL_HOST=${{ github.SQL_HOST }}" >> $GITHUB_ENV
         echo "SQL_PORT=${{ github.SQL_PORT }} " >> $GITHUB_ENV
@@ -47,14 +46,15 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './api/package-lock.json'
-    - name: Install dependencies
+        
+    # Install dependencies
     - run: npm ci
     
-    - name: Build the app
+    # Build the app
     - run: npm run build --if-present
     
-    - name: Run tests
-    - run: npm test # Jest Unit API Testing 
+    # Run tests using Jest
+    - run: npm test 
       
 
   deploy: ## <-- Deployment to Heroku App
