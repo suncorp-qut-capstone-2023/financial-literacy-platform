@@ -54,7 +54,7 @@ jobs:
     - run: npm run build --if-present
     
     # Run tests using Jest
-    - run: npm test --detectOpenHandles --forceExit
+    - run: npm test
       
 
   deploy: ## <-- Deployment to Heroku App
