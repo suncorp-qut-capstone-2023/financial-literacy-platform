@@ -10,15 +10,19 @@ on:
     branches: [ "backend-main" ]
 
 jobs:
+
   build:
-
     runs-on: ubuntu-latest
-
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+      SQL_USER: ${{ secrets.SQL_USER }}
+      SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      SQL_HOST: ${{ secrets.SQL_HOST }}
+      SQL_PORT: ${{ secrets.SQL_PORT }} 
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -38,5 +42,5 @@ jobs:
         - uses: akhileshns/heroku-deploy@v3.12.12
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: "jcmg-api"
-            heroku_email: "n11012595@qut.edu.au"
+            heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+            heroku_email: ${{secrets.HEROKU_EMAIL}}
