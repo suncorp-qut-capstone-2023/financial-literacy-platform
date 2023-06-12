@@ -32,8 +32,8 @@ jobs:
     # setup env variables
     - name: Set up Enviroment variables
       run: |
-        echo "SQL_DATABASE=${{ github.SQL_DATABASE }}" >> $GITHUB_ENV
-        echo "SQL_HOST=${{ github.SQL_HOST }}" >> $GITHUB_ENV
+        echo "SQL_DATABASE=$SQL_DATABASE" >> $GITHUB_ENV
+        echo "SQL_HOST=${{ $SQL_HOST }}" >> $GITHUB_ENV
         echo "SQL_PORT=${{ github.SQL_PORT }} " >> $GITHUB_ENV
         echo "SQL_USER=${{ secrets.SQL_USER }}" >> $GITHUB_ENV
         echo "SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}" >> $GITHUB_ENV
