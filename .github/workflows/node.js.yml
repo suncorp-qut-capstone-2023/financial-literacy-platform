@@ -15,6 +15,16 @@ jobs:
   build: ## <-- Start the build process
     runs-on: ubuntu-latest
     
+    # set up enviroment variables
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}      
+      SQL_USER: ${{ secrets.SQL_USER }}
+      SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      
+      SQL_DATABASE: $SQL_DATABASE
+      SQL_HOST: $SQL_HOST
+      SQL_PORT: $SQL_PORT
+    
     # Change working directory
     defaults:
       run:
@@ -28,16 +38,6 @@ jobs:
     steps:
     # checkout code
     - uses: actions/checkout@v3
-    
-    # setup env variables
-    - name: Set up Enviroment variables
-      run: |
-        echo "SQL_DATABASE=$SQL_DATABASE" >> $GITHUB_ENV
-        echo "SQL_HOST=$SQL_HOST" >> $GITHUB_ENV
-        echo "SQL_PORT=$SQL_PORT" >> $GITHUB_ENV
-        echo "SQL_USER=${{ secrets.SQL_USER }}" >> $GITHUB_ENV
-        echo "SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}" >> $GITHUB_ENV
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
     
     # setup node
     - name: Use Node.js ${{ matrix.node-version }}
