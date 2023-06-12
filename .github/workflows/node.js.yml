@@ -64,7 +64,7 @@ jobs:
         - uses: actions/checkout@v2
         - uses: akhileshns/heroku-deploy@v3.12.12
           with:
-            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: ${{ github.HEROKU_APP_NAME }}
-            heroku_email: ${{ github.HEROKU_EMAIL }}
+            heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+            heroku_app_name: ${{ vars.HEROKU_APP_NAME }}
+            heroku_email: ${{ vars.HEROKU_EMAIL }}
             appdir: "api"
