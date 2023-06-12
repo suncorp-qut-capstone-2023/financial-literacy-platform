@@ -21,9 +21,9 @@ jobs:
       SQL_USER: ${{ secrets.SQL_USER }}
       SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
       
-      SQL_DATABASE: $SQL_DATABASE
-      SQL_HOST: $SQL_HOST
-      SQL_PORT: $SQL_PORT
+      SQL_DATABASE: ${{ vars.SQL_DATABASE }}
+      SQL_HOST: ${{ vars.SQL_HOST }}  
+      SQL_PORT: ${{ vars.SQL_PORT }}    
     
     # Change working directory
     defaults:
