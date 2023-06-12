@@ -12,9 +12,10 @@ on:
     branches: [ "backend-main" ]
 
 jobs:
-  build:
-
+  build: ## <-- Start the build process
     runs-on: ubuntu-latest
+    
+    # Change working directory
     defaults:
       run:
         working-directory: ./api
@@ -25,15 +26,34 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    # checkout code
+    - name: Checkout code
     - uses: actions/checkout@v3
+    
+    # setup env variables
+    - name: Set up Enviroment variables
+    - run: |
+        echo "SQL_DATABASE=${{ github.SQL_DATABASE }}" >> $GITHUB_ENV
+        echo "SQL_HOST=${{ github.SQL_HOST }}" >> $GITHUB_ENV
+        echo "SQL_PORT=${{ github.SQL_PORT }} " >> $GITHUB_ENV
+        echo "SQL_USER=${{ secrets.SQL_USER }}" >> $GITHUB_ENV
+        echo "SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}" >> $GITHUB_ENV
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+    
+    # setup node
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './api/package-lock.json'
+    - name: Install dependencies
     - run: npm ci
+    
+    - name: Build the app
     - run: npm run build --if-present
+    
+    - name: Run tests
     - run: npm test # Jest Unit API Testing 
       
 
@@ -45,6 +65,6 @@ jobs:
         - uses: akhileshns/heroku-deploy@v3.12.12
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: "jcmg-api"
-            heroku_email: "n11012595@qut.edu.au"
+            heroku_app_name: ${{ github.HEROKU_APP_NAME }}
+            heroku_email: ${{ github.HEROKU_EMAIL }}
             appdir: "api"
