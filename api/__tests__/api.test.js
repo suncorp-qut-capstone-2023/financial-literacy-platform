@@ -120,4 +120,4 @@ describe('GET /api/learningmodules', () => {
 //         expect(response.body).toHaveProperty('error', true)
 //         expect(response.body).toHaveProperty('message', 'Module not found')
 //     });
-// });
+});
