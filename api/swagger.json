@@ -69,14 +69,23 @@
     }
   },
   "paths": {
-    "/api/learningmodules/media": {
+    "/api/learningModules/{courseID}/media": {
       "get": {
-        "summary": "Get media content",
+        "summary": "Get media file by course ID",
         "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "image",
             "in": "query",
-            "description": "ID of the image",
+            "description": "Image ID",
             "required": false,
             "schema": {
               "type": "string"
@@ -85,7 +94,7 @@
           {
             "name": "video",
             "in": "query",
-            "description": "ID of the video",
+            "description": "Video ID",
             "required": false,
             "schema": {
               "type": "string"
@@ -103,10 +112,39 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequest"
-                }
               }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/{courseID}/quiz": {
+      "get": {
+        "summary": "Get quiz by course ID and quiz ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the quiz",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           "404": {
@@ -119,20 +157,39 @@
               }
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
         }
       }
     },
-    "/api/learningmodules": {
+    "/api/learningModules": {
       "get": {
         "summary": "View all available learning modules",
-        "parameters": [
-          {
-            "name": "course",
-            "in": "query",
-            "description": "ID of the course",
-            "required": false,
-            "schema": {
-              "type": "string"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
             }
           }
         ],
@@ -156,14 +213,14 @@
         }
       }
     },
-    "/api/learningmodules/{moduleID}/viewContent": {
+    "/api/learningModules/course": {
       "get": {
-        "summary": "View content of a learning module",
+        "summary": "Get course by ID",
         "parameters": [
           {
-            "name": "moduleID",
-            "in": "path",
-            "description": "ID of the learning module",
+            "name": "id",
+            "in": "query",
+            "description": "ID of the course",
             "required": true,
             "schema": {
               "type": "string"
@@ -177,13 +234,17 @@
               "application/json": {}
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
               }
             }
           }
