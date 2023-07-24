@@ -17,7 +17,7 @@ const knex = require("knex")(options);
 
 // swagger setup
 const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json")
+const swaggerDocument = require("./swagger.json");
 
 // create express app
 const app = express();
