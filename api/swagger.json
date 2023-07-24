@@ -3,7 +3,7 @@
   "info": {
     "version": "2.0.0",
     "title": "IFB398 - Capstone Project 2023",
-    "description": "This API has been created to support the Capstone Project in IFB398, Capstone Unit. It exposes a number of REST endpoints. The API endpoints and their usage are described in detail below."
+    "description": "This API has been created to support Capstone Project in IFB398, Capstone Unit. It exposes a number of REST endpoints. The API endpoints and their usage are described in detail below."
   },
   "components": {
     "securitySchemes": {
@@ -14,25 +14,12 @@
       }
     },
     "schemas": {
-      "NotFound": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "boolean",
-            "example": true
-          },
-          "message": {
-            "type": "string",
-            "example": "Resource not found"
-          }
-        }
-      },
       "MissingAuthHeader": {
         "type": "object",
         "properties": {
           "error": {
             "type": "boolean",
-            "example": true
+            "example": "true"
           },
           "message": {
             "type": "string",
@@ -45,7 +32,7 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": true
+            "example": "true"
           },
           "message": {
             "type": "string",
@@ -58,7 +45,7 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": true
+            "example": "true"
           },
           "message": {
             "type": "string",
@@ -71,11 +58,24 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": true
+            "example": "true"
           },
           "message": {
             "type": "string",
             "example": "Authorization header is malformed"
+          }
+        }
+      },
+      "NotFound": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "message": {
+            "type": "string",
+            "example": "Not found"
           }
         }
       }
@@ -130,7 +130,11 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
@@ -238,7 +242,11 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
             }
           }
         }
@@ -258,213 +266,22 @@
                   "properties": {
                     "name": {
                       "type": "string",
-                      "example": "Project Team Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Project Team Description"
-                    },
-                    "company": {
-                      "type": "string",
-                      "example": "Company Name"
+                      "example": "The name of the project team"
                     },
                     "members": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "Member Name"
-                          },
-                          "student_id": {
-                            "type": "string",
-                            "example": "Member Student ID"
-                          },
-                          "email": {
-                            "type": "string",
-                            "example": "Member Email"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/user/register": {
-      "post": {
-        "tags": ["Authentication"],
-        "description": "Creates a new user account. A request body containing the user to be registered must be sent.",
-        "requestBody": {
-          "description": "An object containing the email and password of the user to be registered.",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "mike@gmail.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "User successfully created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User created"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "boolean",
-                      "example": true
+                        "type": "string"
+                      },
+                      "example": ["member1", "member2"]
                     },
-                    "message": {
+                    "duration": {
                       "type": "string",
-                      "example": "Request body incomplete, both email and password are required"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "User already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "boolean",
-                      "example": true
+                      "example": "The project duration"
                     },
-                    "message": {
+                    "description": {
                       "type": "string",
-                      "example": "User already exists"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/user/login": {
-      "post": {
-        "description": "Log in to an existing user account. A request body containing the user credentials must be sent.",
-        "tags": ["Authentication"],
-        "requestBody": {
-          "description": "The credentials of the user to log in.",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "mike@gmail.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Log in successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "ajsonwebtoken"
-                    },
-                    "token_type": {
-                      "type": "string",
-                      "example": "Bearer"
-                    },
-                    "expires_in": {
-                      "type": "number",
-                      "example": 86400
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid log in request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Request body incomplete, both email and password are required"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Log in failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Incorrect email or password"
+                      "example": "A brief description of the project"
                     }
                   }
                 }
