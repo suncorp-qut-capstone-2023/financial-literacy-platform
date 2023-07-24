@@ -3,7 +3,7 @@
   "info": {
     "version": "2.0.0",
     "title": "IFB398 - Capstone Project 2023",
-    "description": "This API has been created to support Capstone Project in IFB398, Capstone Unit. It exposes a number of REST endpoints. The API endpoints and their usage are described in detail below."
+    "description": "This API has been created to support the Capstone Project in IFB398, Capstone Unit. It exposes a number of REST endpoints. The API endpoints and their usage are described in detail below."
   },
   "components": {
     "securitySchemes": {
@@ -14,12 +14,25 @@
       }
     },
     "schemas": {
+      "NotFound": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Resource not found"
+          }
+        }
+      },
       "MissingAuthHeader": {
         "type": "object",
         "properties": {
           "error": {
             "type": "boolean",
-            "example": "true"
+            "example": true
           },
           "message": {
             "type": "string",
@@ -32,7 +45,7 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": "true"
+            "example": true
           },
           "message": {
             "type": "string",
@@ -45,7 +58,7 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": "true"
+            "example": true
           },
           "message": {
             "type": "string",
@@ -58,7 +71,7 @@
         "properties": {
           "error": {
             "type": "boolean",
-            "example": "true"
+            "example": true
           },
           "message": {
             "type": "string",
@@ -111,15 +124,13 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
@@ -146,16 +157,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -168,14 +169,16 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
               }
             }
           }
@@ -185,14 +188,6 @@
     "/api/learningModules": {
       "get": {
         "summary": "View all available learning modules",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -237,15 +232,13 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
@@ -281,16 +274,16 @@
                         "type": "object",
                         "properties": {
                           "name": {
-                              "type": "string",
-                              "example": "Member Name"
+                            "type": "string",
+                            "example": "Member Name"
                           },
                           "student_id": {
-                              "type": "string",
-                              "example": "Member Student ID"
+                            "type": "string",
+                            "example": "Member Student ID"
                           },
                           "email": {
-                              "type": "string",
-                              "example": "Member Email"
+                            "type": "string",
+                            "example": "Member Email"
                           }
                         }
                       }
@@ -354,7 +347,7 @@
                   "properties": {
                     "error": {
                       "type": "boolean",
-                      "example": "true"
+                      "example": true
                     },
                     "message": {
                       "type": "string",
@@ -374,7 +367,7 @@
                   "properties": {
                     "error": {
                       "type": "boolean",
-                      "example": "true"
+                      "example": true
                     },
                     "message": {
                       "type": "string",
@@ -447,7 +440,7 @@
                   "properties": {
                     "error": {
                       "type": "boolean",
-                      "example": "true"
+                      "example": true
                     },
                     "message": {
                       "type": "string",
@@ -467,7 +460,7 @@
                   "properties": {
                     "error": {
                       "type": "boolean",
-                      "example": "true"
+                      "example": true
                     },
                     "message": {
                       "type": "string",
