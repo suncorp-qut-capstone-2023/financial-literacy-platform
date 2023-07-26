@@ -65,19 +65,6 @@
             "example": "Authorization header is malformed"
           }
         }
-      },
-      "NotFound": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "boolean",
-            "example": "true"
-          },
-          "message": {
-            "type": "string",
-            "example": "Not found"
-          }
-        }
       }
     }
   },
@@ -124,16 +111,14 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {}
+              "application/json": {
+              }
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
               }
             }
           }
@@ -173,16 +158,14 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {}
+              "application/json": {
+              }
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
               }
             }
           }
@@ -197,16 +180,6 @@
             "description": "OK",
             "content": {
               "application/json": {}
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
-              }
             }
           }
         }
@@ -236,16 +209,14 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {}
+              "application/json": {
+              }
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
               }
             }
           }
@@ -266,22 +237,213 @@
                   "properties": {
                     "name": {
                       "type": "string",
-                      "example": "The name of the project team"
+                      "example": "Project Team Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Project Team Description"
+                    },
+                    "company": {
+                      "type": "string",
+                      "example": "Company Name"
                     },
                     "members": {
                       "type": "array",
                       "items": {
-                        "type": "string"
-                      },
-                      "example": ["member1", "member2"]
-                    },
-                    "duration": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                              "type": "string",
+                              "example": "Member Name"
+                          },
+                          "student_id": {
+                              "type": "string",
+                              "example": "Member Student ID"
+                          },
+                          "email": {
+                              "type": "string",
+                              "example": "Member Email"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "description": "Creates a new user account. A request body containing the user to be registered must be sent.",
+        "requestBody": {
+          "description": "An object containing the email and password of the user to be registered.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "mike@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
                       "type": "string",
-                      "example": "The project duration"
+                      "example": "User created"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
                     },
-                    "description": {
+                    "message": {
                       "type": "string",
-                      "example": "A brief description of the project"
+                      "example": "Request body incomplete, both email and password are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "description": "Log in to an existing user account. A request body containing the user credentials must be sent.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "description": "The credentials of the user to log in.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "mike@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Log in successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "ajsonwebtoken"
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "example": "Bearer"
+                    },
+                    "expires_in": {
+                      "type": "number",
+                      "example": 86400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid log in request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Request body incomplete, both email and password are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Log in failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Incorrect email or password"
                     }
                   }
                 }
