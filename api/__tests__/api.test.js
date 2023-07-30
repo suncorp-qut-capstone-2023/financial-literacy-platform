@@ -67,57 +67,56 @@ describe('GET /api/learningmodules', () => {
         expect(response.body).toHaveProperty('available courses');
     });
 
-    // TODO(Anyone): Removed this test since it was returning errors
-    // it('should retrieve single course information', async () => {
-    //     const courseID = randomCourseId()
-    //     const response = await request(app).get('/api/learningmodules?course='+courseID);
+    it('should retrieve single course information', async () => {
+        const courseID = randomCourseId()
+        const response = await request(app).get('/api/learningmodules?course='+courseID);
 
-        // expect(response.statusCode).toBe(200);
-        // expect(response.body).toHaveProperty('course.course_id', courseID);
-//     });
-// });
-//
-// describe('GET /api/learningmodules/media', () => {
-//     const imageID = randomMediaImageID()
-//     const videoID = randomMediaVideoID()
-//
-//     it('should retrieve a media image for a course', async () => {
-//         const response = await request(app).get('/api/learningmodules/media?image='+imageID);
-//
-//         expect(response.statusCode).toBe(200);
-//     });
-//
-//     it('should retrieve a media video for a course', async () => {
-//         const response = await request(app).get('/api/learningmodules/media?video='+videoID);
-//
-//         expect(response.statusCode).toBe(200);
-//     });
-//
-//     it('should give an error, when both image and video id is passed', async () => {
-//         const courseID = randomCourseId()
-//         const response = await request(app).get('/api/learningmodules/media?image='+imageID+'&video='+videoID);
-//
-//         expect(response.statusCode).toBe(400);
-//         expect(response.body).toHaveProperty('error', true);
-//         expect(response.body).toHaveProperty('message', 'Bad request, please specify an image ID OR video ID');
-//     });
-// });
-//
-// describe('GET /api/learningmodules/{moduleID}/viewContent', () => {
-//     const moduleID = randomModuleID()
-//
-//     it('should retrieve the contents of a module', async () => {
-//         const response = await request(app).get(`/api/learningmodules/${moduleID}/viewContent`);
-//
-//         expect(response.statusCode).toBe(200);
-//         expect(response.body).toHaveProperty('module_information')
-//     });
-//
-//     it('should give error, for a unrecognised module', async () => {
-//         const response = await request(app).get(`/api/learningmodules/A1B2C3/viewContent`);
-//
-//         expect(response.statusCode).toBe(404);
-//         expect(response.body).toHaveProperty('error', true)
-//         expect(response.body).toHaveProperty('message', 'Module not found')
-//     });
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('course.course_id', courseID);
+    });
+});
+
+describe('GET /api/learningmodules/media', () => {
+    const imageID = randomMediaImageID()
+    const videoID = randomMediaVideoID()
+
+    it('should retrieve a media image for a course', async () => {
+        const response = await request(app).get('/api/learningmodules/media?image='+imageID);
+
+        expect(response.statusCode).toBe(200);
+    });
+
+    it('should retrieve a media video for a course', async () => {
+        const response = await request(app).get('/api/learningmodules/media?video='+videoID);
+
+        expect(response.statusCode).toBe(200);
+    });
+
+    it('should give an error, when both image and video id is passed', async () => {
+        const courseID = randomCourseId()
+        const response = await request(app).get('/api/learningmodules/media?image='+imageID+'&video='+videoID);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('message', 'Bad request, please specify an image ID OR video ID');
+    });
+});
+
+describe('GET /api/learningmodules/{moduleID}/viewContent', () => {
+    const moduleID = randomModuleID()
+
+    it('should retrieve the contents of a module', async () => {
+        const response = await request(app).get(`/api/learningmodules/${moduleID}/viewContent`);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('module_information')
+    });
+
+    it('should give error, for a unrecognised module', async () => {
+        const response = await request(app).get(`/api/learningmodules/A1B2C3/viewContent`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', true)
+        expect(response.body).toHaveProperty('message', 'Module not found')
+    });
 });
