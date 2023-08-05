@@ -223,6 +223,479 @@
         }
       }
     },
+    "/api/learningModules/delete": {
+      "get": {
+        "summary": "Get the result of deleting a course through its ID",
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/add-new-course": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new course",
+        "requestBody": {
+          "description": "An object containing the course name and category type",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_name": {
+                    "type": "string",
+                    "example": "C# basic"
+                  },
+                  "category_type": {
+                    "type": "string",
+                    "example": "basic"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/add-new-course-material": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new material information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, material type and material media",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "material_type": {
+                    "type": "string",
+                    "example": "video"
+                  },
+                  "material_media": {
+                    "type": "string",
+                    "example": "http://127.0.0.1:443/api/learningModules/1/video"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/add-new-course-lecture": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new material information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, material type and material media",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "date_and_time": {
+                    "type": "string",
+                    "example": "2022-10-31T09:00:00.594Z"
+                  },
+                  "lecture_type": {
+                    "type": "string",
+                    "example": "unknown"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/add-new-course-quiz": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new quiz information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, quiz description and maximum tries of doing the quiz.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "A quiz will be more intended for technical understanding."
+                  },
+                  "max_tries": {
+                    "type": "integer",
+                    "example": 5
+                  },
+                  "questions": {
+                      "type": "object",
+                      "properties": {
+                        "question_number": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "question_text": {
+                          "type": "string",
+                          "example": "What does Spagetti made of?"
+                        },
+                        "question_answer_options": {
+                          "type": "object",
+                          "properties": {
+                            "A": {
+                              "type": "string",
+                              "example": "lol"
+                            },
+                            "B": {
+                              "type": "string",
+                              "example": "lol"
+                            },
+                            "C": {
+                              "type": "string",
+                              "example": "lol"
+                            },
+                            "D": {
+                              "type": "string",
+                              "example": "lol"
+                            }
+                          }
+                        },
+                        "answer": {
+                          "type": "string",
+                          "example": "C"
+                        }
+                      }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/add-new-course-quiz-question": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new quiz question to a quiz",
+        "requestBody": {
+          "description": "An object containing the course ID, quiz ID, question number, question test, and all answer options",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "quiz_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "question_text": {
+                    "type": "string",
+                    "example": "how are you?"
+                  },
+                  "question_answer": {
+                    "type": "string",
+                    "example": "B"
+                  },
+                  "question_answer_options": {
+                    "type": "object",
+                    "properties": {
+                      "A": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "B": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "C": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "D": {
+                        "type": "string",
+                        "example": "lol"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/update-course": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "update course",
+        "requestBody": {
+          "description": "An object containing the course name and category type",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "course_name": {
+                    "type": "string",
+                    "example": "C# basic"
+                  },
+                  "category_type": {
+                    "type": "string",
+                    "example": "basic"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/update-course-material": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "update course-material",
+        "requestBody": {
+          "description": "An object containing the course name and category type",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "material_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "material_type": {
+                    "type": "string",
+                    "example": "COOL"
+                  },
+                  "material_media": {
+                    "type": "string",
+                    "example": "ASX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/api/about": {
       "get": {
         "tags": ["Administration"],

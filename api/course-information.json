@@ -32,7 +32,7 @@
                     "description": "tralalalala lores ipstum",
                     "max_tries": 3,
                     "questions": [
-                        {
+                    {
                         "question_number": 1,
                         "question_text": "why do you use C#?",
                         "question_answer_options": {
@@ -40,7 +40,8 @@
                             "B": "",
                             "C": "",
                             "D": ""
-                        }
+                        },
+                        "answer": "A"
                     },
                     {
                         "question_number": 2,
@@ -50,17 +51,8 @@
                             "B": "",
                             "C": "",
                             "D": ""
-                        }
-                    } ,
-                    {
-                        "question_number": 2,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
+                        },
+                        "answer": "B"
                     }
                     ,
                     {
@@ -71,7 +63,8 @@
                             "B": "",
                             "C": "",
                             "D": ""
-                        }
+                        },
+                        "answer": "C"
                     }
                     ,
                     {
@@ -82,7 +75,8 @@
                             "B": "",
                             "C": "",
                             "D": ""
-                        }
+                        },
+                        "answer": "A"
                     }
                     ,
                     {
@@ -93,25 +87,18 @@
                             "B": "",
                             "C": "",
                             "D": ""
-                        }
-                    }
-                    ],
-                    "quiz_answers": [
-                        {"question_number": 1, "answer": "A"},
-                        {"question_number": 2, "answer": "B"},
-                        {"question_number": 3, "answer": "D"},
-                        {"question_number": 4, "answer": "C"},
-                        {"question_number": 5, "answer": "C"}
-                    ]
-                },
-                {
-                    "quiz_id": 2
-                }
-
+                        },
+                        "answer": "D"
+                    }   
+                ]
+            },
+            {
+                "quiz_id": 2
+            }
             ]
         },
         {
-            "course_id": 2,
+            "course_id": 10,
             "course_name": "R course",
             "category_type": "basic/intermediate/advance",
             "material": [
@@ -149,7 +136,8 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    } 
+                    } ,
+                    "answer": "A"
                 }, 
                 {
                     "question_number": 2,
@@ -159,7 +147,8 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    }
+                    },
+                    "answer": "A"
                 } , 
                 {
                     "question_number": 2,
@@ -169,7 +158,8 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    }
+                    },
+                    "answer": "A"
                 }
                 , 
                 {
@@ -180,7 +170,8 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    }
+                    },
+                    "answer": "A"
                 }
                 ,
                 {
@@ -191,7 +182,8 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    }
+                    },
+                    "answer": "A"
                 }
                 ,
                 {
@@ -202,15 +194,9 @@
                         "B": "",
                         "C": "",
                         "D": ""
-                    }
+                    },
+                    "answer": "A"
                 }
-                ],
-                "quiz_answers": [
-                    {"question_number": 1, "answer": "A"},
-                    {"question_number": 2, "answer": "B"},
-                    {"question_number": 3, "answer": "D"},
-                    {"question_number": 4, "answer": "C"},
-                    {"question_number": 5, "answer": "C"}
                 ]
             } 
         }

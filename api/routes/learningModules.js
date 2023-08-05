@@ -56,6 +56,402 @@ router.get("/:courseID/media", (req, res) => {
   }
 });
 
+function FindCourseIndex (course_ID) {
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    if (course_information.available_courses[i].course_id == course_ID) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+router.post("/add-new-course", (req, res) => {
+  const last_data = course_information.available_courses.length - 1;
+  const course_id = course_information.available_courses[last_data].course_id + 1;
+
+  const course_name = req.body.course_name;
+  const category_type = req.body.category_type;
+
+  if (!course_name || !category_type) {
+    return res.status(400).json({
+      "success_addition": false,
+      error: true,
+      message: "Bad request please specify the course name and category type"
+    });
+  }
+
+  //course_information will be modified to accessing S3 or Azure blob storage soon
+  const new_course = {
+    "course_id": course_id,
+    "course_name": course_name,
+    "category_type": category_type,
+    "material": [ ],
+    "lectures": [ ],
+    "quiz": [ ]
+  }
+
+  course_information.available_courses.push(new_course);
+
+  return res.status(200).json({
+    "success_addition": true,
+    message: "A new course with the ID " + course_id + " has been added"
+  })
+
+})
+
+router.post("/add-new-course-material", (req, res) => {
+  const course_ID = req.body.course_id;
+  const material_type = req.body.material_type;
+  const material_media = req.body.material_media;
+
+  const index = FindCourseIndex(course_ID);
+
+  if (!material_type || !material_media) {
+    return res.status(400).json({
+      "success_addition": false,
+      error: true,
+      message: "Bad request please specify the material ID, material type, and material media"
+    });
+  }
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+    const total_data = course_information.available_courses[index].material.length;
+    let material_ID;
+
+    if (total_data != 0) {
+      material_ID = course_information.available_courses[index].material[total_data - 1].material_id + 1;
+    } else {
+      material_ID = 1;
+    }
+    
+
+    const new_material = {
+      "material_id": material_ID,
+      "material_type": material_type,
+      "material_media": material_media
+    }
+
+    course_information.available_courses[index].material.push(new_material);
+
+    return res.status(200).json({
+      "success_addition": true,
+      message: "A new course with the ID " + course_ID + " has been added"
+    })
+  }
+})
+
+router.post("/add-new-course-lecture", (req, res) => {
+  const course_ID = req.body.course_id;
+  const lecture_date_and_time = req.body.date_and_time;
+  const lecture_type = req.body.lecture_type;
+
+  const index = FindCourseIndex(course_ID);
+
+  if (!lecture_date_and_time || !lecture_type) {
+    return res.status(400).json({
+      "success_addition": false,
+      error: true,
+      message: "Bad request please specify the material ID, material type, and material media"
+    });
+  }
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+    const total_data = course_information.available_courses[index].lectures.length;
+    let lecture_ID;
+
+    if (total_data != 0) {
+      lecture_ID = course_information.available_courses[index].lectures[total_data - 1].lectures_id + 1;
+    } else {
+      lecture_ID = 1;
+    }
+    
+
+    const new_lecture = {
+      "lectures_id": lecture_ID,
+      "lecture_date_and_time": {
+        "@type": "ISODate",
+        "value": lecture_date_and_time
+      },
+      "lectures_type": lecture_type
+    }
+
+    course_information.available_courses[index].lectures.push(new_lecture);
+
+    return res.status(200).json({
+      "success_addition": true,
+      message: "A new course with the ID " + course_ID + " has been added"
+    })
+  }
+})
+
+router.post("/add-new-course-quiz", (req, res) => {
+  const course_ID = req.body.course_id;
+  const quiz_description = req.body.description;
+  const quiz_max_tries = req.body.max_tries;
+
+  const quiz_question = req.body.questions;
+  const question_number = quiz_question.question_number;
+  const question_text = quiz_question.question_text;
+  const question_answer = quiz_question.answer;
+
+  const question_options = quiz_question.question_answer_options;
+  const option_A = question_options.A;
+  const option_B = question_options.B;
+  const option_C = question_options.C;
+  const option_D = question_options.D;
+
+  const index = FindCourseIndex(course_ID);
+
+  if (!quiz_description || !quiz_max_tries || !quiz_question || ! question_number || !question_text || !question_answer || !question_options || !option_A || !option_B || !option_C || !option_D ) {
+    return res.status(400).json({
+      "success_addition": false,
+      error: true,
+      message: "Bad request please specify the quiz description and max tries"
+    });
+  }
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+    const total_data = course_information.available_courses[index].quiz.length;
+    let quiz_ID;
+
+    if (total_data != 0) {
+      quiz_ID = course_information.available_courses[index].quiz[total_data - 1].quiz_id + 1;
+    } else {
+      quiz_ID = 1;
+    }
+    
+    //by default, at least one quiz must have one quiz question
+    const new_quiz = {
+      "quiz_id": quiz_ID,
+      "description": quiz_description,
+      "max_tries": quiz_max_tries,
+      "questions": [{
+        "question_number": question_number,
+        "question_text": question_text,
+        "question_answer_options": {
+            "A": option_A,
+            "B": option_B,
+            "C": option_C,
+            "D": option_D
+          },
+        "answer": question_answer
+      }]
+    }
+
+    course_information.available_courses[index].quiz.push(new_quiz);
+
+    return res.status(200).json({
+      "success_addition": true,
+      message: "A new course with the ID " + course_ID + " has been added"
+    })
+  }
+})
+
+function FindQuizIndex (course_index, quiz_ID) {
+  for (let i = 0; i < course_information.available_courses[course_index].quiz.length; i++) {
+    if (course_information.available_courses[course_index].quiz[i].quiz_id == quiz_ID) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+router.post("/add-new-course-quiz-question", (req, res) => {
+  const course_ID = req.body.course_id;
+  const quiz_ID = req.body.quiz_id;
+  const question_text = req.body.question_text;
+  const question_answer = req.body.question_answer;
+
+  const question_options = req.body.question_answer_options;
+  const option_A = question_options.A;
+  const option_B = question_options.B;
+  const option_C = question_options.C;
+  const option_D = question_options.D;
+
+  const index = FindCourseIndex(course_ID);
+
+  if (!question_text || !question_answer || !question_options || !option_A || !option_B || !option_C || !option_D ) {
+    return res.status(400).json({
+      "success_addition": false,
+      error: true,
+      message: "Bad request please specify the --"
+    });
+  }
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+
+    const quiz_index = FindQuizIndex(index, quiz_ID)
+    
+    if (quiz_index < 0) {
+      return res.status(404).json({
+        "success_addition": false,
+        "error": true,
+        message: "the provided quiz ID can not be found"
+      })
+    } else {
+      const total_data = course_information.available_courses[index].quiz[quiz_index].questions.length;
+      let question_num;
+  
+      if (total_data != 0) {
+        question_num = course_information.available_courses[index].quiz[quiz_index].questions[total_data - 1].question_number + 1;
+      } else {
+        question_num = 1;
+      }
+
+      const new_quiz = {
+        "question_number": question_num,
+        "question_text": question_text,
+        "question_answer_options": {
+            "A": option_A,
+            "B": option_B,
+            "C": option_C,
+            "D": option_D
+          },
+        "answer": question_answer
+      }
+
+      course_information.available_courses[index].quiz[quiz_index].questions.push(new_quiz);
+
+      return res.status(200).json({
+        "success_addition": true,
+        message: "A new course with the ID " + course_ID + " has been added"
+      })      
+    }
+
+  }
+})
+
+router.post("/update-course", (req, res) => {
+  const course_id = req.body.course_id;
+  const course_name = req.body.course_name;
+  const category_type = req.body.category_type;
+
+  const index = FindCourseIndex(course_id);
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+    let success = false;
+
+    if (course_name) {
+      course_information.available_courses[index].course_name = course_name;
+      success = true;
+    }
+
+    if (category_type) {
+      course_information.available_courses[index].category_type = category_type;
+      success = true;
+    } 
+
+    if (success == true) {
+      return res.status(200).json({
+        "success_addition": true,
+        message: "A course with the ID " + course_id + " has been updated"
+      })    
+    } else {
+      return res.status(400).json({
+        "success_addition": false,
+        error: true,
+        message: "Bad request please specify the course name and category type"
+      });
+    }
+  }
+})
+
+function FindMaterialIDIndex (course_index, material_ID) {
+  for (let i = 0; i < course_information.available_courses[course_index].material.length; i++) {
+    if (course_information.available_courses[course_index].material[i].material_id == material_ID) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+router.post("/update-course-material", (req, res) => {
+  const course_id = req.body.course_id;
+  const material_id = req.body.material_id;
+  const material_type = req.body.material_type;
+  const material_media = req.body.material_media;
+
+  const index = FindCourseIndex(course_id);
+
+  if (index < 0) {
+    return res.status(404).json({
+      "success_addition": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+
+    const materialIndex = FindMaterialIDIndex(index, material_id);
+
+    if (materialIndex < 0) {
+      return res.status(404).json({
+        "success_addition": false,
+        "error": true,
+        message: "the provided material ID can not be found"
+      })
+    } else {
+
+      let success = false;
+
+      if (material_type) {
+        course_information.available_courses[index].material[materialIndex].material_type = material_type;
+        success = true;
+      }
+
+      if (material_media) {
+        course_information.available_courses[index].material[materialIndex].material_media = material_media;
+        success = true;
+      } 
+
+      if (success == true) {
+        return res.status(200).json({
+          "success_addition": true,
+          message: "the material on the material ID " + material_id + "from course ID " + course_id + " has been updated"
+        })    
+      } else {
+        return res.status(400).json({
+          "success_addition": false,
+          error: true,
+          message: "Bad request please specify the material type and material media"
+        });
+      }      
+    }
+  }
+})
+
 router.get("/delete", (req, res) => {
   const course_ID = req.query.course_id;
 
@@ -85,7 +481,7 @@ router.get("/delete", (req, res) => {
 router.put("/update", (req, res) => {
   function FindCourseIdIndex(course_id) {
     for (let i = 0; i < course_information.available_courses.length; i ++) {
-      if (course_information.available_courses[i] == course_id) {
+      if (course_information.available_courses[i].course_id == course_id) {
         return i;
       }
     }
