@@ -93,7 +93,10 @@
                 ]
             },
             {
-                "quiz_id": 2
+                "quiz_id": 2,
+                "description": "When you believe in yourself, everything is possible - JCMG",
+                "max_tries": 3,
+                "questions": [ ]
             }
             ]
         },
@@ -123,7 +126,8 @@
                     "lectures_type": "unknown"
                 }
             ],
-            "quiz": {
+            "quiz": [
+                {
                 "quiz_id": 2,
                 "description": "lorem ipsum",
                 "max_tries": 3,
@@ -198,7 +202,14 @@
                     "answer": "A"
                 }
                 ]
-            } 
+            },
+            {
+                "quiz_id": 3,
+                "description": "lorem ipsum hachiu",
+                "max_tries": 5,
+                "questions": [ ]
+            }
+        ] 
         }
 
     ],

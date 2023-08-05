@@ -375,10 +375,6 @@
                     "type": "integer",
                     "example": 1
                   },
-                  "date_and_time": {
-                    "type": "string",
-                    "example": "2022-10-31T09:00:00.594Z"
-                  },
                   "lecture_type": {
                     "type": "string",
                     "example": "unknown"
@@ -436,44 +432,6 @@
                   "max_tries": {
                     "type": "integer",
                     "example": 5
-                  },
-                  "questions": {
-                      "type": "object",
-                      "properties": {
-                        "question_number": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "question_text": {
-                          "type": "string",
-                          "example": "What does Spagetti made of?"
-                        },
-                        "question_answer_options": {
-                          "type": "object",
-                          "properties": {
-                            "A": {
-                              "type": "string",
-                              "example": "lol"
-                            },
-                            "B": {
-                              "type": "string",
-                              "example": "lol"
-                            },
-                            "C": {
-                              "type": "string",
-                              "example": "lol"
-                            },
-                            "D": {
-                              "type": "string",
-                              "example": "lol"
-                            }
-                          }
-                        },
-                        "answer": {
-                          "type": "string",
-                          "example": "C"
-                        }
-                      }
                   }
                 }
               }
@@ -665,6 +623,147 @@
                   "material_media": {
                     "type": "string",
                     "example": "ASX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/update-course-quiz": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new quiz information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, quiz description and maximum tries of doing the quiz.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "quiz_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "A quiz will be more intended for technical understanding."
+                  },
+                  "max_tries": {
+                    "type": "integer",
+                    "example": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/learningModules/update-course-quiz-question": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new quiz question to a quiz",
+        "requestBody": {
+          "description": "An object containing the course ID, quiz ID, question number, question test, and all answer options",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "quiz_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "question_number": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "question_text": {
+                    "type": "string",
+                    "example": "how are you?"
+                  },
+                  "question_answer": {
+                    "type": "string",
+                    "example": "B"
+                  },
+                  "question_answer_options": {
+                    "type": "object",
+                    "properties": {
+                      "A": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "B": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "C": {
+                        "type": "string",
+                        "example": "lol"
+                      },
+                      "D": {
+                        "type": "string",
+                        "example": "lol"
+                      }
+                    }
                   }
                 }
               }
