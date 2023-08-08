@@ -1,10 +1,10 @@
 import styles from "@/styles/page.module.css";
 
-export default function Home() {
+export default function Read(/* TODO: pass in some api call */) {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <h1>THIS IS A PLACEHOLDER FOR THE HOMEPAGE CONTENT</h1>
+        <h1>Title Placeholder</h1>
       </div>
 
       <div className={styles.description}>
