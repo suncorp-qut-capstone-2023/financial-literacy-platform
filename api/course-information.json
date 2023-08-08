@@ -41,7 +41,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "A"
+                        "answers":["A", "C"]
                     },
                     {
                         "question_number": 2,
@@ -52,7 +52,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "B"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -64,7 +64,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "C"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -76,7 +76,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "A"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -88,7 +88,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "D"
+                        "answers":["A", "C"]
                     }   
                 ]
             },
@@ -141,7 +141,7 @@
                         "C": "",
                         "D": ""
                     } ,
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }, 
                 {
                     "question_number": 2,
@@ -152,7 +152,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 } , 
                 {
                     "question_number": 2,
@@ -163,7 +163,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 , 
                 {
@@ -175,7 +175,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ,
                 {
@@ -187,7 +187,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ,
                 {
@@ -199,7 +199,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ]
             },
