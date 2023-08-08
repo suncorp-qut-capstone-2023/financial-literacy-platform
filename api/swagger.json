@@ -715,9 +715,9 @@
     "/api/learningModules/update-course-quiz-question": {
       "post": {
         "tags": ["Learning Modules"],
-        "description": "Add new quiz question to a quiz",
+        "description": "Update quiz question in a quiz",
         "requestBody": {
-          "description": "An object containing the course ID, quiz ID, question number, question test, and all answer options",
+          "description": "An object containing the course ID, quiz ID, question number, question text, and all answer options",
           "required": true,
           "content": {
             "application/json": {
@@ -738,30 +738,33 @@
                   },
                   "question_text": {
                     "type": "string",
-                    "example": "how are you?"
+                    "example": "What is the capital of France?"
                   },
-                  "question_answer": {
-                    "type": "string",
-                    "example": "B"
+                  "question_answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["B", "C"]
                   },
                   "question_answer_options": {
                     "type": "object",
                     "properties": {
                       "A": {
                         "type": "string",
-                        "example": "lol"
+                        "example": "London"
                       },
                       "B": {
                         "type": "string",
-                        "example": "lol"
+                        "example": "Paris"
                       },
                       "C": {
                         "type": "string",
-                        "example": "lol"
+                        "example": "Berlin"
                       },
                       "D": {
                         "type": "string",
-                        "example": "lol"
+                        "example": "Madrid"
                       }
                     }
                   }
@@ -780,15 +783,13 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
