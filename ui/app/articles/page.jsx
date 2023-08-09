@@ -10,7 +10,7 @@ export default function Articles(/* TODO: pass in some api call */) {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <h1>Reading Materials</h1>
+        <h1 className={styles.title}>Reading Materials</h1>
       </div>
       
       <Grid container spacing={2}>
