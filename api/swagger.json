@@ -464,83 +464,168 @@
     },
 
     "/api/learningModules/add-new-course-quiz-question": {
-      "post": {
-        "tags": ["Learning Modules"],
-        "description": "Add new quiz question to a quiz",
-        "requestBody": {
-          "description": "An object containing the course ID, quiz ID, question number, question test, and all answer options",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
+  "post": {
+    "tags": ["Learning Modules"],
+    "description": "Add new quiz question to a quiz",
+    "requestBody": {
+      "description": "An object containing the course ID, quiz ID, question text, and all answer options",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "course_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "quiz_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "question_text": {
+                "type": "string",
+                "example": "Which of the following are fruits?"
+              },
+              "question_answers": { 
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["A", "C"]
+              },
+              "question_answer_options": {
                 "type": "object",
                 "properties": {
-                  "course_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "quiz_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "question_text": {
+                  "A": {
                     "type": "string",
-                    "example": "how are you?"
+                    "example": "Apple"
                   },
-                  "question_answer": {
+                  "B": {
                     "type": "string",
-                    "example": "B"
+                    "example": "Carrot"
                   },
-                  "question_answer_options": {
-                    "type": "object",
-                    "properties": {
-                      "A": {
-                        "type": "string",
-                        "example": "lol"
-                      },
-                      "B": {
-                        "type": "string",
-                        "example": "lol"
-                      },
-                      "C": {
-                        "type": "string",
-                        "example": "lol"
-                      },
-                      "D": {
-                        "type": "string",
-                        "example": "lol"
-                      }
-                    }
+                  "C": {
+                    "type": "string",
+                    "example": "Banana"
+                  },
+                  "D": {
+                    "type": "string",
+                    "example": "Lettuce"
                   }
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
               }
             }
           }
         }
       }
     },
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {}
+        }
+      },
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+          }
+        }
+      }
+    }
+  }
+},
+"/api/learningModules/add-new-course-quiz-question": {
+  "post": {
+    "tags": ["Learning Modules"],
+    "description": "Add new quiz question to a quiz",
+    "requestBody": {
+      "description": "An object containing the course ID, quiz ID, question text, and all answer options",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "course_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "quiz_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "question_text": {
+                "type": "string",
+                "example": "Which of the following are fruits?"
+              },
+              "question_answers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["A", "C"]
+              },
+              "question_answer_options": {
+                "type": "object",
+                "properties": {
+                  "A": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "B": {
+                    "type": "string",
+                    "example": "Carrot"
+                  },
+                  "C": {
+                    "type": "string",
+                    "example": "Banana"
+                  },
+                  "D": {
+                    "type": "string",
+                    "example": "Lettuce"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {}
+        }
+      },
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+          }
+        }
+      }
+    }
+  }
+}
+,
 
     "/api/learningModules/update-course": {
       "post": {
