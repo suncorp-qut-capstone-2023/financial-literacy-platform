@@ -21,3 +21,25 @@ module.exports = {
         dateStrings: true
     }
 };
+
+// module.exports = {
+//     development: {
+//         client: 'mssql',
+//         connection: {
+//             host: 'your_azure_sql_server_name.database.windows.net',
+//             user: 'your_username',
+//             password: 'your_password',
+//             database: 'your_database_name',
+//             options: {
+//                 encrypt: true
+//             }
+//         },
+//         pool: {
+//             min: 2,
+//             max: 10
+//         },
+//         migrations: {
+//             tableName: 'knex_migrations'
+//         }
+//     }
+// };
