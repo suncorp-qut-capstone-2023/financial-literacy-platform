@@ -70,7 +70,7 @@ router.post("/register-to-course", (req, res) => {
 
   // Write the updated registrations back to the JSON file
   //TODO(): Change directory to the correct one
-  const filePath = path.join(__dirname, 'user-course-information.json');
+  const filePath = path.join(user_registrations, 'user-course-information.json');
   fs.writeFile(filePath, JSON.stringify(user_registrations, null, 2), (err) => {
     if (err) {
       return res.status(500).json({
