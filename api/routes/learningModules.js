@@ -72,8 +72,9 @@ router.post("/add-new-course", (req, res) => {
 
   const course_name = req.body.course_name;
   const category_type = req.body.category_type;
+  const course_last_updated = req.body.course_last_updated;
 
-  if (!course_name || !category_type) {
+  if (!course_name || !category_type || ! course_last_updated) {
     return res.status(400).json({
       "success_addition": false,
       error: true,
@@ -86,6 +87,11 @@ router.post("/add-new-course", (req, res) => {
     "course_id": course_id,
     "course_name": course_name,
     "category_type": category_type,
+    "course_tag": [ ],
+    "course_last_updated": {
+      "@type": "ISODate",
+      "value": course_last_updated
+    },
     "material": [ ],
     "lectures": [ ],
     "quiz": [ ]
@@ -330,6 +336,7 @@ router.post("/update-course", (req, res) => {
   const course_id = req.body.course_id;
   const course_name = req.body.course_name;
   const category_type = req.body.category_type;
+  const course_last_updated = req.body.course_last_updated;
 
   const index = FindCourseIndex(course_id);
 
@@ -349,6 +356,11 @@ router.post("/update-course", (req, res) => {
 
     if (category_type) {
       course_information.available_courses[index].category_type = category_type;
+      success = true;
+    } 
+
+    if (course_last_updated) {
+      course_information.available_courses[index].course_last_updated.value = course_last_updated;
       success = true;
     } 
 
@@ -670,6 +682,32 @@ router.get("/delete", (req, res) => {
       message: "course ID with the ID " + course_ID + " has been deleted"
     })
   };
+});
+
+router.get("/sort-newest-module", (req, res) => {
+  const course_ID = req.query.course_id;
+
+  let dates = [];
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    dates.push(course_information.available_courses[i].course_last_updated.value);
+  }
+
+  const indexedDates = dates.map((date, index) => ({ date, index }));
+
+  indexedDates.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const sortedIndices = indexedDates.map(item => item.index);
+
+  let sortedNewestModule = []
+  for (let i = 0; i < sortedIndices.length; i++) {
+    sortedNewestModule.push(course_information.available_courses[sortedIndices[i]]);
+  }
+  
+  return res.status(200).json({
+    "success_deletion": true,
+    message: "course ID with the ID " + course_ID + " has been deleted",
+    "sorted": sortedNewestModule
+  })
 });
 
 //TODO(): for presentation, must log in to see quiz answers.
