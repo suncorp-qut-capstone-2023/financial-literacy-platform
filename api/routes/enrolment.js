@@ -116,7 +116,7 @@ router.post("/mark-lectures-attended", (req, res) => {
   }
 
   const registration = user_registrations.registrations.find(reg => reg.user_id === userId && reg.course_id === courseId);
-  
+
   if (!registration) {
     return res.status(404).json({
       error: true,
@@ -155,7 +155,7 @@ router.post("/mark-materials-viewed", (req, res) => {
   }
 
   const registration = user_registrations.registrations.find(reg => reg.user_id === userId && reg.course_id === courseId);
-  
+
   if (!registration) {
     return res.status(404).json({
       error: true,
@@ -193,7 +193,7 @@ router.post("/mark-quizzes-attempted", (req, res) => {
   }
 
   const registration = user_registrations.registrations.find(reg => reg.user_id === userId && reg.course_id === courseId);
-  
+
   if (!registration) {
     return res.status(404).json({
       error: true,
