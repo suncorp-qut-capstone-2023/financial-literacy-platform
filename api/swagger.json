@@ -476,6 +476,99 @@
         }
       }
     },
+    "/api/enrolment/mark-lectures-attended": {
+      "post": {
+          "tags": [
+              "User Interactions"
+          ],
+          "summary": "Mark a lecture as attended for a user",
+          "requestBody": {
+              "required": true,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "user_id": {
+                                  "type": "integer",
+                                  "description": "User's unique identifier",
+                                  "example": 1
+                              },
+                              "course_id": {
+                                  "type": "integer",
+                                  "description": "Course's unique identifier",
+                                  "example": 101
+                              },
+                              "lecture_id": {
+                                  "type": "integer",
+                                  "description": "Lecture's unique identifier",
+                                  "example": 303
+                              }
+                          }
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "200": {
+                  "description": "Lecture marked as attended successfully or course completed",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "message": {
+                                      "type": "string",
+                                      "example": "Lecture with ID 303 has been marked as attended for user ID 1 in course ID 101"
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "400": {
+                  "description": "Bad request, such as lecture already attended by the user",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "error": {
+                                      "type": "boolean",
+                                      "example": true
+                                  },
+                                  "message": {
+                                      "type": "string",
+                                      "example": "Lecture already attended by the user for this course."
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "404": {
+                  "description": "User or course not found",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "error": {
+                                      "type": "boolean",
+                                      "example": true
+                                  },
+                                  "message": {
+                                      "type": "string",
+                                      "example": "User is not registered for this course."
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  },  
     "/api/enrolment/mark-materials-viewed": {
       "post": {
         "tags": [
@@ -570,7 +663,99 @@
       }
     },
 
-
+    "/api/enrolment/mark-quizzes-attempted": {
+      "post": {
+          "tags": [
+              "User Interactions"
+          ],
+          "summary": "Mark a quiz as attempted for a user",
+          "requestBody": {
+              "required": true,
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "user_id": {
+                                  "type": "integer",
+                                  "description": "User's unique identifier",
+                                  "example": 1
+                              },
+                              "course_id": {
+                                  "type": "integer",
+                                  "description": "Course's unique identifier",
+                                  "example": 101
+                              },
+                              "quiz_id": {
+                                  "type": "integer",
+                                  "description": "Quiz's unique identifier",
+                                  "example": 404
+                              }
+                          }
+                      }
+                  }
+              }
+          },
+          "responses": {
+              "200": {
+                  "description": "Quiz marked as attempted successfully or course completed",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "message": {
+                                      "type": "string",
+                                      "example": "Quiz with ID 404 has been marked as attempted for user ID 1 in course ID 101"
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "400": {
+                  "description": "Bad request, such as quiz already attempted by the user",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "error": {
+                                      "type": "boolean",
+                                      "example": true
+                                  },
+                                  "message": {
+                                      "type": "string",
+                                      "example": "Quiz already attempted by the user for this course."
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "404": {
+                  "description": "User or course not found",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "error": {
+                                      "type": "boolean",
+                                      "example": true
+                                  },
+                                  "message": {
+                                      "type": "string",
+                                      "example": "User is not registered for this course."
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  },
     "/api/learningModules/add-new-course-quiz": {
       "post": {
         "tags": ["Learning Modules"],

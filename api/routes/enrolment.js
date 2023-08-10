@@ -8,26 +8,20 @@ const user_registrations = require("../user-course-information.json");
 const fs = require("fs");
 const path = require("path");
 
-
-function FindCourseIndex(course_ID) {
-  for (let i = 0; i < course_information.available_courses.length; i++) {
-    if (course_information.available_courses[i].course_id == course_ID) {
-      return i;
+function updateUserCourseInformationFile(res, successMessage) {
+  const filePath = path.join(__dirname, '..', 'user-course-information.json');
+  fs.writeFile(filePath, JSON.stringify(user_registrations, null, 2), (err) => {
+    if (err) {
+      return res.status(500).json({
+        error: true,
+        message: "Internal Server Error. Failed to save updates."
+      });
     }
-  }
 
-  return -1;
-}
-
-
-function FindQuizIndex(course_index, quiz_ID) {
-  for (let i = 0; i < course_information.available_courses[course_index].quiz.length; i++) {
-    if (course_information.available_courses[course_index].quiz[i].quiz_id == quiz_ID) {
-      return i;
-    }
-  }
-
-  return -1;
+    res.status(200).json({
+      message: successMessage
+    });
+  });
 }
 
 
@@ -70,19 +64,7 @@ router.post("/register-to-course", (req, res) => {
 
   // Write the updated registrations back to the JSON file
   //TODO(): Change directory to the correct one
-  const filePath = path.join(user_registrations, 'user-course-information.json');
-  fs.writeFile(filePath, JSON.stringify(user_registrations, null, 2), (err) => {
-    if (err) {
-      return res.status(500).json({
-        error: true,
-        message: "Internal Server Error. Failed to save registration."
-      });
-    }
-    
-    res.status(200).json({
-      message: `User with ID ${userId} has been registered to course ID ${courseId}`
-    });
-  });
+  updateUserCourseInformationFile(res, `User with ID ${userId} has been registered to course ID ${courseId}`);
 });
 
 function checkCourseCompletion(userId, courseId) {
@@ -153,13 +135,9 @@ router.post("/mark-lectures-attended", (req, res) => {
 
   // Check course completion after marking a lecture as attended
   if (checkCourseCompletion(userId, courseId)) {
-    return res.status(200).json({
-      message: `Lecture with ID ${lectureId} has been marked as attended for user ID ${userId} in course ID ${courseId}. The course is now completed.`
-    });
+    updateUserCourseInformationFile(res, `Lecture with ID ${lectureId} has been marked as attended for user ID ${userId} in course ID ${courseId}. The course is now completed.`);
   } else {
-    return res.status(200).json({
-      message: `Lecture with ID ${lectureId} has been marked as attended for user ID ${userId} in course ID ${courseId}`
-    });
+    updateUserCourseInformationFile(res, `Lecture with ID ${lectureId} has been marked as attended for user ID ${userId} in course ID ${courseId}`);
   }
 });
 
@@ -196,13 +174,9 @@ router.post("/mark-materials-viewed", (req, res) => {
 
   // Check course completion after marking a material as viewed
   if (checkCourseCompletion(userId, courseId)) {
-    return res.status(200).json({
-      message: `Material with ID ${materialId} has been marked as viewed for user ID ${userId} in course ID ${courseId}. The course is now completed.`
-    });
+    updateUserCourseInformationFile(res, `Material with ID ${materialId} has been marked as viewed for user ID ${userId} in course ID ${courseId}. The course is now completed.`);
   } else {
-    return res.status(200).json({
-      message: `Material with ID ${materialId} has been marked as viewed for user ID ${userId} in course ID ${courseId}`
-    });
+    updateUserCourseInformationFile(res, `Material with ID ${materialId} has been marked as viewed for user ID ${userId} in course ID ${courseId}`);
   }
 });
 
@@ -238,17 +212,10 @@ router.post("/mark-quizzes-attempted", (req, res) => {
 
   // Check course completion after marking a quiz as attempted
   if (checkCourseCompletion(userId, courseId)) {
-    return res.status(200).json({
-      message: `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}. The course is now completed.`
-    });
+    updateUserCourseInformationFile(res, `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}. The course is now completed.`);
   } else {
-    return res.status(200).json({
-      message: `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}`
-    });
+    updateUserCourseInformationFile(res, `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}`);
   }
 });
 
-
-
 module.exports = router;
-
