@@ -47,6 +47,7 @@ font-size: 0.75rem;
   width: 100%;
   font-family: var(--font-mono);
   margin-top: 4rem;
+  height: 100%;
 }
 
 .articleContent p {
@@ -63,6 +64,10 @@ font-size: 0.75rem;
 
 .buttons {
   font-weight: bold;
+}
+
+.contentPrevNext{
+  margin-top: 50px;
 }
 
 .footer {
