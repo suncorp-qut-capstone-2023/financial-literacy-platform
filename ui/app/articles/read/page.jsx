@@ -6,7 +6,6 @@ import Link from "@mui/material/Link";
 
 export default function Read(/* TODO: pass in some api call */) {
   return (
-    
     <main className={styles.main}>
       <Grid container spacing={1} className={styles.articleTitle}>
         <Grid xs={12}>
@@ -55,23 +54,16 @@ export default function Read(/* TODO: pass in some api call */) {
         </p>
         <Grid container>
           <Grid xs={6}>
-            
-          <Link
-                    href="/articles/read" underline="hover"
-                  >
-                    <ArrowBackIcon />
-            Previous Article
-                  </Link>
-            
-            
+            <Link href="/articles/read" underline="hover">
+              <ArrowBackIcon />
+              Previous Article
+            </Link>
           </Grid>
-          <Grid xs={6} style={{ textAlign: 'right' }}>
-          <Link
-                    href="/articles/read" underline="hover"
-                  >
-            Next Article
-                    <ArrowForwardIcon />
-                  </Link>
+          <Grid xs={6} sx={{ textAlign: "right" }}>
+            <Link href="/articles/read" underline="hover">
+              Next Article
+              <ArrowForwardIcon />
+            </Link>
           </Grid>
         </Grid>
       </div>
