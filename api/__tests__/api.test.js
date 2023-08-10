@@ -135,5 +135,3 @@ describe('GET /api/about', () => {
 //         expect(response.body).toHaveProperty('error', true);
 //         expect(response.body).toHaveProperty('message', 'Module not found');
 //     });
-    
-});
