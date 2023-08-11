@@ -82,6 +82,13 @@ router.post("/add-new-course", (req, res) => {
     });
   }
 
+  /*
+  =================================NOTE========================================
+
+  check if the ISOdate format is already correct or not!
+  check all the other types too (string and int) if it's inputted correctly!
+  */
+
   //course_information will be modified to accessing S3 or Azure blob storage soon
   const new_course = {
     "course_id": course_id,
@@ -685,7 +692,6 @@ router.get("/delete", (req, res) => {
 });
 
 router.get("/sort-newest-module", (req, res) => {
-  const course_ID = req.query.course_id;
 
   let dates = [];
   for (let i = 0; i < course_information.available_courses.length; i++) {
@@ -704,8 +710,6 @@ router.get("/sort-newest-module", (req, res) => {
   }
   
   return res.status(200).json({
-    "success_deletion": true,
-    message: "course ID with the ID " + course_ID + " has been deleted",
     "sorted": sortedNewestModule
   })
 });

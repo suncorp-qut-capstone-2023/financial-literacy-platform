@@ -281,6 +281,10 @@
                   "category_type": {
                     "type": "string",
                     "example": "basic"
+                  },
+                  "course_last_updated": {
+                    "type": "string",
+                    "example": "2022-10-31T09:00:00.504Z"
                   }
                 }
               }
@@ -565,6 +569,10 @@
                   "category_type": {
                     "type": "string",
                     "example": "basic"
+                  },
+                  "course_last_updated": {
+                    "type": "string",
+                    "example": "2022-10-31T09:00:00.504Z"
                   }
                 }
               }
@@ -770,6 +778,33 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/sort-newest-module": {
+      "get": {
+        "summary": "Sort module from the latest to the oldest",
         "responses": {
           "200": {
             "description": "OK",
