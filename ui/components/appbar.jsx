@@ -1,5 +1,6 @@
 "use client";
 
+// Mui Imports
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,13 +15,20 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.svg"; // Suncorp logo
+
 import Image from 'next/image'
+import Link from 'next/link';
 
-import styles from './appbar.module.css'
+import styles from './appbar.module.css' // Custom styling for 
 
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [
+  { label: 'Articles', path: '/articles' },
+  { label: 'Videos', path: './videos' },
+  { label: 'Login', path: '/' },
+];
+
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -45,13 +53,13 @@ function ResponsiveAppBar() {
 
   return (
     // add suncorp green color here
-    <AppBar position="static" style={{background: "#2E3B55"}}>
+    <AppBar position="static" style={{background: "#009877"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <div className={styles.desktop_image}>
-            <Image src={logo} height={80} width={100}/>
-          </div>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Link href='/' className={styles.desktop_image}>
+              <Image src={logo} height={50} width={100}/>
+          </Link>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -80,29 +88,32 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+            {pages.map((page) => (
+                <Link href={page.path} key={page.label} passHref>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.label}</Typography>
+                  </MenuItem>
+                </Link>
+            ))}
             </Menu>
-            <div className={styles.mobile_image}>
-              <Image src={logo} height={80} width={100}/>
-            </div>
+
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
+          {pages.map((page) => (
+            <Link href={page.path} key={page.label} passHref>
+              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                {page.label}
               </Button>
+            </Link>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
+          {/* centered mobile logo */}
+          <Box sx={{ mx: 'auto', display: { xs: 'flex', md: 'none' } }} className={styles.mobile_image}>
+          <Link href='/'>
+              <Image src={logo} height={50} width={100}/>
+          </Link>
+          </Box>
+          <Box sx={{ display: 'flex', ml: { xs: 2, md: 0 } }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
