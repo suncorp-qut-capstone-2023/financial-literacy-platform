@@ -28,6 +28,7 @@ function updateUserCourseInformationFile(res, successMessage) {
 router.post("/register-to-course", (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
+  // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
   const currentDate = new Date().toISOString();
 
   if (!userId || !courseId) {
@@ -99,6 +100,7 @@ function checkCourseCompletion(userId, courseId) {
 
   // If all checks pass, mark the course as completed
   registration.completed = true;
+  // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
   registration.completion_date = new Date().toISOString();
   return true; // Course is marked as completed
 }
