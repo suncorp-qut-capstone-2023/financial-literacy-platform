@@ -18,7 +18,7 @@ export default function Read(/* TODO: pass in some api call */) {
         </Grid>
       </Grid>
 
-      <div className={styles.articleContent}>
+      <div className={styles.contentWrapper}>
         <h2>Subheading</h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam

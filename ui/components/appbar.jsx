@@ -20,12 +20,12 @@ import logo from "../assets/logo.svg"; // Suncorp logo
 import Image from 'next/image'
 import Link from 'next/link';
 
-import styles from './appbar.module.css' // Custom styling for 
+import styles from '@/styles/appbar.module.css' // Custom styling for 
 
 
 const pages = [
   { label: 'Articles', path: '/articles' },
-  { label: 'Videos', path: './videos' },
+  { label: 'Videos', path: '/videos' },
   { label: 'Login', path: '/' },
 ];
 

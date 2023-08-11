@@ -9,34 +9,34 @@ import VideoPlayer from "@/components/videoplayer";
 export default function Watch(/* TODO: pass in some api call */) {
   return (
     <main className={styles.main}>
-      <Grid container spacing={1} className={styles.articleTitle}>
-        <Grid xs={12}>
-          <h1>The Political and Economical State of the World</h1>
+        <Grid container spacing={1} className={styles.articleTitle}>
+          <Grid xs={12}>
+            <h1>The Political and Economical State of the World</h1>
+          </Grid>
+          <Grid xs={12}>
+            <p>Credits: Jaden Smith</p>
+            <p>Published: August 9, 2023</p>
+            <p>Duration: 3 min.</p>
+          </Grid>
         </Grid>
-        <Grid xs={12}>
-          <p>Credits: Jaden Smith</p>
-          <p>Published: August 9, 2023</p>
-          <p>Duration: 3 min.</p>
-        </Grid>
-      </Grid>
 
-      <div className={styles.articleContent}>
-        <VideoPlayer />
-        <Grid container sx={{ marginTop: "20px" }}>
-          <Grid xs={6}>
-            <Link href="/videos/watch" underline="hover">
-              <ArrowBackIcon />
-              Previous Video
-            </Link>
+        <div className={styles.contentWrapper}>
+          <VideoPlayer />
+          <Grid container sx={{ marginTop: "20px" }}>
+            <Grid xs={6}>
+              <Link href="/videos/watch" underline="hover">
+                <ArrowBackIcon />
+                Previous Video
+              </Link>
+            </Grid>
+            <Grid xs={6} sx={{ textAlign: "right" }}>
+              <Link href="/videos/watch" underline="hover">
+                Next Video
+                <ArrowForwardIcon />
+              </Link>
+            </Grid>
           </Grid>
-          <Grid xs={6} sx={{ textAlign: "right" }}>
-            <Link href="/videos/watch" underline="hover">
-              Next Video
-              <ArrowForwardIcon />
-            </Link>
-          </Grid>
-        </Grid>
-      </div>
+        </div>
     </main>
   );
 }

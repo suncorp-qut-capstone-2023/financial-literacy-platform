@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Typography from '@mui/material/Typography';
 
-import styles from "./header.module.css";
+import styles from "@/styles/header.module.css";
 
 const { heroContent, heroWrapper, imageWrapper } = styles;
 
