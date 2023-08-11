@@ -1,0 +1,25 @@
+ /* header.module.css */
+
+/* step 1. */
+.heroWrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100vw;
+    height: 50vh;
+}
+
+/* step 3. */
+.imageWrapper {
+  z-index: -1;
+  flex: 1;
+}
+
+/* step 4. */
+.heroContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #009877;
+}
