@@ -41,7 +41,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "A"
+                        "answers":["A", "C"]
                     },
                     {
                         "question_number": 2,
@@ -52,7 +52,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "B"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -64,7 +64,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "C"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -76,7 +76,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "A"
+                        "answers":["A", "C"]
                     }
                     ,
                     {
@@ -88,7 +88,7 @@
                             "C": "",
                             "D": ""
                         },
-                        "answer": "D"
+                        "answers":["A", "C"]
                     }   
                 ]
             },
@@ -141,7 +141,7 @@
                         "C": "",
                         "D": ""
                     } ,
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }, 
                 {
                     "question_number": 2,
@@ -152,7 +152,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 } , 
                 {
                     "question_number": 2,
@@ -163,7 +163,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 , 
                 {
@@ -175,7 +175,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ,
                 {
@@ -187,7 +187,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ,
                 {
@@ -199,7 +199,7 @@
                         "C": "",
                         "D": ""
                     },
-                    "answer": "A"
+                    "answers":["A", "C"]
                 }
                 ]
             },
@@ -212,51 +212,5 @@
         ] 
         }
 
-    ],
-    "user_register_to_courses" : [
-        {
-            "user_id":1,
-            "course_id": 1,
-            "quiz_submission": [
-                {
-                    "quiz_submission_no": 1,
-                    "quiz_id": 1,
-                    "grade": "A",
-                    "grade_details": "it was perfect. no more comment.",
-                    "status": "pass",
-                    "rating": 10,
-                    "feedback": "you have passed all quizes question flawlessly. You are as good as Steve Jobs."
-                }
-            ]
-        },
-        {
-            "user_id":2,
-            "course_id": 1,
-            "quiz_submission": [
-                {
-                    "quiz_submission_no": 2,
-                    "quiz_id": 1,
-                    "grade": "F",
-                    "grade_details": "Please study harder. You only have one correct answer per 10 questions",
-                    "status": "not pass",
-                    "rating": 2,
-                    "feedback": "Sorry. You need to study more."
-                },
-                {
-                    "quiz_submission_no": 3,
-                    "quiz_id": 1,
-                    "grade": "B",
-                    "grade_details": "Great progess!",
-                    "status": "pass",
-                    "rating": 8,
-                    "feedback": "You study hard for the second quiz! good improvement."
-                }
-            ]
-        },
-        {
-            "user_id":1,
-            "course_id": 2,
-            "quiz_submission": [ ]
-        }
     ]
 }
