@@ -25,7 +25,7 @@ function updateUserCourseInformationFile(res, successMessage) {
 }
 
 
-router.post("/register-to-course", (req, res) => {
+router.post("/course/register", (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
   // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
@@ -105,7 +105,7 @@ function checkCourseCompletion(userId, courseId) {
   return true; // Course is marked as completed
 }
 
-router.post("/mark-lectures-attended", (req, res) => {
+router.post("/lectures/attended", (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
   const lectureId = req.body.lecture_id;
@@ -144,7 +144,7 @@ router.post("/mark-lectures-attended", (req, res) => {
 });
 
 
-router.post("/mark-materials-viewed", (req, res) => {
+router.post("/materials/viewed", (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
   const materialId = req.body.material_id;
@@ -182,7 +182,7 @@ router.post("/mark-materials-viewed", (req, res) => {
   }
 });
 
-router.post("/mark-quizzes-attempted", (req, res) => {
+router.post("/quizzes/attempted", (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
   const quizId = req.body.quiz_id;

@@ -408,7 +408,7 @@
         }
       }
     },
-    "/api/enrolment/register-to-course": {
+    "/api/enrolment/course/register": {
       "post": {
         "tags": [
           "User Interactions"
@@ -476,7 +476,7 @@
         }
       }
     },
-    "/api/enrolment/mark-lectures-attended": {
+    "/api/enrolment/lectures/attended": {
       "post": {
           "tags": [
               "User Interactions"
@@ -569,7 +569,7 @@
           }
       }
   },  
-    "/api/enrolment/mark-materials-viewed": {
+    "/api/enrolment/materials/viewed": {
       "post": {
         "tags": [
           "User Interactions"
@@ -663,7 +663,7 @@
       }
     },
 
-    "/api/enrolment/mark-quizzes-attempted": {
+    "/api/enrolment/quizzes/attempted": {
       "post": {
           "tags": [
               "User Interactions"
