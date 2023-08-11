@@ -9,7 +9,7 @@
                     "material_id": 1,
                     "material_type": "video",
                     "material_media": "http://127.0.0.1:443/api/learningModules/1/video"
-                }, 
+                },
                 {
                     "material_id": 2,
                     "material_type": "image",
@@ -33,85 +33,87 @@
                     "max_tries": 3,
                     "questions": [
                         {
-                        "question_number": 1,
-                        "question_text": "why do you use C#?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
+                            "question_number": 1,
+                            "question_text": "why do you use C#?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 2,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 3,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 4,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 5,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
                         }
-                    },
-                    {
-                        "question_number": 2,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
-                    } ,
-                    {
-                        "question_number": 2,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
-                    }
-                    ,
-                    {
-                        "question_number": 3,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
-                    }
-                    ,
-                    {
-                        "question_number": 4,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
-                    }
-                    ,
-                    {
-                        "question_number": 5,
-                        "question_text": "Which on shows the implementation of inheritance?",
-                        "question_answer_options": {
-                            "A": "",
-                            "B": "",
-                            "C": "",
-                            "D": ""
-                        }
-                    }
-                    ],
-                    "quiz_answers": [
-                        {"question_number": 1, "answer": "A"},
-                        {"question_number": 2, "answer": "B"},
-                        {"question_number": 3, "answer": "D"},
-                        {"question_number": 4, "answer": "C"},
-                        {"question_number": 5, "answer": "C"}
                     ]
                 },
                 {
-                    "quiz_id": 2
+                    "quiz_id": 2,
+                    "description": "When you believe in yourself, everything is possible - JCMG",
+                    "max_tries": 3,
+                    "questions": []
                 }
-
             ]
         },
         {
-            "course_id": 2,
+            "course_id": 10,
             "course_name": "R course",
             "category_type": "basic/intermediate/advance",
             "material": [
@@ -119,7 +121,7 @@
                     "material_id": 3,
                     "material_type": "video",
                     "material_media": "http://127.0.0.1:443/api/learningModules/2/video"
-                }, 
+                },
                 {
                     "material_id": 4,
                     "material_type": "video",
@@ -136,130 +138,105 @@
                     "lectures_type": "unknown"
                 }
             ],
-            "quiz": {
-                "quiz_id": 2,
-                "description": "lorem ipsum",
-                "max_tries": 3,
-                "questions": [
-                    {
-                    "question_number": 1,
-                    "question_text": "why do you use C#?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    } 
-                }, 
+            "quiz": [
                 {
-                    "question_number": 2,
-                    "question_text": "Which on shows the implementation of inheritance?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    }
-                } , 
-                {
-                    "question_number": 2,
-                    "question_text": "Which on shows the implementation of inheritance?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    }
-                }
-                , 
-                {
-                    "question_number": 3,
-                    "question_text": "Which on shows the implementation of inheritance?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    }
-                }
-                ,
-                {
-                    "question_number": 4,
-                    "question_text": "Which on shows the implementation of inheritance?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    }
-                }
-                ,
-                {
-                    "question_number": 5,
-                    "question_text": "Which on shows the implementation of inheritance?",
-                    "question_answer_options": {
-                        "A": "",
-                        "B": "",
-                        "C": "",
-                        "D": ""
-                    }
-                }
-                ],
-                "quiz_answers": [
-                    {"question_number": 1, "answer": "A"},
-                    {"question_number": 2, "answer": "B"},
-                    {"question_number": 3, "answer": "D"},
-                    {"question_number": 4, "answer": "C"},
-                    {"question_number": 5, "answer": "C"}
-                ]
-            } 
-        }
-
-    ],
-    "user_register_to_courses" : [
-        {
-            "user_id":1,
-            "course_id": 1,
-            "quiz_submission": [
-                {
-                    "quiz_submission_no": 1,
-                    "quiz_id": 1,
-                    "grade": "A",
-                    "grade_details": "it was perfect. no more comment.",
-                    "status": "pass",
-                    "rating": 10,
-                    "feedback": "you have passed all quizes question flawlessly. You are as good as Steve Jobs."
-                }
-            ]
-        },
-        {
-            "user_id":2,
-            "course_id": 1,
-            "quiz_submission": [
-                {
-                    "quiz_submission_no": 2,
-                    "quiz_id": 1,
-                    "grade": "F",
-                    "grade_details": "Please study harder. You only have one correct answer per 10 questions",
-                    "status": "not pass",
-                    "rating": 2,
-                    "feedback": "Sorry. You need to study more."
+                    "quiz_id": 2,
+                    "description": "lorem ipsum",
+                    "max_tries": 3,
+                    "questions": [
+                        {
+                            "question_number": 1,
+                            "question_text": "why do you use C#?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 2,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 2,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 3,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 4,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        },
+                        {
+                            "question_number": 5,
+                            "question_text": "Which on shows the implementation of inheritance?",
+                            "question_answer_options": {
+                                "A": "",
+                                "B": "",
+                                "C": "",
+                                "D": ""
+                            },
+                            "answers": [
+                                "A",
+                                "C"
+                            ]
+                        }
+                    ]
                 },
                 {
-                    "quiz_submission_no": 3,
-                    "quiz_id": 1,
-                    "grade": "B",
-                    "grade_details": "Great progess!",
-                    "status": "pass",
-                    "rating": 8,
-                    "feedback": "You study hard for the second quiz! good improvement."
+                    "quiz_id": 3,
+                    "description": "lorem ipsum hachiu",
+                    "max_tries": 5,
+                    "questions": []
                 }
             ]
-        },
-        {
-            "user_id":1,
-            "course_id": 2,
-            "quiz_submission": [ ]
         }
     ]
 }
