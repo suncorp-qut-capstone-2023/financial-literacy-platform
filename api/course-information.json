@@ -4,6 +4,11 @@
             "course_id": 1,
             "course_name": "C# course",
             "category_type": "basic/intermediate/advance",
+            "course_tag": ["C#", "c sharp"],
+            "course_last_updated": {
+                "@type": "ISODate",
+                "value": "2022-10-31T09:00:00.504Z"
+            },
             "material": [
                 {
                     "material_id": 1,
@@ -104,6 +109,11 @@
             "course_id": 10,
             "course_name": "R course",
             "category_type": "basic/intermediate/advance",
+            "course_tag": ["C#", "c sharp"],
+            "course_last_updated": {
+                "@type": "ISODate",
+                "value": "2022-10-31T09:00:00.594Z"
+            },
             "material": [
                 {
                     "material_id": 3,
