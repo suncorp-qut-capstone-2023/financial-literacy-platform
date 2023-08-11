@@ -2,7 +2,7 @@
 
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import styles from "@/styles/page.module.css";
-import Video from "@/components/video";
+import VideoOverview from "@/components/videoOverview";
 
 
 export default function Articles(/* TODO: pass in some api call */) {
@@ -14,10 +14,10 @@ export default function Articles(/* TODO: pass in some api call */) {
       </div>
       
       <Grid container spacing={2}>
-        <Video />
-        <Video />
-        <Video />
-        <Video />
+        <VideoOverview />
+        <VideoOverview />
+        <VideoOverview />
+        <VideoOverview />
       </Grid>
     </main>
   );

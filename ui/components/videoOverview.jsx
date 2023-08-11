@@ -29,7 +29,7 @@ const theme = createTheme({
 
 const src = "https://placehold.co/1024x1024";
 
-export default function Article(/* TODO: pass in some api call */) {
+export default function VideoOverview(/* TODO: pass in some api call */) {
   return (
     <ThemeProvider theme={theme}>
       <Item>
@@ -51,17 +51,14 @@ export default function Article(/* TODO: pass in some api call */) {
             <Grid xs={9}>
               <Grid container spacing={1}>
                 <Grid xs={12} sx={{ fontWeight: "bold" }}>
-                  Article Title Placeholder
+                  Video Title Placeholder
                 </Grid>
                 <Grid xs={12}>
-                  Article Description Placeholder. Lorem ipsum dolor sit amet
-                  consectetur adipisicing elit. Obcaecati, tenetur. Aliquid
-                  quisquam, qui ex ut nisi inventore vel itaque facilis quo
-                  soluta corporis temporibus molestias eaque dolor ipsam,
-                  accusamus rerum.
+                  Video Description Placeholder. Lorem ipsum dolor sit amet
+                  consectetur adipisicing elit. Obcaecati, tenetur.
                 </Grid>
                 <Grid xs={6} sx={{ fontWeight: "bold" }}>
-                  Estimated Reading Time: 3min.
+                  Duration: 3min.
                 </Grid>
                 <Grid xs={6}>
                   <Button
@@ -69,9 +66,9 @@ export default function Article(/* TODO: pass in some api call */) {
                     color="teal"
                     className={styles.buttons}
                     component={Link}
-                    href="/articles/read"
+                    href="/videos/watch"
                   >
-                    Continue Reading
+                    Watch Now
                   </Button>
                 </Grid>
               </Grid>
