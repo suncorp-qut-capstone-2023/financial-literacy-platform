@@ -20,8 +20,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const theme = createTheme({
   palette: {
-    teal: {
-      main: "#24AFB5",
+    suncorpgreen: {
+      main: "#009877",
       contrastText: "#000000",
     },
   },
@@ -63,7 +63,7 @@ export default function VideoOverview(/* TODO: pass in some api call */) {
                 <Grid xs={6}>
                   <Button
                     variant="contained"
-                    color="teal"
+                    color="suncorpgreen"
                     className={styles.buttons}
                     component={Link}
                     href="/videos/watch"
