@@ -22,6 +22,7 @@ const app = express();
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
 const learningModulesRouter = require('./routes/learningModules.js');
+const enrolmentRouter = require('./routes/enrolment.js'); 
 
 // security implementation
 app.use(helmet());
@@ -59,6 +60,7 @@ app.get('/api/docs', swaggerUI.setup(swaggerDocument));
 app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
 app.use('/api/learningModules', learningModulesRouter);
+app.use('/api/enrolment', enrolmentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
