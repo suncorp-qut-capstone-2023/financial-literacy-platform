@@ -13,10 +13,10 @@ export default function Videos(/* TODO: pass in some api call */) {
         </div>
 
         <Grid container spacing={2}>
-          <Video />
-          <Video />
-          <Video />
-          <Video />
+          <VideoOverview />
+          <VideoOverview />
+          <VideoOverview />
+          <VideoOverview />
         </Grid>
       </div>
     </main>

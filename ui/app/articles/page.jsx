@@ -13,10 +13,10 @@ export default function Articles(/* TODO: pass in some api call */) {
         </div>
 
         <Grid container spacing={2}>
-          <Article />
-          <Article />
-          <Article />
-          <Article />
+          <ArticleOverview />
+          <ArticleOverview />
+          <ArticleOverview />
+          <ArticleOverview />
         </Grid>
       </div>
     </main>
