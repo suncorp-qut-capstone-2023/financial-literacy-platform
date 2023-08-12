@@ -11,11 +11,6 @@ const helmet = require('helmet');
 const cors = require("cors");
 require("dotenv").config();
 
-// database setup
-
-const options = require('./knexfile');
-const knex = require("knex")(options);
-
 // swagger setup
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
@@ -57,14 +52,6 @@ logger.token('res', (req, res) => {
     return JSON.stringify(headers)
 });
 
-// check if knex is working
-app.get('/api/knex', function(req,res,next){
-    req.db.raw("SELECT VERSION()")
-        .then((version) => console.log(version[0][0]))
-        .catch((err) => {console.log(err); throw err;})
-    res.send("Version logged successfully")
-});
-
 // swagger implementation
 app.use('/api/docs', swaggerUI.serve);
 //@ts-ignore
@@ -79,7 +66,6 @@ app.use('/api/modules', modulesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    //console.log(req);
     next(createError(404));
 });
 
