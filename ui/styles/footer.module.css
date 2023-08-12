@@ -1,0 +1,19 @@
+.footer {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.footer p {
+  padding: 0.5rem;
+}
+
+.footer img {
+  margin-left: 1rem;
+}
+
+.f_socials {
+  margin-left: 0.5rem;
+}

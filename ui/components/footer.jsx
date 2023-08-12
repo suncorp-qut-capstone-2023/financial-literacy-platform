@@ -6,7 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 
 import Image from "next/image";
 import logo from "../assets/logo.svg";
-import styles from "../styles/page.module.css";
+import styles from "../styles/footer.module.css";
 
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -30,7 +30,7 @@ export default function Footer() {
           <Image src={logo} alt="Suncorp Logo" />
         </Grid>
         <Grid xs={12} md={3}>
-          <Item elevation="0">
+          <Item elevation={0}>
             <FacebookIcon className={styles.f_socials} />
             <TwitterIcon className={styles.f_socials} />
             <LinkedInIcon className={styles.f_socials} />
@@ -38,13 +38,13 @@ export default function Footer() {
           </Item>
         </Grid>
         <Grid xs={12} md={3}>
-          <Item elevation="0">
+          <Item elevation={0}>
             <p>Contact Us</p>
             <p>Report an Issue</p>
           </Item>
         </Grid>
         <Grid xs={12} md={3}>
-          <Item elevation="0">
+          <Item elevation={0}>
             <p>
               Sustainable business • Disclaimer • Accessibility • Privacy policy
               • Sitemap
