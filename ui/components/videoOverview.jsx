@@ -29,7 +29,7 @@ const theme = createTheme({
 
 const src = "https://placehold.co/1024x1024";
 
-export default function Video(/* TODO: pass in some api call */) {
+export default function VideoOverview(/* TODO: pass in some api call */) {
   return (
     <ThemeProvider theme={theme}>
       <Item>

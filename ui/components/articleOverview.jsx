@@ -29,7 +29,7 @@ const theme = createTheme({
 
 const src = "https://placehold.co/1024x1024";
 
-export default function Article(/* TODO: pass in some api call */) {
+export default function ArticleOverview(/* TODO: pass in some api call */) {
   return (
     <ThemeProvider theme={theme}>
       <Item>
