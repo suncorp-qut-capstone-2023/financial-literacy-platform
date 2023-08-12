@@ -16,7 +16,7 @@ const {
     deleteCourse,
     deleteModule,
     deleteQuiz
-} = require('../controller/modulesController.js');
+} = require('../controller/coursesController.js');
 
 router.get('/', auth, getAllCourses);
 
@@ -24,6 +24,7 @@ router.get('/:courseID', auth, getCourse);
 router.get('/:courseID/:moduleID', auth, getModule);
 router.get('/:courseID/:moduleID/:quizID', auth, getQuiz);
 
+// TODO: Uncomment these routes when you have implemented the corresponding functions in the controller
 // router.post('/:courseID', auth, createCourse);
 // router.post('/:courseID/:moduleID', auth, createModule);
 // router.post('/:courseID/:moduleID/:quizID', auth, createQuiz);

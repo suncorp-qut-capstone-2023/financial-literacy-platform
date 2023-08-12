@@ -27,13 +27,8 @@ const app = express();
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
 const learningModulesRouter = require('./routes/learningModules.js');
-const enrolmentRouter = require('./routes/enrolment.js'); 
-
-// database connection
-app.use((req,res,next) => {
-    req.db = knex;
-    next();
-})
+const enrolmentRouter = require('./routes/enrolment.js');
+const modulesRouter = require('./routes/courses.js');
 
 // security implementation
 app.use(helmet());
@@ -80,6 +75,7 @@ app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
 app.use('/api/learningModules', learningModulesRouter);
 app.use('/api/enrolment', enrolmentRouter);
+app.use('/api/modules', modulesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
