@@ -2,20 +2,7 @@ const jwt = require('jsonwebtoken');
 const { hashPassword, comparePassword } = require('../utils/auth');
 const User = require('../models/user');
 
-/**
- * Login User
- * 
- * Theoretically this would be a description but i dont see a login route
- * Sorry
- * 
- * Also line character limit of 80 if possible. Just makes the docs easy
- * to read without scrolling horizontal
- * 
- * @param {any} req request
- * @param {any} res response
- * @param {any} next next
- * @returns HTTP response, either 200, ....,...,..
- */
+// Register new user
 const registerUser = async (req, res, next) => {
     // get body values
     const email = req.body.email
