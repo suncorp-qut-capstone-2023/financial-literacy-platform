@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6ed79cf0-e3c0-45c0-867c-987e91fbed01" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/video2.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/authorize.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jcmg.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/knexfile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/learningModules.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/learningModules.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/swagger.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectId" id="2PiozLojpeXKoovk5TLdBbq8ccv" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "meet",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "18.16.0",
+    "javascript.nodejs.core.library.typings.version": "18.16.0",
+    "last_opened_file_path": "F:/github/financial-literacy-platform/api",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "F:/github/financial-literacy-platform/api/node_modules/jest",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "F:\\programs\\WebStorm 2023.1.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ],
+    "RunConfigurationTargetLRU": [
+      "b01e74c0-4513-4cbd-bf81-ad45e3a38867"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\github\financial-literacy-platform\api\config" />
+      <recent name="F:\github\financial-literacy-platform\api\middleware" />
+      <recent name="F:\github\financial-literacy-platform\api\controller" />
+      <recent name="F:\github\financial-literacy-platform\api\utils" />
+      <recent name="F:\github\financial-literacy-platform\api\db" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Node.js.start">
+    <configuration name="GET /api/learningmodules/{moduleID}/viewContent.should retrieve a media image for a course" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/api.test.js" />
+      <test-names>
+        <test-name value="GET /api/learningmodules/{moduleID}/viewContent" />
+        <test-name value="should retrieve a media image for a course" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="GET /api/learningmodules/media" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__tests__/api.test.js" />
+      <test-names>
+        <test-name value="GET /api/learningmodules/media" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="GET /api/learningmodules/media.should give an error, when both image and video id is asked" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/api.test.js" />
+      <test-names>
+        <test-name value="GET /api/learningmodules/media" />
+        <test-name value="should give an error, when both image and video id is asked" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="GET /api/learningmodules/media.should retrieve a media image for a course" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/api.test.js" />
+      <test-names>
+        <test-name value="GET /api/learningmodules/media" />
+        <test-name value="should retrieve a media image for a course" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="api.test.js" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST_FILE" />
+      <test-file value="$PROJECT_DIR$/__tests__/api.test.js" />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="NodeJSConfigurationType" node-parameters="./bin/www" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="F:\github\financial-literacy-platform\api\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="F:\github\financial-literacy-platform\api\swagger.json" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Jest.GET /api/learningmodules/media" />
+      <item itemvalue="Jest.GET /api/learningmodules/media.should give an error, when both image and video id is asked" />
+      <item itemvalue="Jest.GET /api/learningmodules/media.should retrieve a media image for a course" />
+      <item itemvalue="Jest.GET /api/learningmodules/{moduleID}/viewContent.should retrieve a media image for a course" />
+      <item itemvalue="Jest.api.test.js" />
+      <item itemvalue="Node.js.start" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.api.test.js" />
+        <item itemvalue="Jest.GET /api/learningmodules/{moduleID}/viewContent.should retrieve a media image for a course" />
+        <item itemvalue="Jest.GET /api/learningmodules/media.should give an error, when both image and video id is asked" />
+        <item itemvalue="Jest.GET /api/learningmodules/media.should retrieve a media image for a course" />
+        <item itemvalue="Jest.GET /api/learningmodules/media" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6ed79cf0-e3c0-45c0-867c-987e91fbed01" name="Changes" comment="" />
+      <created>1683949525704</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683949525704</updated>
+      <workItem from="1683949527541" duration="735000" />
+      <workItem from="1683950498824" duration="12000" />
+      <workItem from="1683950518823" duration="14000" />
+      <workItem from="1683950541976" duration="1083000" />
+      <workItem from="1683951655455" duration="5538000" />
+      <workItem from="1683957283668" duration="378000" />
+      <workItem from="1683957713638" duration="1260000" />
+      <workItem from="1683959002941" duration="35000" />
+      <workItem from="1683959051834" duration="1653000" />
+      <workItem from="1683961356031" duration="423000" />
+      <workItem from="1683961795287" duration="3952000" />
+      <workItem from="1683971059851" duration="367000" />
+      <workItem from="1683973805451" duration="394000" />
+      <workItem from="1683987226275" duration="794000" />
+      <workItem from="1683988199825" duration="302000" />
+      <workItem from="1683993486851" duration="6538000" />
+      <workItem from="1684055042998" duration="2000" />
+      <workItem from="1684061950912" duration="107000" />
+      <workItem from="1684137410113" duration="29000" />
+      <workItem from="1685149709525" duration="669000" />
+      <workItem from="1685150404132" duration="1622000" />
+      <workItem from="1686572597532" duration="6280000" />
+      <workItem from="1686580379003" duration="1233000" />
+      <workItem from="1686588189673" duration="36000" />
+      <workItem from="1686637053280" duration="223000" />
+      <workItem from="1686648498083" duration="420000" />
+      <workItem from="1689480149788" duration="392000" />
+      <workItem from="1690979362989" duration="2773000" />
+      <workItem from="1691066831386" duration="2986000" />
+      <workItem from="1691395390161" duration="595000" />
+      <workItem from="1691585108169" duration="4809000" />
+      <workItem from="1691590941687" duration="220000" />
+      <workItem from="1691591382482" duration="2659000" />
+      <workItem from="1691649823260" duration="1503000" />
+      <workItem from="1691653077626" duration="9259000" />
+    </task>
+    <task id="LOCAL-00001" summary="Added Login and Register endpoints">
+      <created>1683965542702</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1683965542703</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Update README.md">
+      <created>1683971122711</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1683971122711</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Update README.md">
+      <created>1683974044004</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1683974044004</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Update Knex Configuration from .env">
+      <created>1683987651015</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1683987651015</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Login and Register endpoints" />
+    <MESSAGE value="Update README.md" />
+    <MESSAGE value="Update Knex Configuration from .env" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Knex Configuration from .env" />
+  </component>
+</project>

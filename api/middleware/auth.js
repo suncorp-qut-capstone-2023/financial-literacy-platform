@@ -12,7 +12,6 @@ const authorize = function(req, res, next){
             error: true,
             message: 'Authorization header is malformed'
         })
-        return
     }
     else{
         const token = authHeader.split(" ")[1]
@@ -48,7 +47,6 @@ const authorize = function(req, res, next){
                 error: true,
                 message: 'Invalid JWT token'
             })
-            return
         }
     }
 }
