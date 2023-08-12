@@ -106,22 +106,21 @@ const loginUser = async (req, res, next) => {
 
 // Get user info
 const getUser = async (req, res, next) => {
-
-    // grab the userId from the jwt header
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const decodedEmail = decoded.email;
-
-    // Handle input
-    if(!decodedEmail){
-        res.status(400).json({
-            error: true,
-            message: "Invalid token"
-        });
-    }
-
-    // Query DB for request
     try {
+        // grab the userId from the jwt header
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decodedEmail = decoded.email;
+
+        // Handle input
+        if(!decodedEmail){
+            res.status(400).json({
+                error: true,
+                message: "Invalid token"
+            });
+        }
+
+        // Query DB for request
         const users = await User.getByEmail(decodedEmail);
         if(users.length === 0){
             res.status(404).json({
@@ -159,13 +158,13 @@ const updateUser = async (req, res, next) => {
         });
     }
 
-    // grab the userId from the jwt header
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const decodedUserId = decoded.userId;
-
-    // Query DB for request
     try {
+        // grab the userId from the jwt header
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decodedUserId = decoded.userId;
+
+        // Query DB for request
         const users = await User.getById(decodedUserId);
         if(users.length === 0){
             res.status(404).json({
@@ -201,22 +200,21 @@ const updateUser = async (req, res, next) => {
 
 // Delete user
 const deleteUser = async (req, res, next) => {
-
-    // grab the userId from the jwt header
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const decodedUserId = decoded.userId;
-
-    // Handle input
-    if(!decodedUserId){
-        res.status(400).json({
-            error: true,
-            message: "Invalid token"
-        });
-    }
-
-    // Query DB for request
     try {
+        // grab the userId from the jwt header
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decodedUserId = decoded.userId;
+
+        // Handle input
+        if(!decodedUserId){
+            res.status(400).json({
+                error: true,
+                message: "Invalid token"
+            });
+        }
+
+        // Query DB for request
         const users = await User.getById(decodedUserId);
         if(users.length === 0){
             res.status(404).json({
@@ -236,19 +234,7 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
-// Logout user
-const logoutUser = async (req, res, next) => {
-    try {
-        res.clearCookie('token');
-        res.status(200).json({
-            message: "User logged out"
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-}
-
+// TODO: For future implementation, not functional yet
 // Forgot password
 const forgotPassword = async (req, res, next) => {
     const email = req.body.email
@@ -300,6 +286,5 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser,
-    logoutUser,
     forgotPassword
 }
