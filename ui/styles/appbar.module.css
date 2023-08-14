@@ -6,7 +6,7 @@
     display: block !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
     .desktop_image {
         display: block !important;
     }

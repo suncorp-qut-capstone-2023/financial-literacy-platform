@@ -3,11 +3,9 @@ import Image from "next/image";
 import Typography from "@mui/material/Typography";
 
 import styles from "@/styles/header.module.css";
+import businessWoman from '../assets/businesswoman.png'
 
 const { heroContent, heroWrapper, imageWrapper } = styles;
-
-const IMAGE_URL =
-  "https://www.perssondennis.com/images/articles/how-to-make-a-hero-image-in-nextjs/perfect-avocado.webp";
 
 export default function Header() {
   return (
@@ -15,7 +13,7 @@ export default function Header() {
       <div className={imageWrapper}>
         <Image
           priority={true}
-          src={"https://cdn.discordapp.com/attachments/1104524531944652860/1139352052926005338/krissandrew_hd_business_woman_minority_suncorp_bank_018cb885-7c18-41b3-9369-293f38be1142.png"}
+          src={businessWoman}
           layout="fill"
           objectFit="cover"
           objectPosition="50% 25%"  // Adjust these values as needed
