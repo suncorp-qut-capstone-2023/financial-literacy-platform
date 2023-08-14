@@ -6,22 +6,21 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { SearchOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function SearchBar(props) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState(props.query);
 
   return (
     <Box
+      sx={props.sx}
       component="form"
-      sx={{
-        marginTop: "2rem",
-        marginBottom: 0,
-      }}
       noValidate
       autoComplete="on"
       onSubmit={(e) => {
         e.preventDefault();
-        props.onSubmit(searchTerm || "");
+        router.push(`/search?q=${searchTerm}`);
       }}
     >
       <Grid container>
@@ -31,13 +30,12 @@ export default function SearchBar(props) {
             size="small"
             label="Search"
             variant="outlined"
-            sx={{ width: "100%", }}
+            sx={{ width: "100%" }}
             value={searchTerm}
             onChange={(e) => {
+              e.preventDefault();
               setSearchTerm(e.target.value);
             }}
-            {...props.inputProps}
-            inputProps={{ "aria-label": "search" }}
           />
         </Grid>
 

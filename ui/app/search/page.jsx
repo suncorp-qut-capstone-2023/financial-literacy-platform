@@ -5,10 +5,11 @@ import styles from "@/styles/page.module.css";
 import ArticleOverview from "@/components/articleOverview";
 import VideoOverview from "@/components/videoOverview";
 import SearchBar from "@/components/searchBar";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchResults() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q");
 
   return (
     <main className={styles.main}>
@@ -16,17 +17,7 @@ export default function SearchResults() {
         <div className={styles.description}>
           <h1 className={styles.title}>Search Results</h1>
         </div>
-        <SearchBar
-          onSubmit={(searchTerm) => {
-            // when the user submits the form, we only modify the router query parameters
-            router.push({
-              pathname: "/search", // Provide the correct pathname
-              query: {
-                search: searchTerm,
-              },
-            });
-          }}
-          inputProps={{}}/>
+        <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={query} />
         <Grid container spacing={2}>
           <ArticleOverview />
           <VideoOverview />
