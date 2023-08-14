@@ -28,9 +28,10 @@ import Link from "next/link";
 import styles from "@/styles/appbar.module.css"; // Custom styling for
 
 const pages = [
+  { label: "Home", path: "/" },
   { label: "Articles", path: "/articles" },
   { label: "Videos", path: "/videos" },
-  { label: "Login", path: "/" },
+  { label: "Login", path: "/login" },
 ];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -40,7 +41,6 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
