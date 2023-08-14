@@ -24,13 +24,13 @@ export default function SearchBar(props) {
       }}
     >
       <Grid container>
-        <Grid xs={11}>
+        <Grid xs={11} >
           <TextField
             id="outlined-basic"
             size="small"
             label="Search"
             variant="outlined"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", backgroundColor:'white',  borderRadius:"5px"}}
             value={searchTerm}
             onChange={(e) => {
               e.preventDefault();
