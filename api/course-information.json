@@ -14,7 +14,7 @@
                     "material_id": 1,
                     "material_type": "video",
                     "material_media": "http://127.0.0.1:443/api/learningModules/1/video"
-                }, 
+                },
                 {
                     "material_id": 2,
                     "material_type": "image",
@@ -119,7 +119,7 @@
                     "material_id": 3,
                     "material_type": "video",
                     "material_media": "http://127.0.0.1:443/api/learningModules/2/video"
-                }, 
+                },
                 {
                     "material_id": 4,
                     "material_type": "video",
@@ -221,6 +221,5 @@
             }
         ] 
         }
-
     ]
 }
