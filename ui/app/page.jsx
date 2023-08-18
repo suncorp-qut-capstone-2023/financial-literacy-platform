@@ -15,12 +15,12 @@ export default function Home() {
         <div className={styles.description}>
             <h1 className={styles.title}>Featured Articles</h1>
         </div>
-      </div>
       <Grid container spacing={2}>
           <ArticleOverview />
           <ArticleOverview />
           <ArticleOverview />
         </Grid>
+      </div>
     </main>
   );
 }
