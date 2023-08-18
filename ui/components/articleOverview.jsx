@@ -12,10 +12,9 @@ import styles from "../styles/page.module.css";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
-  marginTop: theme.spacing(5),
+  marginTop: theme.spacing(2.5),
   padding: theme.spacing(0.1),
   textAlign: "left",
-  color: theme.palette.text.secondary,
 }));
 
 const theme = createTheme({

@@ -11,8 +11,10 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Header/>
-      <div className="featured_articles">
-        <Typography variant="h3" textAlign="center">Featured Articles</Typography>
+      <div className={styles.contentWrapper}>
+        <div className={styles.description}>
+            <h1 className={styles.title}>Featured Articles</h1>
+        </div>
       </div>
       <Grid container spacing={2}>
           <ArticleOverview />
