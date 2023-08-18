@@ -1,0 +1,47 @@
+ /* header.module.css */
+
+/* step 1. */
+.heroWrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100vw;
+    height: 50vh;
+}
+
+/* step 3. */
+.imageWrapper {
+  z-index: -1;
+  flex: 1;
+}
+
+.heroBox {
+  position: relative; /* add this */
+  z-index: 1;         /* add this */
+  background-color: #00987783;
+  padding: 5px 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.heroTitle {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 32px;
+}
+
+.heroSubtitle {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .heroTitle {
+    font-size: 20px;
+  }
+
+  .heroSubtitle {
+    font-size: 14px;
+  }
+}
