@@ -621,6 +621,10 @@
                   "category_type": {
                     "type": "string",
                     "example": "basic"
+                  },
+                  "course_last_updated": {
+                    "type": "string",
+                    "example": "2022-10-31T09:00:00.504Z"
                   }
                 }
               }
