@@ -3,7 +3,6 @@
 import styles from "@/styles/page.module.css";
 import Header from "@/components/header"
 
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import ArticleOverview from "@/components/articleOverview";
 
