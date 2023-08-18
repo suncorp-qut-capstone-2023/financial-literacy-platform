@@ -58,6 +58,7 @@ font-size: 0.75rem;
   -webkit-box-shadow: 0 6px 6px -6px #000000;
   -moz-box-shadow: 0 6px 6px -6px #000000;
   box-shadow: 0 6px 6px -6px #000000;
+  text-align: center;
 }
 
 .buttons {
