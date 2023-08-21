@@ -2,27 +2,35 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const auth = require("../authorize.js");
+const auth = require("../middleware/auth.js");
 const course_information = require("../course-information.json");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
+
+const {
+  searchModule,
+  addTag,
+  deleteTag,
+  searchTag
+} = require('../controller/SearchController.js');
 
 // TODO(): Write a handler for Json files so we dont have to for loop through it.
 // TODO: Check good practice for variable names. (filewide)
-router.get("/:courseID/media", (req, res) => {
+router.get("/:courseID/media", auth, (req, res) => {
   const courseID = req.params.courseID;
   const image = req.query.image;
   const video = req.query.video;
 
 
-  if(!courseID) {
+  if (!courseID) {
     return res.status(400).json({
       error: true,
       message: "Bad request please specify a course ID"
     });
   }
 
-  if(!image && !video || image && video) {
+  if (!image && !video || image && video) {
     return res.status(400).json({
       error: true,
       message: "Bad request, please specify an image ID OR video ID",
@@ -33,7 +41,7 @@ router.get("/:courseID/media", (req, res) => {
     return c.course_id === Number(courseID);
   });
 
-  if(!filteredCourse) {
+  if (!filteredCourse) {
     return res.status(404).json({
       error: true,
       message: "Bad request please specify a valid course ID"
@@ -43,10 +51,10 @@ router.get("/:courseID/media", (req, res) => {
   const fileType = image ? 'image' : 'video'
   const fileId = image ?? video;
   const fileExt = image ? 'jpeg' : 'mp4';
-  
+
   const filePath = `../api/assets/course${courseID}/${fileType}${fileId}.${fileExt}`;
 
-  if(fs.existsSync(path.resolve(filePath))) {
+  if (fs.existsSync(path.resolve(filePath))) {
     return res.sendFile(path.resolve(filePath));
   } else {
     return res.status(404).json({
@@ -56,7 +64,8 @@ router.get("/:courseID/media", (req, res) => {
   }
 });
 
-function FindCourseIndex (course_ID) {
+//TODO: create one FindController.js to be connected with every find functions
+function FindCourseIndex(course_ID) {
   for (let i = 0; i < course_information.available_courses.length; i++) {
     if (course_information.available_courses[i].course_id == course_ID) {
       return i;
@@ -66,7 +75,7 @@ function FindCourseIndex (course_ID) {
   return -1;
 }
 
-router.post("/add-new-course", (req, res) => {
+router.post("/course/add", auth, (req, res) => {
   const last_data = course_information.available_courses.length - 1;
   const course_id = course_information.available_courses[last_data].course_id + 1;
 
@@ -113,7 +122,7 @@ router.post("/add-new-course", (req, res) => {
 
 })
 
-router.post("/add-new-course-material", (req, res) => {
+router.post("/course/add/material", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const material_type = req.body.material_type;
   const material_media = req.body.material_media;
@@ -143,7 +152,7 @@ router.post("/add-new-course-material", (req, res) => {
     } else {
       material_ID = 1;
     }
-    
+
 
     const new_material = {
       "material_id": material_ID,
@@ -160,7 +169,7 @@ router.post("/add-new-course-material", (req, res) => {
   }
 })
 
-router.post("/add-new-course-lecture", (req, res) => {
+router.post("/course/add/lecture", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const lecture_type = req.body.lecture_type;
 
@@ -189,7 +198,7 @@ router.post("/add-new-course-lecture", (req, res) => {
     } else {
       lecture_ID = 1;
     }
-    
+
     const currentDate = new Date();
 
     const new_lecture = {
@@ -210,14 +219,14 @@ router.post("/add-new-course-lecture", (req, res) => {
   }
 })
 
-router.post("/add-new-course-quiz", (req, res) => {
+router.post("/course/add/quiz", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const quiz_description = req.body.description;
   const quiz_max_tries = req.body.max_tries;
 
   const index = FindCourseIndex(course_ID);
 
-  if (!quiz_description || !quiz_max_tries ) {
+  if (!quiz_description || !quiz_max_tries) {
     return res.status(400).json({
       "success_addition": false,
       error: true,
@@ -240,13 +249,13 @@ router.post("/add-new-course-quiz", (req, res) => {
     } else {
       quiz_ID = 1;
     }
-    
+
     //by default, at least a quiz can be added without any question
     const new_quiz = {
       "quiz_id": quiz_ID,
       "description": quiz_description,
       "max_tries": quiz_max_tries,
-      "questions": [ ]
+      "questions": []
     }
 
     course_information.available_courses[index].quiz.push(new_quiz);
@@ -258,7 +267,7 @@ router.post("/add-new-course-quiz", (req, res) => {
   }
 })
 
-function FindQuizIndex (course_index, quiz_ID) {
+function FindQuizIndex(course_index, quiz_ID) {
   for (let i = 0; i < course_information.available_courses[course_index].quiz.length; i++) {
     if (course_information.available_courses[course_index].quiz[i].quiz_id == quiz_ID) {
       return i;
@@ -268,11 +277,11 @@ function FindQuizIndex (course_index, quiz_ID) {
   return -1;
 }
 
-router.post("/add-new-course-quiz-question", (req, res) => {
+router.post("/course/add/quiz/question", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const quiz_ID = req.body.quiz_id;
   const question_text = req.body.question_text;
-  const question_answer = req.body.question_answer;
+  const question_answers = req.body.question_answers;
 
   const question_options = req.body.question_answer_options;
   const option_A = question_options.A;
@@ -282,11 +291,11 @@ router.post("/add-new-course-quiz-question", (req, res) => {
 
   const index = FindCourseIndex(course_ID);
 
-  if (!question_text || !question_answer || !question_options || !option_A || !option_B || !option_C || !option_D ) {
+  if (!question_text || !question_answers || !question_answers.length || !question_options || !option_A || !option_B || !option_C || !option_D) {
     return res.status(400).json({
       "success_addition": false,
       error: true,
-      message: "Bad request please specify the question text, question answer, and the question answer options"
+      message: "Bad request please specify the question text, question answers, and the question answer options"
     });
   }
 
@@ -299,7 +308,7 @@ router.post("/add-new-course-quiz-question", (req, res) => {
   } else {
 
     const quiz_index = FindQuizIndex(index, quiz_ID)
-    
+
     if (quiz_index < 0) {
       return res.status(404).json({
         "success_addition": false,
@@ -309,7 +318,7 @@ router.post("/add-new-course-quiz-question", (req, res) => {
     } else {
       const total_data = course_information.available_courses[index].quiz[quiz_index].questions.length;
       let question_num;
-  
+
       if (total_data != 0) {
         question_num = course_information.available_courses[index].quiz[quiz_index].questions[total_data - 1].question_number + 1;
       } else {
@@ -320,12 +329,12 @@ router.post("/add-new-course-quiz-question", (req, res) => {
         "question_number": question_num,
         "question_text": question_text,
         "question_answer_options": {
-            "A": option_A,
-            "B": option_B,
-            "C": option_C,
-            "D": option_D
-          },
-        "answer": question_answer
+          "A": option_A,
+          "B": option_B,
+          "C": option_C,
+          "D": option_D
+        },
+        "answers": question_answers  // Store answers array in the question
       }
 
       course_information.available_courses[index].quiz[quiz_index].questions.push(new_quiz);
@@ -333,13 +342,13 @@ router.post("/add-new-course-quiz-question", (req, res) => {
       return res.status(200).json({
         "success_addition": true,
         message: `A new course quiz question with the number ${question_num} has been added to quiz ID ${quiz_ID} of course ID ${course_ID}`
-      })      
+      })
     }
 
   }
 })
 
-router.post("/update-course", (req, res) => {
+router.post("/course/update", auth, (req, res) => {
   const course_id = req.body.course_id;
   const course_name = req.body.course_name;
   const category_type = req.body.category_type;
@@ -364,7 +373,7 @@ router.post("/update-course", (req, res) => {
     if (category_type) {
       course_information.available_courses[index].category_type = category_type;
       success = true;
-    } 
+    }
 
     if (course_last_updated) {
       course_information.available_courses[index].course_last_updated.value = course_last_updated;
@@ -375,7 +384,7 @@ router.post("/update-course", (req, res) => {
       return res.status(200).json({
         "success_update": true,
         message: `A course with the ID ${course_id} has been updated`
-      })    
+      })
     } else {
       return res.status(400).json({
         "success_update": false,
@@ -386,7 +395,7 @@ router.post("/update-course", (req, res) => {
   }
 })
 
-function FindMaterialIDIndex (course_index, material_ID) {
+function FindMaterialIDIndex(course_index, material_ID) {
   for (let i = 0; i < course_information.available_courses[course_index].material.length; i++) {
     if (course_information.available_courses[course_index].material[i].material_id == material_ID) {
       return i;
@@ -396,7 +405,7 @@ function FindMaterialIDIndex (course_index, material_ID) {
   return -1;
 }
 
-router.post("/update-course-material", (req, res) => {
+router.post("/course/update/material", auth, (req, res) => {
   const course_id = req.body.course_id;
   const material_id = req.body.material_id;
   const material_type = req.body.material_type;
@@ -432,25 +441,25 @@ router.post("/update-course-material", (req, res) => {
       if (material_media) {
         course_information.available_courses[index].material[materialIndex].material_media = material_media;
         success = true;
-      } 
+      }
 
       if (success == true) {
         return res.status(200).json({
           "success_update": true,
           message: `the material on the material ID ${material_id} from course ID ${course_id} has been updated`
-        })    
+        })
       } else {
         return res.status(400).json({
           "success_update": false,
           error: true,
           message: "Bad request please specify the course ID, material ID, material type, and material media"
         });
-      }      
+      }
     }
   }
 })
 
-function FindLectureIDIndex (course_index, lecture_ID) {
+function FindLectureIDIndex(course_index, lecture_ID) {
   for (let i = 0; i < course_information.available_courses[course_index].lectures.length; i++) {
     if (course_information.available_courses[course_index].lectures[i].lectures_id == lecture_ID) {
       return i;
@@ -460,7 +469,7 @@ function FindLectureIDIndex (course_index, lecture_ID) {
   return -1;
 }
 
-router.post("/update-course-lecture", (req, res) => {
+router.post("/course/update/lecture", auth, (req, res) => {
   const course_id = req.body.course_id;
   const lecture_id = req.body.lecture_id;
   const lecture_type = req.body.lecture_type;
@@ -490,20 +499,20 @@ router.post("/update-course-lecture", (req, res) => {
         return res.status(200).json({
           "success_update": true,
           message: `the material on the lecture ID ${lecture_id} from course ID ${course_id} has been updated`
-        })    
-      
+        })
+
       } else {
         return res.status(400).json({
           "success_update": false,
           error: true,
           message: "Bad request please specify the lecture type"
         });
-      }      
+      }
     }
   }
 })
 
-function FindQuizIDIndex (course_index, quiz_ID) {
+function FindQuizIDIndex(course_index, quiz_ID) {
   for (let i = 0; i < course_information.available_courses[course_index].quiz.length; i++) {
     if (course_information.available_courses[course_index].quiz[i].quiz_id == quiz_ID) {
       return i;
@@ -513,7 +522,7 @@ function FindQuizIDIndex (course_index, quiz_ID) {
   return -1;
 }
 
-router.post("/update-course-quiz", (req, res) => {
+router.post("/course/update/quiz", auth, (req, res) => {
   const course_id = req.body.course_id;
   const quiz_id = req.body.quiz_id;
   const description = req.body.description;
@@ -542,8 +551,8 @@ router.post("/update-course-quiz", (req, res) => {
       if (description) {
         course_information.available_courses[index].quiz[quizIndex].description = description;
         success = true;
-      } 
-      
+      }
+
       if (maxTries) {
         course_information.available_courses[index].quiz[quizIndex].max_tries = maxTries;
         success = true;
@@ -553,19 +562,19 @@ router.post("/update-course-quiz", (req, res) => {
         return res.status(200).json({
           "success_update": true,
           message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
-        })    
+        })
       } else {
         return res.status(400).json({
           "success_update": false,
           error: true,
           message: "Bad request please specify the lecture type"
         });
-      }      
+      }
     }
   }
 })
 
-function FindQuestionNumberIndex (course_index, quiz_index, question_number) {
+function FindQuestionNumberIndex(course_index, quiz_index, question_number) {
   for (let i = 0; i < course_information.available_courses[course_index].quiz[quiz_index].questions.length; i++) {
     if (course_information.available_courses[course_index].quiz[quiz_index].questions[i].question_number == question_number) {
       return i;
@@ -575,12 +584,12 @@ function FindQuestionNumberIndex (course_index, quiz_index, question_number) {
   return -1;
 }
 
-router.post("/update-course-quiz-question", (req, res) => {
+router.post("/course/update/quiz/question", auth, (req, res) => {
   const course_id = req.body.course_id;
   const quiz_id = req.body.quiz_id;
   const question_number = req.body.question_number;
   const question_text = req.body.question_text;
-  const question_answer = req.body.question_answer;
+  const question_answers = req.body.question_answers; // Now expecting an array of answers
 
   const question_answer_options = req.body.question_answer_options;
   const option_A = question_answer_options.A;
@@ -595,7 +604,7 @@ router.post("/update-course-quiz-question", (req, res) => {
       "success_update": false,
       "error": true,
       message: "the provided course ID can not be found"
-    })
+    });
   } else {
     const quizIndex = FindQuizIDIndex(index, quiz_id);
 
@@ -604,9 +613,8 @@ router.post("/update-course-quiz-question", (req, res) => {
         "success_update": false,
         "error": true,
         message: "the provided quiz ID can not be found"
-      })
+      });
     } else {
-
       const quesNumIndex = FindQuestionNumberIndex(index, quizIndex, question_number);
 
       if (quesNumIndex < 0) {
@@ -614,59 +622,59 @@ router.post("/update-course-quiz-question", (req, res) => {
           "success_update": false,
           "error": true,
           message: "the provided question number can not be found"
-        })
+        });
       } else {
-          let success = false;
+        let success = false;
 
-          if (question_text) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_text = question_text;
-            success = true;
-          } 
-          
-          if (question_answer) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer = question_answer;
-            success = true;
-          } 
+        // Update the question text if provided
+        if (question_text) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_text = question_text;
+          success = true;
+        }
 
-          if (option_A) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.A = option_A;
-            success = true;
-          }
+        // Update the answers if provided
+        if (question_answers && Array.isArray(question_answers) && question_answers.length) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].answers = question_answers;
+          success = true;
+        }
 
-          if (option_B) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.B = option_B;
-            success = true;
-          }
+        // Update the answer options if provided
+        if (option_A) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.A = option_A;
+          success = true;
+        }
+        if (option_B) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.B = option_B;
+          success = true;
+        }
+        if (option_C) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.C = option_C;
+          success = true;
+        }
+        if (option_D) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.D = option_D;
+          success = true;
+        }
 
-          if (option_C) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.C = option_C;
-            success = true;
-          }
-
-          if (option_D) {
-            course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.D = option_D;
-            success = true;
-          }
-
-          if (success == true) {
-            return res.status(200).json({
-              "success_update": true,
-              message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
-            })    
-          } else {
-            return res.status(400).json({
-              "success_update": false,
-              error: true,
-              message: "Bad request please specify the lecture type"
-            });
-          }         
-      }   
+        if (success) {
+          return res.status(200).json({
+            "success_update": true,
+            message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
+          });
+        } else {
+          return res.status(400).json({
+            "success_update": false,
+            error: true,
+            message: "Bad request. Please provide valid details to update."
+          });
+        }
+      }
     }
   }
-})
+});
 
-router.get("/delete", (req, res) => {
-  const course_ID = req.query.course_id;
+router.delete("/course/delete/:course_id", auth, (req, res) => {
+  const course_ID = req.params.course_id;
 
   let check = false;
   for (let i = 0; i < course_information.available_courses.length; i++) {
@@ -691,7 +699,7 @@ router.get("/delete", (req, res) => {
   };
 });
 
-router.get("/sort-newest-module", (req, res) => {
+router.get("/sort-newest-module", auth, (req, res) => {
 
   let dates = [];
   for (let i = 0; i < course_information.available_courses.length; i++) {
@@ -715,21 +723,21 @@ router.get("/sort-newest-module", (req, res) => {
 });
 
 //TODO(): for presentation, must log in to see quiz answers.
-router.get("/:courseID/quiz", (req, res) => {
+router.get("/:courseID/quiz", auth, (req, res) => {
   // TODO: dummy boolean remove when implemented logging in token
   const loggedIn = true;
 
   const courseID = req.params['courseID'];
   const id = req.query.id;
 
-  if(!courseID) {
+  if (!courseID) {
     return res.status(400).json({
       error: true,
       message: "Bad request please specify a course ID"
     });
   }
 
-  if(!id) {
+  if (!id) {
     return res.status(400).json({
       error: true,
       message: "Bad request, please specify a quiz ID",
@@ -740,7 +748,7 @@ router.get("/:courseID/quiz", (req, res) => {
     return c['course_id'] === Number(courseID);
   });
 
-  if(!filteredCourseQuizzes) {
+  if (!filteredCourseQuizzes) {
     return res.status(404).json({
       error: true,
       message: "Bad request please specify a valid course ID"
@@ -751,26 +759,31 @@ router.get("/:courseID/quiz", (req, res) => {
     return q['quiz_id'] === Number(id);
   });
 
-  if(!filteredQuiz) {
+  if (!filteredQuiz) {
     return res.status(404).json({
       error: true,
       message: "Bad request please specify a valid quiz ID"
     });
   }
 
-  if(!loggedIn) {
+  if (!loggedIn) {
     delete filteredQuiz["quiz_answers"];
   }
 
   return res.json({ filteredQuiz });
 });
 
+router.post("/search", auth, searchModule);
+
+router.post("/add/tags", auth, addTag);
+router.delete("/delete/tags", auth, deleteTag);
+router.post("/search/tags", auth, searchTag);
 
 /* View all available learning modules */
-router.get("", function (req, res, next) {
+router.get("", auth, function (req, res, next) {
   // TODO(): Handle if query params are added
   return res.json({
-    "available courses": course_information.available_courses,
+    "available_courses": course_information.available_courses,
   });
 });
 
@@ -780,19 +793,19 @@ router.get("/course", function (req, res, next) {
     return c.course_id === Number(courseId);
   });
 
-  if (!filteredCourse){
+  if (!filteredCourse) {
     return res.status(400).json({
       error: true,
       message: "Malformed request, please query a valid course ID."
     });
   }
 
-  if (filteredCourse){
+  if (filteredCourse) {
     return res.json({
       id: filteredCourse
     });
   }
-// TODO(): This is not reached.
+  // TODO(): This is not reached.
   return res.status(404).json({
     error: true,
     message: "Course not found"
