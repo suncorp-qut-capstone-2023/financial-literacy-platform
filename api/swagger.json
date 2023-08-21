@@ -564,13 +564,13 @@
         }
       }
     },
-    "/api/learningModules/delete": {
-      "get": {
+    "/api/learningModules/course/delete/{courseID}": {
+      "delete": {
         "summary": "Get the result of deleting a course through its ID",
         "parameters": [
           {
-            "name": "course_id",
-            "in": "query",
+            "name": "courseID",
+            "in": "path",
             "description": "ID of the course",
             "required": true,
             "schema": {
@@ -600,7 +600,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course": {
+    "/api/learningModules/course/add": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -647,7 +647,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course-material": {
+    "/api/learningModules/course/add/material": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -700,7 +700,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course-lecture": {
+    "/api/learningModules/course/add/lecture": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -749,7 +749,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course-quiz": {
+    "/api/learningModules/course/add/quiz": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -802,7 +802,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course-quiz-question": {
+    "/api/learningModules/course/quiz/question": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -886,91 +886,7 @@
         }
       }
     },
-    "/api/learningModules/add-new-course-quiz-question": {
-      "post": {
-        "tags": [
-          "Learning Modules"
-        ],
-        "description": "Add new quiz question to a quiz",
-        "requestBody": {
-          "description": "An object containing the course ID, quiz ID, question text, and all answer options",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "course_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "quiz_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "question_text": {
-                    "type": "string",
-                    "example": "Which of the following are fruits?"
-                  },
-                  "question_answers": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": [
-                      "A",
-                      "C"
-                    ]
-                  },
-                  "question_answer_options": {
-                    "type": "object",
-                    "properties": {
-                      "A": {
-                        "type": "string",
-                        "example": "Apple"
-                      },
-                      "B": {
-                        "type": "string",
-                        "example": "Carrot"
-                      },
-                      "C": {
-                        "type": "string",
-                        "example": "Banana"
-                      },
-                      "D": {
-                        "type": "string",
-                        "example": "Lettuce"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/api/learningModules/update-course": {
+    "/api/learningModules/course/update": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -1023,7 +939,7 @@
         }
       }
     },
-    "/api/learningModules/update-course-material": {
+    "/api/learningModules/course/update/material": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -1080,7 +996,7 @@
         }
       }
     },
-    "/api/learningModules/update-course-quiz": {
+    "/api/learningModules/course/update/quiz": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -1137,7 +1053,7 @@
         }
       }
     },
-    "/api/learningModules/update-course-quiz-question": {
+    "/api/learningModules/course/update/quiz/question": {
       "post": {
         "tags": [
           "Learning Modules"
@@ -1692,6 +1608,280 @@
                   "$ref": "#/components/schemas/NotFound"
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "/api/modules/{courseID}": {
+      "get": {
+        "tags": [
+          "Learning Modules"
+        ],
+        "summary": "View content of a learning module",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the learning module",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/search": {
+      "post": {
+        "tags": [
+          "Search function"
+        ],
+        "description": "Search for modules",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "string",
+                    "example": "c"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module search result has been found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted"
+                    },
+                    "module": {
+                      "type": "object",
+                      "properties": {
+                        "course_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "course_name": {
+                          "type": "string",
+                          "example": "C# course"
+                        },
+                        "category_type": {
+                          "type": "string",
+                          "example": "basic/intermediate/advance"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Other URL issue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Learning modules endpoint is not working"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Module not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "no module with the provided module name has been found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/add/tags": {
+      "post": {
+        "tags": [
+          "Search function"
+        ],
+        "summary": "Add new tag to an existing course",
+        "requestBody": {
+          "description": "Add a new tag",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "new_tag",
+                    "example": "C#"
+                  },
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/delete/tags": {
+      "delete": {
+        "tags": [
+          "Search function"
+        ],
+        "summary": "Get the result of deleting a course through its ID",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "delete_tag": {
+                    "type": "string",
+                    "example": "C#"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/search/tags": {
+      "post": {
+        "tags": [
+          "Search function"
+        ],
+        "summary": "Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "string",
+                    "example": "C"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
             }
           }
         }

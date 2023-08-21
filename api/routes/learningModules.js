@@ -6,10 +6,18 @@ const auth = require("../middleware/auth.js");
 const course_information = require("../course-information.json");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
+
+const {
+  searchModule,
+  addTag,
+  deleteTag,
+  searchTag
+} = require('../controller/SearchController.js');
 
 // TODO(): Write a handler for Json files so we dont have to for loop through it.
 // TODO: Check good practice for variable names. (filewide)
-router.get("/:courseID/media", (req, res) => {
+router.get("/:courseID/media", auth, (req, res) => {
   const courseID = req.params.courseID;
   const image = req.query.image;
   const video = req.query.video;
@@ -56,6 +64,7 @@ router.get("/:courseID/media", (req, res) => {
   }
 });
 
+//TODO: create one FindController.js to be connected with every find functions
 function FindCourseIndex(course_ID) {
   for (let i = 0; i < course_information.available_courses.length; i++) {
     if (course_information.available_courses[i].course_id == course_ID) {
@@ -66,7 +75,7 @@ function FindCourseIndex(course_ID) {
   return -1;
 }
 
-router.post("/add-new-course", (req, res) => {
+router.post("/course/add", auth, (req, res) => {
   const last_data = course_information.available_courses.length - 1;
   const course_id = course_information.available_courses[last_data].course_id + 1;
 
@@ -106,7 +115,7 @@ router.post("/add-new-course", (req, res) => {
 
 })
 
-router.post("/add-new-course-material", (req, res) => {
+router.post("/course/add/material", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const material_type = req.body.material_type;
   const material_media = req.body.material_media;
@@ -153,7 +162,7 @@ router.post("/add-new-course-material", (req, res) => {
   }
 })
 
-router.post("/add-new-course-lecture", (req, res) => {
+router.post("/course/add/lecture", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const lecture_type = req.body.lecture_type;
 
@@ -203,7 +212,7 @@ router.post("/add-new-course-lecture", (req, res) => {
   }
 })
 
-router.post("/add-new-course-quiz", (req, res) => {
+router.post("/course/add/quiz", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const quiz_description = req.body.description;
   const quiz_max_tries = req.body.max_tries;
@@ -261,7 +270,7 @@ function FindQuizIndex(course_index, quiz_ID) {
   return -1;
 }
 
-router.post("/add-new-course-quiz-question", (req, res) => {
+router.post("/course/add/quiz/question", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const quiz_ID = req.body.quiz_id;
   const question_text = req.body.question_text;
@@ -332,7 +341,7 @@ router.post("/add-new-course-quiz-question", (req, res) => {
   }
 })
 
-router.post("/update-course", (req, res) => {
+router.post("/course/update", auth, (req, res) => {
   const course_id = req.body.course_id;
   const course_name = req.body.course_name;
   const category_type = req.body.category_type;
@@ -389,7 +398,7 @@ function FindMaterialIDIndex(course_index, material_ID) {
   return -1;
 }
 
-router.post("/update-course-material", (req, res) => {
+router.post("/course/update/material", auth, (req, res) => {
   const course_id = req.body.course_id;
   const material_id = req.body.material_id;
   const material_type = req.body.material_type;
@@ -453,7 +462,7 @@ function FindLectureIDIndex(course_index, lecture_ID) {
   return -1;
 }
 
-router.post("/update-course-lecture", (req, res) => {
+router.post("/course/update/lecture", auth, (req, res) => {
   const course_id = req.body.course_id;
   const lecture_id = req.body.lecture_id;
   const lecture_type = req.body.lecture_type;
@@ -506,7 +515,7 @@ function FindQuizIDIndex(course_index, quiz_ID) {
   return -1;
 }
 
-router.post("/update-course-quiz", (req, res) => {
+router.post("/course/update/quiz", auth, (req, res) => {
   const course_id = req.body.course_id;
   const quiz_id = req.body.quiz_id;
   const description = req.body.description;
@@ -568,7 +577,7 @@ function FindQuestionNumberIndex(course_index, quiz_index, question_number) {
   return -1;
 }
 
-router.post("/update-course-quiz-question", (req, res) => {
+router.post("/course/update/quiz/question", auth, (req, res) => {
   const course_id = req.body.course_id;
   const quiz_id = req.body.quiz_id;
   const question_number = req.body.question_number;
@@ -657,8 +666,8 @@ router.post("/update-course-quiz-question", (req, res) => {
   }
 });
 
-router.get("/delete", (req, res) => {
-  const course_ID = req.query.course_id;
+router.delete("/course/delete/:course_id", auth, (req, res) => {
+  const course_ID = req.params.course_id;
 
   let check = false;
   for (let i = 0; i < course_information.available_courses.length; i++) {
@@ -683,7 +692,7 @@ router.get("/delete", (req, res) => {
   };
 });
 
-router.get("/sort-newest-module", (req, res) => {
+router.get("/sort-newest-module", auth, (req, res) => {
   const course_ID = req.query.course_id;
 
   let dates = [];
@@ -710,7 +719,7 @@ router.get("/sort-newest-module", (req, res) => {
 });
 
 //TODO(): for presentation, must log in to see quiz answers.
-router.get("/:courseID/quiz", (req, res) => {
+router.get("/:courseID/quiz", auth, (req, res) => {
   // TODO: dummy boolean remove when implemented logging in token
   const loggedIn = true;
 
@@ -760,12 +769,17 @@ router.get("/:courseID/quiz", (req, res) => {
   return res.json({ filteredQuiz });
 });
 
+router.post("/search", auth, searchModule);
+
+router.post("/add/tags", auth, addTag);
+router.delete("/delete/tags", auth, deleteTag);
+router.post("/search/tags", auth, searchTag);
 
 /* View all available learning modules */
-router.get("", function (req, res, next) {
+router.get("", auth, function (req, res, next) {
   // TODO(): Handle if query params are added
   return res.json({
-    "available courses": course_information.available_courses,
+    "available_courses": course_information.available_courses,
   });
 });
 
