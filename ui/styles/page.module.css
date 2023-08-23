@@ -6,7 +6,7 @@
 }
 
 .contentWrapper {
-  padding: 2rem;
+  padding: 1rem;
   font-size: 0.85rem;
   max-width: var(--max-width);
   width: 100%;
@@ -24,6 +24,17 @@
   max-width: var(--max-width);
   width: 100%;
   font-family: var(--font-mono);
+}
+
+.content_info{
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.content_info p{
+  margin: 0.5rem;
 }
 
 .description a {

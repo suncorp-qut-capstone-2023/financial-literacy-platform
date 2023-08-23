@@ -10,7 +10,7 @@ const src = "https://www.youtube.com/embed/dQw4w9WgXcQ";
 const VideoPlayer = () => {
   return (
     <div>
-      <ReactPlayer controls={true} playing={true} width={"100%"} url={src} />
+      <ReactPlayer controls={true} playing={false} width={"100%"} height={"500px"} url={src} />
         <Accordion disableGutters={true} sx={{marginTop:"20px"}}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             Transcript

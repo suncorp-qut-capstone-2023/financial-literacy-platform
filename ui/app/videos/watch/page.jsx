@@ -9,18 +9,16 @@ import VideoPlayer from "@/components/videoplayer";
 export default function Watch(/* TODO: pass in some api call */) {
   return (
     <main className={styles.main}>
-        <Grid container spacing={1} className={styles.articleTitle}>
-          <Grid xs={12}>
-            <h1>The Political and Economical State of the World</h1>
-          </Grid>
-          <Grid xs={12}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.description}>
+            <h1 className={styles.title}>The Political and Economical State of the World</h1>
+        </div>          
+          <div className={styles.content_info}>
             <p>Credits: Jaden Smith</p>
             <p>Published: August 9, 2023</p>
             <p>Duration: 3 min.</p>
-          </Grid>
-        </Grid>
+          </div>
 
-        <div className={styles.contentWrapper}>
           <VideoPlayer />
           <Grid container sx={{ marginTop: "20px" }}>
             <Grid xs={6}>
