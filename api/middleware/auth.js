@@ -27,6 +27,9 @@ const authorize = function(req, res, next){
                 return
             }
 
+            // Set userID from the decoded JWT to the req object
+            req.userID = jwtVerify.userId;
+
             // Check token expiration
             if(jwtVerify.exp < Date.now()){
                 res.status(401).json({
