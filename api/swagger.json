@@ -462,6 +462,133 @@
         }
       }
     },
+
+    "/api/forum/create": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a new forum **Needs Fixing**",
+        "description": "Endpoint to create a new forum thread. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumPost",
+            "description": "Forum thread object that needs to be added.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ForumPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum thread successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumID": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/forum/{forumID}/comment": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a forum comment **Needs fixing**",
+        "description": "Endpoint to create a new forum comment. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumComment",
+            "description": "Forum comment object that needs to be added.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["body", "forumID"],
+              "properties": {
+                "body": {
+                  "type": "string",
+                  "description": "Main content of the comment."
+                },
+                "forumID": {
+                  "type": "integer",
+                  "description": "Id of the forum to post the comment to."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum comment successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumComment": {
+                  "type": "object",
+                  "properties": {
+                    "Body": {
+                      "type": "string",
+                      "description": "Main content of the comment"
+                    },
+                    "DateCommented": {
+                      "type": "string",
+                      "description": "Date when the comment was created."
+                    },
+                    "UserID": {
+                      "type": "integer",
+                      "description": "ID of the user who created the comment."
+                    },
+                    "ForumID": {
+                      "type": "integer",
+                      "description": "ID of the forum to which the comment belongs."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+
     "/api/learningModules/{courseID}/quiz": {
       "get": {
         "summary": "Get quiz by course ID and quiz ID",
@@ -733,132 +860,6 @@
             }
           }
         }
-      }
-    },
-
-    "/api/forum/create": {
-      "post": {
-        "tags": ["Forum"],
-        "summary": "Create a new forum **Needs Fixing**",
-        "description": "Endpoint to create a new forum thread. Requires JWT token in the Authorization header.",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "forumPost",
-            "description": "Forum thread object that needs to be added.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ForumPost"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Forum thread successfully created.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "forumID": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input."
-          },
-          "401": {
-            "description": "Authentication error."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/forum/{forumID}/comment": {
-      "post": {
-        "tags": ["Forum"],
-        "summary": "Create a forum comment **Needs fixing**",
-        "description": "Endpoint to create a new forum comment. Requires JWT token in the Authorization header.",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "forumComment",
-            "description": "Forum comment object that needs to be added.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": ["body", "forumID"],
-              "properties": {
-                "body": {
-                  "type": "string",
-                  "description": "Main content of the comment."
-                },
-                "forumID": {
-                  "type": "integer",
-                  "description": "Id of the forum to post the comment to."
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Forum comment successfully created.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "forumComment": {
-                  "type": "object",
-                  "properties": {
-                    "Body": {
-                      "type": "string",
-                      "description": "Main content of the comment"
-                    },
-                    "DateCommented": {
-                      "type": "string",
-                      "description": "Date when the comment was created."
-                    },
-                    "UserID": {
-                      "type": "integer",
-                      "description": "ID of the user who created the comment."
-                    },
-                    "ForumID": {
-                      "type": "integer",
-                      "description": "ID of the forum to which the comment belongs."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input."
-          },
-          "401": {
-            "description": "Authentication error."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       }
     },
     "/api/learningModules/course/add/quiz": {
@@ -1952,18 +1953,6 @@
               "application/json": {}
             }
           }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "ForumPost": {
-      "type": "object",
-      "required": ["ForumTitle"],
-      "properties": {
-        "ForumTitle": {
-          "type": "string",
-          "description": "Title of the forum thread."
         }
       }
     }
