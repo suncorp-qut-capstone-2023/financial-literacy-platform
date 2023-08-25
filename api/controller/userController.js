@@ -11,7 +11,7 @@ const registerUser = async (req, res, next) => {
     const lastName = req.body.lastName
 
     // Handle input
-    if(!email || !password || !firstName || !lastName){
+    if (!email || !password || !firstName || !lastName) {
         res.status(400).json({
             error: true,
             message: "Request body incomplete, all fields are required"
@@ -23,7 +23,7 @@ const registerUser = async (req, res, next) => {
     try {
         // check if user exists
         const users = await User.getByEmail(email);
-        if(users.length > 0){
+        if (users.length > 0) {
             res.status(409).json({
                 error: true,
                 message: "User already exists!"
@@ -44,7 +44,7 @@ const registerUser = async (req, res, next) => {
             message: "User created",
             userId: userId[0]
         });
-        
+
     } catch (error) {
         next(error);
     }
@@ -56,7 +56,7 @@ const loginUser = async (req, res, next) => {
     const password = req.body.password
 
     // Handle input
-    if(!email || !password){
+    if (!email || !password) {
         res.status(400).json({
             error: true,
             message: "Request body incomplete, both email and password are required"
@@ -67,16 +67,16 @@ const loginUser = async (req, res, next) => {
     // Query DB for request
     try {
         const users = await User.getByEmail(email);
-        if(users.length === 0){
+        if (users.length === 0) {
             res.status(401).json({
                 error: true,
                 message: "Incorrect email or password"
             });
         }
-        else{
+        else {
             const user = users[0];
             const match = await comparePassword(password, user.password_hash);
-            if(!match){
+            if (!match) {
                 res.status(401).json({
                     error: true,
                     message: "Incorrect email or password"
@@ -88,10 +88,10 @@ const loginUser = async (req, res, next) => {
             const userId = user.id;
             const expires_in = 24 * 60 * 60;
             const exp = Date.now() + expires_in * 1000;
-            const token = jwt.sign({userId, email, exp}, process.env.SECRET_KEY);
+            const token = jwt.sign({ userId, email, exp }, process.env.SECRET_KEY);
 
             // attach token to response
-            res.cookie("token", token, {httpOnly: true, expires: new Date(exp * 1000)});
+            res.cookie("token", token, { httpOnly: true, expires: new Date(exp * 1000) });
 
             res.status(200).json({
                 token_type: "Bearer",
@@ -113,7 +113,7 @@ const getUser = async (req, res, next) => {
         const decodedEmail = decoded.email;
 
         // Handle input
-        if(!decodedEmail){
+        if (!decodedEmail) {
             res.status(400).json({
                 error: true,
                 message: "Invalid token"
@@ -122,13 +122,13 @@ const getUser = async (req, res, next) => {
 
         // Query DB for request
         const users = await User.getByEmail(decodedEmail);
-        if(users.length === 0){
+        if (users.length === 0) {
             res.status(404).json({
                 error: true,
                 message: "User not found"
             });
         }
-        else{
+        else {
             // return user
             const user = users[0];
             res.status(200).json({
@@ -151,7 +151,7 @@ const updateUser = async (req, res, next) => {
     const lastName = req.body.lastName
 
     // Handle input
-    if(!email && !password && !firstName && !lastName){
+    if (!email && !password && !firstName && !lastName) {
         res.status(400).json({
             error: true,
             message: "Request body incomplete, some fields are required"
@@ -166,25 +166,25 @@ const updateUser = async (req, res, next) => {
 
         // Query DB for request
         const users = await User.getById(decodedUserId);
-        if(users.length === 0){
+        if (users.length === 0) {
             res.status(404).json({
                 error: true,
                 message: "User not found"
             });
         }
-        else{
+        else {
             // update user
             const userData = {};
-            if(email){
+            if (email) {
                 userData.email = email;
             }
-            if(password){
+            if (password) {
                 userData.password_hash = await hashPassword(password);
             }
-            if(firstName){
+            if (firstName) {
                 userData.first_name = firstName;
             }
-            if(lastName){
+            if (lastName) {
                 userData.last_name = lastName;
             }
             await User.update(decodedUserId, userData)
@@ -207,7 +207,7 @@ const deleteUser = async (req, res, next) => {
         const decodedUserId = decoded.userId;
 
         // Handle input
-        if(!decodedUserId){
+        if (!decodedUserId) {
             res.status(400).json({
                 error: true,
                 message: "Invalid token"
@@ -216,13 +216,13 @@ const deleteUser = async (req, res, next) => {
 
         // Query DB for request
         const users = await User.getById(decodedUserId);
-        if(users.length === 0){
+        if (users.length === 0) {
             res.status(404).json({
                 error: true,
                 message: "User not found"
             });
         }
-        else{
+        else {
             // delete user
             await User.delete(decodedUserId);
             res.status(200).json({
@@ -240,7 +240,7 @@ const forgotPassword = async (req, res, next) => {
     const email = req.body.email
 
     // Handle input
-    if(!email){
+    if (!email) {
         res.status(400).json({
             error: true,
             message: "Request body incomplete, email is required"
@@ -249,32 +249,32 @@ const forgotPassword = async (req, res, next) => {
 
     // Query DB for request
     try {
-            const users = await User.getByEmail(email);
-            if(users.length === 0){
-                res.status(404).json({
-                    error: true,
-                    message: "User not found"
-                });
-            }
-            else{
-                // send email
-                // const user = users[0];
-                // const expires_in = 24 * 60 * 60;
-                // const exp = Date.now() + expires_in * 1000;
-                // const token = jwt.sign({email, exp}, process.env.JWT_SECRET);
-                // const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
-                // const message = `Hi ${user.first_name},\n\nPlease click on the following link ${link} to reset your password. \n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`;
-                // const mailOptions = {
-                //     from: process.env.EMAIL,
-                //     to: email,
-                //     subject: "Password reset",
-                //     text: message
-                // };
-                // await transporter.sendMail(mailOptions);
-                // res.status(200).json({
-                //     message: "Password reset email sent"
-                // });
-            }
+        const users = await User.getByEmail(email);
+        if (users.length === 0) {
+            res.status(404).json({
+                error: true,
+                message: "User not found"
+            });
+        }
+        else {
+            // send email
+            // const user = users[0];
+            // const expires_in = 24 * 60 * 60;
+            // const exp = Date.now() + expires_in * 1000;
+            // const token = jwt.sign({email, exp}, process.env.JWT_SECRET);
+            // const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+            // const message = `Hi ${user.first_name},\n\nPlease click on the following link ${link} to reset your password. \n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`;
+            // const mailOptions = {
+            //     from: process.env.EMAIL,
+            //     to: email,
+            //     subject: "Password reset",
+            //     text: message
+            // };
+            // await transporter.sendMail(mailOptions);
+            // res.status(200).json({
+            //     message: "Password reset email sent"
+            // });
+        }
     } catch (error) {
         next(error);
     }
