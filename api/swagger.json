@@ -111,298 +111,13 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/learningModules/{courseID}/quiz": {
-      "get": {
-        "summary": "Get quiz by course ID and quiz ID",
-        "parameters": [
-          {
-            "name": "courseID",
-            "in": "path",
-            "description": "ID of the course",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "description": "ID of the quiz",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
               "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/learningModules": {
-      "get": {
-        "summary": "View all available learning modules",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/api/learningModules/course": {
-      "get": {
-        "summary": "Get course by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "ID of the course",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/learningModules/delete": {
-      "get": {
-        "summary": "Get the result of deleting a course through its ID",
-        "parameters": [
-          {
-            "name": "course_id",
-            "in": "query",
-            "description": "ID of the course",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/api/learningModules/add-new-course": {
-      "post": {
-        "tags": ["Learning Modules"],
-        "description": "Add new course",
-        "requestBody": {
-          "description": "An object containing the course name and category type",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "course_name": {
-                    "type": "string",
-                    "example": "C# basic"
-                  },
-                  "category_type": {
-                    "type": "string",
-                    "example": "basic"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/api/learningModules/add-new-course-material": {
-      "post": {
-        "tags": ["Learning Modules"],
-        "description": "Add new material information to a course",
-        "requestBody": {
-          "description": "An object containing the course ID, material type and material media",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "course_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "material_type": {
-                    "type": "string",
-                    "example": "video"
-                  },
-                  "material_media": {
-                    "type": "string",
-                    "example": "http://127.0.0.1:443/api/learningModules/1/video"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/api/learningModules/add-new-course-lecture": {
-      "post": {
-        "tags": ["Learning Modules"],
-        "description": "Add new material information to a course",
-        "requestBody": {
-          "description": "An object containing the course ID, material type and material media",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "course_id": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "lecture_type": {
-                    "type": "string",
-                    "example": "unknown"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-              }
             }
           }
         }
@@ -410,9 +125,7 @@
     },
     "/api/enrolment/course/register": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Register a user to a course",
         "requestBody": {
           "required": true,
@@ -424,12 +137,12 @@
                   "user_id": {
                     "type": "integer",
                     "description": "User's unique identifier",
-                    "example": 1
+                    "example": 6
                   },
                   "course_id": {
                     "type": "integer",
                     "description": "Course's unique identifier",
-                    "example": 101
+                    "example": 1
                   }
                 }
               }
@@ -478,102 +191,98 @@
     },
     "/api/enrolment/lectures/attended": {
       "post": {
-          "tags": [
-              "User Interactions"
-          ],
-          "summary": "Mark a lecture as attended for a user",
-          "requestBody": {
-              "required": true,
-              "content": {
-                  "application/json": {
-                      "schema": {
-                          "type": "object",
-                          "properties": {
-                              "user_id": {
-                                  "type": "integer",
-                                  "description": "User's unique identifier",
-                                  "example": 1
-                              },
-                              "course_id": {
-                                  "type": "integer",
-                                  "description": "Course's unique identifier",
-                                  "example": 101
-                              },
-                              "lecture_id": {
-                                  "type": "integer",
-                                  "description": "Lecture's unique identifier",
-                                  "example": 303
-                              }
-                          }
-                      }
+        "tags": ["User Interactions"],
+        "summary": "Mark a lecture as attended for a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer",
+                    "description": "User's unique identifier",
+                    "example": 6
+                  },
+                  "course_id": {
+                    "type": "integer",
+                    "description": "Course's unique identifier",
+                    "example": 1
+                  },
+                  "lecture_id": {
+                    "type": "integer",
+                    "description": "Lecture's unique identifier",
+                    "example": 1
                   }
+                }
               }
-          },
-          "responses": {
-              "200": {
-                  "description": "Lecture marked as attended successfully or course completed",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "message": {
-                                      "type": "string",
-                                      "example": "Lecture with ID 303 has been marked as attended for user ID 1 in course ID 101"
-                                  }
-                              }
-                          }
-                      }
-                  }
-              },
-              "400": {
-                  "description": "Bad request, such as lecture already attended by the user",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "error": {
-                                      "type": "boolean",
-                                      "example": true
-                                  },
-                                  "message": {
-                                      "type": "string",
-                                      "example": "Lecture already attended by the user for this course."
-                                  }
-                              }
-                          }
-                      }
-                  }
-              },
-              "404": {
-                  "description": "User or course not found",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "error": {
-                                      "type": "boolean",
-                                      "example": true
-                                  },
-                                  "message": {
-                                      "type": "string",
-                                      "example": "User is not registered for this course."
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
+            }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "Lecture marked as attended successfully or course completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Lecture with ID 303 has been marked as attended for user ID 1 in course ID 101"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, such as lecture already attended by the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Lecture already attended by the user for this course."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or course not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User is not registered for this course."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-  },  
+    },
     "/api/enrolment/materials/viewed": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Mark a material as viewed for a user",
         "requestBody": {
           "required": true,
@@ -585,17 +294,17 @@
                   "user_id": {
                     "type": "integer",
                     "description": "User's unique identifier",
-                    "example": 1
+                    "example": 6
                   },
                   "course_id": {
                     "type": "integer",
                     "description": "Course's unique identifier",
-                    "example": 101
+                    "example": 1
                   },
                   "material_id": {
                     "type": "integer",
                     "description": "Material's unique identifier",
-                    "example": 202
+                    "example": 1
                   }
                 }
               }
@@ -662,229 +371,497 @@
         }
       }
     },
-
     "/api/enrolment/quizzes/attempted": {
       "post": {
-          "tags": [
-              "User Interactions"
-          ],
-          "summary": "Mark a quiz as attempted for a user",
-          "requestBody": {
-              "required": true,
-              "content": {
-                  "application/json": {
-                      "schema": {
-                          "type": "object",
-                          "properties": {
-                              "user_id": {
-                                  "type": "integer",
-                                  "description": "User's unique identifier",
-                                  "example": 1
-                              },
-                              "course_id": {
-                                  "type": "integer",
-                                  "description": "Course's unique identifier",
-                                  "example": 101
-                              },
-                              "quiz_id": {
-                                  "type": "integer",
-                                  "description": "Quiz's unique identifier",
-                                  "example": 404
-                              }
-                          }
-                      }
-                  }
-              }
-          },
-          "responses": {
-              "200": {
-                  "description": "Quiz marked as attempted successfully or course completed",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "message": {
-                                      "type": "string",
-                                      "example": "Quiz with ID 404 has been marked as attempted for user ID 1 in course ID 101"
-                                  }
-                              }
-                          }
-                      }
-                  }
-              },
-              "400": {
-                  "description": "Bad request, such as quiz already attempted by the user",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "error": {
-                                      "type": "boolean",
-                                      "example": true
-                                  },
-                                  "message": {
-                                      "type": "string",
-                                      "example": "Quiz already attempted by the user for this course."
-                                  }
-                              }
-                          }
-                      }
-                  }
-              },
-              "404": {
-                  "description": "User or course not found",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "type": "object",
-                              "properties": {
-                                  "error": {
-                                      "type": "boolean",
-                                      "example": true
-                                  },
-                                  "message": {
-                                      "type": "string",
-                                      "example": "User is not registered for this course."
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      }
-  },
-  
-  "/api/forum/create": {
-    "post": {
-      "tags": [
-        "Forum"
-      ],
-      "summary": "Create a new forum **Needs Fixing**",
-      "description": "Endpoint to create a new forum thread. Requires JWT token in the Authorization header.",
-      "parameters": [
-        {
-          "in": "body",
-          "name": "forumPost",
-          "description": "Forum thread object that needs to be added.",
+        "tags": ["User Interactions"],
+        "summary": "Mark a quiz as attempted for a user",
+        "requestBody": {
           "required": true,
-          "schema": {
-            "$ref": "#/definitions/ForumPost"
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "Forum thread successfully created.",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              },
-              "forumID": {
-                "type": "integer"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "Invalid input."
-        },
-        "401": {
-          "description": "Authentication error."
-        },
-        "500": {
-          "description": "Internal server error."
-        }
-      },
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ]
-    }
-  },
-  "/api/forum/{forumID}/comment": {
-    "post": {
-      "tags": ["Forum"],
-      "summary": "Create a forum comment **Needs fixing**",
-      "description": "Endpoint to create a new forum comment. Requires JWT token in the Authorization header.",
-      "parameters": [
-        {
-          "in": "body",
-          "name": "forumComment",
-          "description": "Forum comment object that needs to be added.",
-          "required": true,
-          "schema": {
-            "type": "object",
-            "required": ["body", "forumID"],
-            "properties": {
-              "body": {
-                "type": "string",
-                "description": "Main content of the comment."
-              },
-              "forumID": {
-                "type": "integer",
-                "description": "Id of the forum to post the comment to."
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "Forum comment successfully created.",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              },
-              "forumComment": {
+          "content": {
+            "application/json": {
+              "schema": {
                 "type": "object",
                 "properties": {
-                  "Body": {
-                    "type": "string",
-                    "description": "Main content of the comment"
-                  },
-                  "DateCommented": {
-                    "type": "string",
-                    "description": "Date when the comment was created."
-                  },
-                  "UserID": {
+                  "user_id": {
                     "type": "integer",
-                    "description": "ID of the user who created the comment."
+                    "description": "User's unique identifier",
+                    "example": 6
                   },
-                  "ForumID": {
+                  "course_id": {
                     "type": "integer",
-                    "description": "ID of the forum to which the comment belongs."
+                    "description": "Course's unique identifier",
+                    "example": 1
+                  },
+                  "quiz_id": {
+                    "type": "integer",
+                    "description": "Quiz's unique identifier",
+                    "example": 1
                   }
                 }
               }
             }
           }
         },
-        "400": {
-          "description": "Invalid input."
-        },
-        "401": {
-          "description": "Authentication error."
-        },
-        "500": {
-          "description": "Internal server error."
+        "responses": {
+          "200": {
+            "description": "Quiz marked as attempted successfully or course completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Quiz with ID 404 has been marked as attempted for user ID 1 in course ID 101"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, such as quiz already attempted by the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Quiz already attempted by the user for this course."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or course not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User is not registered for this course."
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
-      },
-      "security": [
-        {
-          "bearerAuth": []
+      }
+    },
+    "/api/learningModules/{courseID}/quiz": {
+      "get": {
+        "summary": "Get quiz by course ID and quiz ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the quiz",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
         }
-      ]
-    }
-  },
-    "/api/learningModules/add-new-course-quiz": {
+      }
+    },
+    "/api/learningModules": {
+      "get": {
+        "summary": "View all available learning modules",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course": {
+      "get": {
+        "summary": "Get course by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/delete/{courseID}": {
+      "delete": {
+        "summary": "Get the result of deleting a course through its ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/add": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new course",
+        "requestBody": {
+          "description": "An object containing the course name and category type",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_name": {
+                    "type": "string",
+                    "example": "C# basic"
+                  },
+                  "category_type": {
+                    "type": "string",
+                    "example": "basic"
+                  },
+                  "course_last_updated": {
+                    "type": "string",
+                    "example": "2022-10-31T09:00:00.504Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/add/material": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new material information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, material type and material media",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "material_type": {
+                    "type": "string",
+                    "example": "video"
+                  },
+                  "material_media": {
+                    "type": "string",
+                    "example": "http://127.0.0.1:443/api/learningModules/1/video"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/add/lecture": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new material information to a course",
+        "requestBody": {
+          "description": "An object containing the course ID, material type and material media",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "lecture_type": {
+                    "type": "string",
+                    "example": "unknown"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+
+    "/api/forum/create": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a new forum **Needs Fixing**",
+        "description": "Endpoint to create a new forum thread. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumPost",
+            "description": "Forum thread object that needs to be added.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ForumPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum thread successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumID": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/forum/{forumID}/comment": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a forum comment **Needs fixing**",
+        "description": "Endpoint to create a new forum comment. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumComment",
+            "description": "Forum comment object that needs to be added.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["body", "forumID"],
+              "properties": {
+                "body": {
+                  "type": "string",
+                  "description": "Main content of the comment."
+                },
+                "forumID": {
+                  "type": "integer",
+                  "description": "Id of the forum to post the comment to."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum comment successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumComment": {
+                  "type": "object",
+                  "properties": {
+                    "Body": {
+                      "type": "string",
+                      "description": "Main content of the comment"
+                    },
+                    "DateCommented": {
+                      "type": "string",
+                      "description": "Date when the comment was created."
+                    },
+                    "UserID": {
+                      "type": "integer",
+                      "description": "ID of the user who created the comment."
+                    },
+                    "ForumID": {
+                      "type": "integer",
+                      "description": "ID of the forum to which the comment belongs."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/learningModules/course/add/quiz": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "Add new quiz information to a course",
@@ -923,186 +900,98 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
       }
     },
-
-    "/api/learningModules/add-new-course-quiz-question": {
-  "post": {
-    "tags": ["Learning Modules"],
-    "description": "Add new quiz question to a quiz",
-    "requestBody": {
-      "description": "An object containing the course ID, quiz ID, question text, and all answer options",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "course_id": {
-                "type": "integer",
-                "example": 1
-              },
-              "quiz_id": {
-                "type": "integer",
-                "example": 1
-              },
-              "question_text": {
-                "type": "string",
-                "example": "Which of the following are fruits?"
-              },
-              "question_answers": { 
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["A", "C"]
-              },
-              "question_answer_options": {
+    "/api/learningModules/course/quiz/question": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "Add new quiz question to a quiz",
+        "requestBody": {
+          "description": "An object containing the course ID, quiz ID, question text, and all answer options",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
                 "type": "object",
                 "properties": {
-                  "A": {
-                    "type": "string",
-                    "example": "Apple"
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
                   },
-                  "B": {
-                    "type": "string",
-                    "example": "Carrot"
+                  "quiz_id": {
+                    "type": "integer",
+                    "example": 1
                   },
-                  "C": {
+                  "question_text": {
                     "type": "string",
-                    "example": "Banana"
+                    "example": "Which of the following are fruits?"
                   },
-                  "D": {
-                    "type": "string",
-                    "example": "Lettuce"
+                  "question_answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["A", "C"]
+                  },
+                  "question_answer_options": {
+                    "type": "object",
+                    "properties": {
+                      "A": {
+                        "type": "string",
+                        "example": "Apple"
+                      },
+                      "B": {
+                        "type": "string",
+                        "example": "Carrot"
+                      },
+                      "C": {
+                        "type": "string",
+                        "example": "Banana"
+                      },
+                      "D": {
+                        "type": "string",
+                        "example": "Lettuce"
+                      }
+                    }
                   }
                 }
               }
             }
           }
-        }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "OK",
-        "content": {
-          "application/json": {}
-        }
-      },
-      "400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found",
-        "content": {
-          "application/json": {
-          }
-        }
-      }
-    }
-  }
-},
-"/api/learningModules/add-new-course-quiz-question": {
-  "post": {
-    "tags": ["Learning Modules"],
-    "description": "Add new quiz question to a quiz",
-    "requestBody": {
-      "description": "An object containing the course ID, quiz ID, question text, and all answer options",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "course_id": {
-                "type": "integer",
-                "example": 1
-              },
-              "quiz_id": {
-                "type": "integer",
-                "example": 1
-              },
-              "question_text": {
-                "type": "string",
-                "example": "Which of the following are fruits?"
-              },
-              "question_answers": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["A", "C"]
-              },
-              "question_answer_options": {
-                "type": "object",
-                "properties": {
-                  "A": {
-                    "type": "string",
-                    "example": "Apple"
-                  },
-                  "B": {
-                    "type": "string",
-                    "example": "Carrot"
-                  },
-                  "C": {
-                    "type": "string",
-                    "example": "Banana"
-                  },
-                  "D": {
-                    "type": "string",
-                    "example": "Lettuce"
-                  }
-                }
-              }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
             }
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "OK",
-        "content": {
-          "application/json": {}
-        }
-      },
-      "400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found",
-        "content": {
-          "application/json": {
-          }
-        }
-      }
-    }
-  }
-}
-,
-
-    "/api/learningModules/update-course": {
+    "/api/learningModules/course/update": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "update course",
@@ -1141,22 +1030,19 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
       }
     },
-
-    "/api/learningModules/update-course-material": {
+    "/api/learningModules/course/update/material": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "update course-material",
@@ -1199,22 +1085,19 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
       }
     },
-
-    "/api/learningModules/update-course-quiz": {
+    "/api/learningModules/course/update/quiz": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "Add new quiz information to a course",
@@ -1257,22 +1140,19 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
       }
     },
-
-    "/api/learningModules/update-course-quiz-question": {
+    "/api/learningModules/course/update/quiz/question": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "Update quiz question in a quiz",
@@ -1355,7 +1235,6 @@
         }
       }
     },
-
     "/api/about": {
       "get": {
         "tags": ["Administration"],
@@ -1386,16 +1265,16 @@
                         "type": "object",
                         "properties": {
                           "name": {
-                              "type": "string",
-                              "example": "Member Name"
+                            "type": "string",
+                            "example": "Member Name"
                           },
                           "student_id": {
-                              "type": "string",
-                              "example": "Member Student ID"
+                            "type": "string",
+                            "example": "Member Student ID"
                           },
                           "email": {
-                              "type": "string",
-                              "example": "Member Email"
+                            "type": "string",
+                            "example": "Member Email"
                           }
                         }
                       }
@@ -1593,16 +1472,14 @@
         "requestBody": {
           "description": "Nothing required.",
           "required": false,
-          "content": {
-          }
+          "content": {}
         },
         "responses": {
           "200": {
             "description": "User logged out",
             "content": {
               "application/json": {
-                "schema": {
-                }
+                "schema": {}
               }
             }
           }
@@ -1813,14 +1690,276 @@
           }
         }
       }
+    },
+    "/api/modules/{courseID}": {
+      "get": {
+        "tags": ["Learning Modules"],
+        "summary": "View content of a learning module",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the learning module",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/search": {
+      "post": {
+        "tags": ["Search function"],
+        "description": "Search for modules",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "string",
+                    "example": "c"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module search result has been found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted"
+                    },
+                    "module": {
+                      "type": "object",
+                      "properties": {
+                        "course_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "course_name": {
+                          "type": "string",
+                          "example": "C# course"
+                        },
+                        "category_type": {
+                          "type": "string",
+                          "example": "basic/intermediate/advance"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Other URL issue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Learning modules endpoint is not working"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Module not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "no module with the provided module name has been found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/add/tags": {
+      "post": {
+        "tags": ["Search function"],
+        "summary": "Add new tag to an existing course",
+        "requestBody": {
+          "description": "Add a new tag",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "new_tag",
+                    "example": "C#"
+                  },
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/delete/tags": {
+      "delete": {
+        "tags": ["Search function"],
+        "summary": "Get the result of deleting a course through its ID",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "delete_tag": {
+                    "type": "string",
+                    "example": "C#"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/search/tags": {
+      "post": {
+        "tags": ["Search function"],
+        "summary": "Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "string",
+                    "example": "C"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "ForumPost": {
       "type": "object",
-      "required": [
-        "ForumTitle"
-      ],
+      "required": ["ForumTitle"],
       "properties": {
         "ForumTitle": {
           "type": "string",
