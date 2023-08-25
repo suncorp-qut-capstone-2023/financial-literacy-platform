@@ -62,7 +62,7 @@ const searchModule = (req, res) => {
 };
 
 const addTag = async (req, res) => {
-    const newTag = req.body.new_tag;
+    const newTag = req.body.search_query;
     const courseId = req.body.course_id;
 
     courseIdIndex = FindCourseIndex(courseId);
@@ -117,14 +117,17 @@ const deleteTag = async (req, res) => {
         message: `current tag with the name '${deleteTag}' has been not been found`
       }) 
     } else {
+      const courseTagList = course_information.available_courses[courseIdIndex].course_tag;
+      const deleteTagIndex = courseTagList.indexOf(deleteTag);
+
       //TODO: in cloud development, 
       //later we need to modify the file and put it back to the learning modules database.
       //at the moment, this is the solution first.
-      course_information.available_courses[courseIdIndex].course_tag.pop(deleteTag);
+      courseTagList.splice(deleteTagIndex, 1);
 
       return res.status(200).json({
           "success": true,
-          message: `new tag has been added to course ID ${courseId}`
+          message: `The targeted tag has been deleted on course ID ${courseId}`
       })      
     }
   })

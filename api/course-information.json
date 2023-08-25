@@ -109,7 +109,7 @@
             "course_id": 10,
             "course_name": "R course",
             "category_type": "basic/intermediate/advance",
-            "course_tag": ["C#", "c sharp"],
+            "course_tag": ["C#", "c sharp", "charlie"],
             "course_last_updated": {
                 "@type": "ISODate",
                 "value": "2022-10-31T09:00:00.594Z"
