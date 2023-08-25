@@ -2,11 +2,20 @@ const forumModel = require('../models/forum.js');
 
 
 const getForumComments = async (req, res) => {
-    res.status(200).json({});
-    //get
+    const { forumID } = req.params;
+
+    try {
+        const comments = await forumModel.getForumComments(forumID);
+        res.status(200).json(comments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Database error!', error: error.message });
+    }
 }
 
 const createForumComment = async (req, res) => {
+
+    console.log(req.body)
     if (!req.isAuthorized) {
         return res.status(401).json({ error: true, message: 'Not authorized!' });
     }
@@ -36,7 +45,6 @@ const createForumComment = async (req, res) => {
 
 
 const createForum = async (req, res) => {
-    console.log(req.userID);
 
     if (!req.isAuthorized) {
         return res.status(401).json({ error: true, message: 'Not authorized!' });
@@ -66,30 +74,36 @@ const createForum = async (req, res) => {
 
 
 const getForumComment = async (req, res) => {
-       // TODO: error handling
-    const forumInfo = req.body;
+    const { commentID } = req.params;
 
-    /*
-        ForumTitle VARCHAR(255) NOT NULL,
-        DateCreated DATETIME NOT NULL,
-        CreatorID INT NOT NULL,
-    */
-
-    formData = {
-        ForumTitle: forumInfo.title,
-        DateCreated: "2023-12-31 23:59:59",
-        CreatorID: forumInfo.creator,
-    };
-
-    await forum.createForum(formData);
-
-    res.status(200).json(forumInfo);
-    //post
+    try {
+        const comment = await forumModel.getForumComment(commentID);
+        if (comment) {
+            res.status(200).json(comment);
+        } else {
+            res.status(404).json({ message: 'Comment not found.' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Database error!', error: error.message });
+    }
 }
 
 const updateForumComment = async (req, res) => {
-    res.status(200).json({});
-    //put
+    const { commentID } = req.params;
+    const { body } = req.body;
+
+    if (!body) {
+        return res.status(400).json({ message: 'Comment body is required!' });
+    }
+
+    try {
+        await forumModel.updateForumComment(commentID, body);
+        res.status(200).json({ message: 'Forum comment updated successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Database error!', error: error.message });
+    }
 }
 
 module.exports = {
