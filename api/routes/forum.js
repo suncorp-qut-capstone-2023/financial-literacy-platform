@@ -6,10 +6,12 @@ const {
     getForumComments,
     createForumComment,
     createForum,
+    getForums,
     getForumComment,
     updateForumComment
 } = require("../controller/forumController.js");
 
+router.get("/", auth, getForums);
 router.get("/:forumID", auth, getForumComments);
 router.get("/:forumID/:commentID", auth, getForumComment);
 
