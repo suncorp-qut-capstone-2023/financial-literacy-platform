@@ -1830,9 +1830,9 @@
         "tags": [
           "Search function"
         ],
-        "summary": "Get the result of deleting a course through its ID",
+        "summary": "Get the result of deleting a course tag through its course ID",
         "requestBody": {
-          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "description": "An object containing the course ID and the tag to be deleted",
           "required": true,
           "content": {
             "application/json": {

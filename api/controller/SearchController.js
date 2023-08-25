@@ -114,7 +114,7 @@ const deleteTag = async (req, res) => {
       return res.status(404).json({
         "success": false,
         "error": true,
-        message: `current tag with the name '${deleteTag}' has been deleted in course ID ${courseId}`
+        message: `current tag with the name '${deleteTag}' has been not been found`
       }) 
     } else {
       //TODO: in cloud development, 
@@ -122,7 +122,6 @@ const deleteTag = async (req, res) => {
       //at the moment, this is the solution first.
       course_information.available_courses[courseIdIndex].course_tag.pop(deleteTag);
 
-      console.log("DELETED TAG: " + deleteTag);
       return res.status(200).json({
           "success": true,
           message: `new tag has been added to course ID ${courseId}`
@@ -162,7 +161,6 @@ const searchTag = async (req, res) => {
       if (value === 0) {
         tagCountArray.splice(index, 1);
         delete tagCounts[key];
-        console.log(`Removed key ${key}`);
         break;
       }
     }
