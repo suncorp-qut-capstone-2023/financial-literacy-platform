@@ -6,7 +6,9 @@ const {
   registerCourse,
   attendedLecture,
   viewedMaterial,
-  attemptedQuiz
+  attemptedQuiz,
+  addInterest,
+  removeInterest
 } = require('../controller/enrolmentController.js')
 
 router.post("/course/register", auth, registerCourse);
@@ -16,5 +18,10 @@ router.post("/lectures/attended", auth, attendedLecture);
 router.post("/materials/viewed", auth, viewedMaterial);
 
 router.post("/quizzes/attempted", auth, attemptedQuiz);
+
+router.post("/interests/add", auth, addInterest);
+
+router.post("/interests/remove", auth, removeInterest);
+
 
 module.exports = router;

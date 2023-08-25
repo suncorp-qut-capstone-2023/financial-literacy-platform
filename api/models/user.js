@@ -24,6 +24,22 @@ class User {
         return knex('users').select("*").where('email', '=', email);
     }
 
+    static getInterestsFromDB(userId) {
+        return knex('users')
+            .select('interests') 
+            .where('id', '=', userId)
+            .first() 
+            .then(result => {
+                return result ? result.interests : null; 
+            });
+    }
+
+    static updateInterestsInDB(userId, serializedInterests) {
+        return knex('users')
+            .where('id', '=', userId)
+            .update({ interests: serializedInterests });
+    }
+
 }
 
 module.exports = User;
