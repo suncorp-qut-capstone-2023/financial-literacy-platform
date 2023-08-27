@@ -125,9 +125,7 @@
     },
     "/api/enrolment/course/register": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Register a user to a course",
         "requestBody": {
           "required": true,
@@ -193,9 +191,7 @@
     },
     "/api/enrolment/lectures/attended": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Mark a lecture as attended for a user",
         "requestBody": {
           "required": true,
@@ -286,9 +282,7 @@
     },
     "/api/enrolment/materials/viewed": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Mark a material as viewed for a user",
         "requestBody": {
           "required": true,
@@ -379,9 +373,7 @@
     },
     "/api/enrolment/quizzes/attempted": {
       "post": {
-        "tags": [
-          "User Interactions"
-        ],
+        "tags": ["User Interactions"],
         "summary": "Mark a quiz as attempted for a user",
         "requestBody": {
           "required": true,
@@ -470,6 +462,133 @@
         }
       }
     },
+
+    "/api/forum/create": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a new forum **Needs Fixing**",
+        "description": "Endpoint to create a new forum thread. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumPost",
+            "description": "Forum thread object that needs to be added.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ForumPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum thread successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumID": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/forum/{forumID}/comment": {
+      "post": {
+        "tags": ["Forum"],
+        "summary": "Create a forum comment **Needs fixing**",
+        "description": "Endpoint to create a new forum comment. Requires JWT token in the Authorization header.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "forumComment",
+            "description": "Forum comment object that needs to be added.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["body", "forumID"],
+              "properties": {
+                "body": {
+                  "type": "string",
+                  "description": "Main content of the comment."
+                },
+                "forumID": {
+                  "type": "integer",
+                  "description": "Id of the forum to post the comment to."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Forum comment successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "forumComment": {
+                  "type": "object",
+                  "properties": {
+                    "Body": {
+                      "type": "string",
+                      "description": "Main content of the comment"
+                    },
+                    "DateCommented": {
+                      "type": "string",
+                      "description": "Date when the comment was created."
+                    },
+                    "UserID": {
+                      "type": "integer",
+                      "description": "ID of the user who created the comment."
+                    },
+                    "ForumID": {
+                      "type": "integer",
+                      "description": "ID of the forum to which the comment belongs."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+
     "/api/learningModules/{courseID}/quiz": {
       "get": {
         "summary": "Get quiz by course ID and quiz ID",
@@ -602,9 +721,7 @@
     },
     "/api/learningModules/course/add": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new course",
         "requestBody": {
           "description": "An object containing the course name and category type",
@@ -649,9 +766,7 @@
     },
     "/api/learningModules/course/add/material": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new material information to a course",
         "requestBody": {
           "description": "An object containing the course ID, material type and material media",
@@ -702,9 +817,7 @@
     },
     "/api/learningModules/course/add/lecture": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new material information to a course",
         "requestBody": {
           "description": "An object containing the course ID, material type and material media",
@@ -751,9 +864,7 @@
     },
     "/api/learningModules/course/add/quiz": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new quiz information to a course",
         "requestBody": {
           "description": "An object containing the course ID, quiz description and maximum tries of doing the quiz.",
@@ -804,9 +915,7 @@
     },
     "/api/learningModules/course/quiz/question": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new quiz question to a quiz",
         "requestBody": {
           "description": "An object containing the course ID, quiz ID, question text, and all answer options",
@@ -833,10 +942,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "A",
-                      "C"
-                    ]
+                    "example": ["A", "C"]
                   },
                   "question_answer_options": {
                     "type": "object",
@@ -888,9 +994,7 @@
     },
     "/api/learningModules/course/update": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "update course",
         "requestBody": {
           "description": "An object containing the course name and category type",
@@ -941,9 +1045,7 @@
     },
     "/api/learningModules/course/update/material": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "update course-material",
         "requestBody": {
           "description": "An object containing the course name and category type",
@@ -998,9 +1100,7 @@
     },
     "/api/learningModules/course/update/quiz": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Add new quiz information to a course",
         "requestBody": {
           "description": "An object containing the course ID, quiz description and maximum tries of doing the quiz.",
@@ -1055,9 +1155,7 @@
     },
     "/api/learningModules/course/update/quiz/question": {
       "post": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "description": "Update quiz question in a quiz",
         "requestBody": {
           "description": "An object containing the course ID, quiz ID, question number, question text, and all answer options",
@@ -1088,10 +1186,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "B",
-                      "C"
-                    ]
+                    "example": ["B", "C"]
                   },
                   "question_answer_options": {
                     "type": "object",
@@ -1143,9 +1238,7 @@
     },
     "/api/about": {
       "get": {
-        "tags": [
-          "Administration"
-        ],
+        "tags": ["Administration"],
         "description": "A route to know more about the project team.",
         "responses": {
           "200": {
@@ -1197,9 +1290,7 @@
     },
     "/api/user/register": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "description": "Creates a new user account. A request body containing the user to be registered must be sent.",
         "requestBody": {
           "description": "An object containing the email and password of the user to be registered.",
@@ -1285,9 +1376,7 @@
     "/api/user/login": {
       "post": {
         "description": "Log in to an existing user account. A request body containing the user credentials must be sent.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "description": "The credentials of the user to log in.",
           "required": true,
@@ -1380,9 +1469,7 @@
     "/api/user/logout": {
       "get": {
         "description": "Logout from the user account.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "description": "Nothing required.",
           "required": false,
@@ -1402,9 +1489,7 @@
     },
     "/api/user/:email/delete": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "description": "Delete a user account. A request body containing the user email to be deleted must be sent.",
         "requestBody": {
           "description": "An object containing the email of the user to be deleted.",
@@ -1485,9 +1570,7 @@
     },
     "/api/learningmodules/media": {
       "get": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "summary": "Get media content",
         "parameters": [
           {
@@ -1541,9 +1624,7 @@
     },
     "/api/learningmodules": {
       "get": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "summary": "View all available learning modules",
         "parameters": [
           {
@@ -1578,9 +1659,7 @@
     },
     "/api/learningmodules/{moduleID}/viewContent": {
       "get": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "summary": "View content of a learning module",
         "parameters": [
           {
@@ -1615,9 +1694,7 @@
     },
     "/api/modules/{courseID}": {
       "get": {
-        "tags": [
-          "Learning Modules"
-        ],
+        "tags": ["Learning Modules"],
         "summary": "View content of a learning module",
         "parameters": [
           {
@@ -1652,9 +1729,7 @@
     },
     "/api/learningModules/search": {
       "post": {
-        "tags": [
-          "Search function"
-        ],
+        "tags": ["Search function"],
         "description": "Search for modules",
         "requestBody": {
           "description": "An object containing the search queries to be search to. Match modules will appear if found.",
@@ -1752,9 +1827,7 @@
     },
     "/api/learningModules/add/tags": {
       "post": {
-        "tags": [
-          "Search function"
-        ],
+        "tags": ["Search function"],
         "summary": "Add new tag to an existing course",
         "requestBody": {
           "description": "Add a new tag",
@@ -1795,9 +1868,7 @@
     },
     "/api/learningModules/delete/tags": {
       "delete": {
-        "tags": [
-          "Search function"
-        ],
+        "tags": ["Search function"],
         "summary": "Get the result of deleting a course through its ID",
         "requestBody": {
           "description": "An object containing the search queries to be search to. Match modules will appear if found.",
@@ -1844,9 +1915,7 @@
     },
     "/api/learningModules/search/tags": {
       "post": {
-        "tags": [
-          "Search function"
-        ],
+        "tags": ["Search function"],
         "summary": "Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.",
         "requestBody": {
           "description": "An object containing the search queries to be search to. Match modules will appear if found.",
