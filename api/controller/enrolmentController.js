@@ -1,7 +1,75 @@
 const course_information = require("../course-information.json");
+const User = require('../models/user.js');
 const user_registrations = require("../user-course-information.json");
 const path = require("path");
 const fs = require("fs");
+
+const addInterest = async (req, res) => {
+  const userId = req.body.user_id;
+  const interest = req.body.interest;
+
+  try {
+      let serializedInterests = await User.getInterestsFromDB(userId);
+
+      let interests = serializedInterests ? JSON.parse(serializedInterests) : [];
+      
+      // Check if the interest already exists
+      if (!interests.includes(interest)) {
+          interests.push(interest);
+
+          let updatedSerializedInterests = JSON.stringify(interests);
+          await User.updateInterestsInDB(userId, updatedSerializedInterests);
+          
+          res.status(200).json({
+              message: `Interest ${interest} added for user ID ${userId}.`
+          });
+      } else {
+          res.status(400).json({
+              error: true,
+              message: `Interest ${interest} already exists for user ID ${userId}.`
+          });
+      }
+  } catch(err) {
+      res.status(500).json({
+          error: true,
+          message: 'Internal Server Error.'
+      });
+  }
+};
+
+const removeInterest = async (req, res) => {
+  const userId = req.body.user_id;
+  const interest = req.body.interest;
+
+  try {
+      let serializedInterests = await User.getInterestsFromDB(userId);
+
+      let interests = serializedInterests ? JSON.parse(serializedInterests) : [];
+      
+      if (interests.includes(interest)) {
+          // Remove the interest
+          interests = interests.filter(int => int !== interest);
+
+          let updatedSerializedInterests = JSON.stringify(interests);
+          await User.updateInterestsInDB(userId, updatedSerializedInterests);
+          
+          res.status(200).json({
+              message: `Interest ${interest} removed for user ID ${userId}.`
+          });
+      } else {
+          res.status(400).json({
+              error: true,
+              message: `Interest ${interest} doesn't exist for user ID ${userId}.`
+          });
+      }
+  } catch(err) {
+      res.status(500).json({
+          error: true,
+          message: 'Internal Server Error.'
+      });
+  }
+};
+
 
 function checkCourseCompletion(userId, courseId) {
   // Find the user's registration for the specified course
@@ -246,9 +314,14 @@ const attemptedQuiz = async (req, res) => {
   }
 };
 
+
+
+
 module.exports = {
   registerCourse,
   attendedLecture,
   viewedMaterial,
   attemptedQuiz,
+  addInterest,
+  removeInterest
 };
