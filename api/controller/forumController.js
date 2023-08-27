@@ -13,7 +13,6 @@ const getForumComments = async (req, res) => {
 };
 
 const createForumComment = async (req, res) => {
-  console.log(req.body);
   if (!req.isAuthorized) {
     return res.status(401).json({ error: true, message: "Not authorized!" });
   }
@@ -41,12 +40,10 @@ const createForumComment = async (req, res) => {
 
   try {
     await forumModel.createForumComment(forumCommentData);
-    res
-      .status(201)
-      .json({
-        message: "Forum comment created!",
-        forumComment: forumCommentData,
-      });
+    res.status(201).json({
+      message: "Forum comment created!",
+      forumComment: forumCommentData,
+    });
   } catch (error) {
     console.error(error); // Log the error for debugging
     res.status(500).json({ message: "Database error!", error: error.message });
@@ -67,20 +64,19 @@ const createForum = async (req, res) => {
   const forumData = {
     ForumTitle,
     DateCreated: new Date(),
-    CreatorID: req.userID
-};
+    CreatorID: req.userID,
+  };
 
-if (CourseID) {
+  if (CourseID) {
     forumData.CourseID = CourseID;
-}
+  }
 
   try {
     const _result = await forumModel.createForum(forumData);
     console.log("Result from createForum:", _result);
     res.status(201).json({ message: "Forum created!", forumID: _result[0] });
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: "Database error!" });
   }
 };
 
@@ -89,8 +85,7 @@ const getForums = async (req, res) => {
     const forums = await forumModel.getForums();
     res.status(200).json(forums);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: "Database error!" });
   }
 };
 
@@ -105,8 +100,7 @@ const getForumComment = async (req, res) => {
       res.status(404).json({ message: "Comment not found." });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: "Database error!" });
   }
 };
 
@@ -122,8 +116,7 @@ const updateForumComment = async (req, res) => {
     await forumModel.updateForumComment(commentID, body);
     res.status(200).json({ message: "Forum comment updated successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: "Database error!" });
   }
 };
 
