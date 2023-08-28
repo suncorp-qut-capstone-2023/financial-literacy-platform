@@ -25,6 +25,7 @@ const learningModulesRouter = require('./routes/learningModules.js');
 const enrolmentRouter = require('./routes/enrolment.js');
 const modulesRouter = require('./routes/courses.js');
 const mediaRouter = require('./routes/media.js');
+const forumRouter = require('./routes/forum.js');
 
 // security implementation
 app.use(helmet());
@@ -65,6 +66,7 @@ app.use('/api/learningModules', learningModulesRouter);
 app.use('/api/enrolment', enrolmentRouter);
 app.use('/api/modules', modulesRouter);
 app.use('/api/media', mediaRouter);
+app.use('/api/forum', forumRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

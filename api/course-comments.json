@@ -1,0 +1,54 @@
+{
+  "courses": [
+    {
+      "course_id": 1,
+      "lectures": [
+        {
+          "lecture_id": 1,
+          "comments": [
+            {
+              "comment": "blah blah blah",
+              "user_id": 1,
+              "timestamp": "2023-08-08T10:20:00.594Z"
+            }
+          ]
+        },
+        {
+            "lecture_id": 2,
+            "comments": [
+              {
+                "comment": "blah blah blah",
+                "user_id": 1,
+                "timestamp": "2023-08-08T10:20:00.594Z"
+              }
+            ]
+          }
+      ]
+    },
+    {
+        "course_id": 2,
+        "lectures": [
+          {
+            "lecture_id": 1,
+            "comments": [
+              {
+                "comment": "blah blah blah",
+                "user_id": 1,
+                "timestamp": "2023-08-08T10:20:00.594Z"
+              }
+            ]
+          },
+          {
+              "lecture_id": 2,
+              "comments": [
+                {
+                  "comment": "blah blah blah",
+                  "user_id": 1,
+                  "timestamp": "2023-08-08T10:20:00.594Z"
+                }
+              ]
+            }
+        ]
+      }
+  ]
+}
