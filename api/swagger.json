@@ -120,7 +120,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/enrolment/course/register": {
@@ -761,7 +766,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/learningModules/course/add/material": {
@@ -812,7 +822,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/learningModules/course/add/lecture": {
@@ -859,7 +874,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/learningModules/course/add/quiz": {
@@ -910,7 +930,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/learningModules/course/quiz/question": {
@@ -989,7 +1014,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/learningModules/course/update": {
@@ -1654,41 +1684,6 @@
         }
       }
     },
-    "/api/learningmodules": {
-      "get": {
-        "tags": ["Learning Modules"],
-        "summary": "View all available learning modules",
-        "parameters": [
-          {
-            "name": "course",
-            "in": "query",
-            "description": "ID of the course",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/learningmodules/{moduleID}/viewContent": {
       "get": {
         "tags": ["Learning Modules"],
@@ -2034,7 +2029,12 @@
               "application/json": {}
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/media/download": {
@@ -2081,6 +2081,109 @@
             "description": "Not Found",
             "content": {
               "application/json": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/forum/search": {
+      "post": {
+        "tags": ["Forum"],
+        "description": "Search for forum",
+        "requestBody": {
+          "description": "An object containing the search queries to be search to. Match modules will appear if found.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "search_query": {
+                    "type": "string",
+                    "example": "test"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module search result has been found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted"
+                    },
+                    "module": {
+                      "type": "object",
+                      "properties": {
+                        "course_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "course_name": {
+                          "type": "string",
+                          "example": "C# course"
+                        },
+                        "category_type": {
+                          "type": "string",
+                          "example": "basic/intermediate/advance"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Other URL issue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Learning modules endpoint is not working"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Module not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "no module with the provided module name has been found"
+                    }
+                  }
+                }
+              }
             }
           }
         }

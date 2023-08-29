@@ -12,7 +12,7 @@ function FindCourseIndex(course_ID) {
   return -1;
 }
 
-function SearchRegex(regex, input) {
+function ModuleSearchRegex(regex, input) {
   const pattern = new RegExp(`^${regex}`, 'i'); // The 'i' flag makes the match case-insensitive
   const result = pattern.exec(input);
   return result;
@@ -31,7 +31,7 @@ const searchModule = (req, res) => {
       //compare the search input query with the available courses name
       response.data.available_courses.find(course => {
         const courseName = course.course_name;
-        const result = SearchRegex(regex, courseName);
+        const result = ModuleSearchRegex(regex, courseName);
 
         if (result) {
             matchModules.push(course); // Include the course if match
@@ -150,7 +150,7 @@ const searchTag = async (req, res) => {
 
       response.data.available_courses[i].course_tag.find( courseTag => {
 
-        const match = SearchRegex(searchQuery, courseTag);
+        const match = ModuleSearchRegex(searchQuery, courseTag);
         
         if (match !== null) {
           tagCounts[`${response.data.available_courses[i].course_id}`]++;
@@ -185,9 +185,61 @@ const searchTag = async (req, res) => {
   })
 };
 
+function ForumSearchRegex(regex, input) {
+  const pattern = new RegExp(`^${regex}`, 'i'); // The 'i' flag makes the match case-insensitive
+  const result = pattern.exec(input);
+
+  console.log(result);
+  return result;
+}
+
+const SearchForum = async (req, res) => {
+  const searchQuery = req.body.search_query;
+
+  await axios
+  .get('http://127.0.0.1:443/api/forum')
+  .then((response) => {
+    
+    //keep track of match modules
+    let matchForums = [];
+
+    for (let i = 0; i < response.data.length; i++) {
+      const title = response.data[i].ForumTitle;
+      const result = ForumSearchRegex(searchQuery, title);
+
+      if (result) {
+        matchForums.push(response.data[i]); // Include the course if match
+      }
+    }
+
+    //check if module has been found or not
+    if (matchForums.length === 0) {
+      return res.status(404).json({
+        "error": true,
+        "message": "no module with the provided module name has been found"
+      })
+    } else {
+      //TODO: add more result (but empty result is fine so wait until unit testing)
+      return res.status(200).json({
+        "error": false,
+        "message": "one or several modules has been found",
+        "forum": matchForums
+      })        
+    }    
+        
+  })    
+  .catch((error) => {
+    return res.status(400).json({
+      "error": true,
+      "message": "Learning modules endpoint is not working"
+    })  
+  });
+}
+
 module.exports = {
     searchModule,
     addTag,
     deleteTag,
-    searchTag
+    searchTag,
+    SearchForum
 };

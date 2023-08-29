@@ -22,6 +22,9 @@ router.get("/:courseID/media", auth, (req, res) => {
   const image = req.query.image;
   const video = req.query.video;
 
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
 
   if (!courseID) {
     return res.status(400).json({
@@ -83,6 +86,10 @@ router.post("/course/add", auth, (req, res) => {
   const category_type = req.body.category_type;
   const course_last_updated = req.body.course_last_updated;
 
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
+
   if (!course_name || !category_type || ! course_last_updated) {
     return res.status(400).json({
       "success_addition": false,
@@ -126,6 +133,10 @@ router.post("/course/add/material", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const material_type = req.body.material_type;
   const material_media = req.body.material_media;
+
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
 
   const index = FindCourseIndex(course_ID);
 
@@ -175,6 +186,10 @@ router.post("/course/add/lecture", auth, (req, res) => {
 
   const index = FindCourseIndex(course_ID);
 
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
+
   if (!lecture_type) {
     return res.status(400).json({
       "success_addition": false,
@@ -223,6 +238,10 @@ router.post("/course/add/quiz", auth, (req, res) => {
   const course_ID = req.body.course_id;
   const quiz_description = req.body.description;
   const quiz_max_tries = req.body.max_tries;
+
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
 
   const index = FindCourseIndex(course_ID);
 
@@ -288,6 +307,10 @@ router.post("/course/add/quiz/question", auth, (req, res) => {
   const option_B = question_options.B;
   const option_C = question_options.C;
   const option_D = question_options.D;
+
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
 
   const index = FindCourseIndex(course_ID);
 
@@ -812,6 +835,5 @@ router.get("/course", function (req, res, next) {
   })
 
 });
-
 
 module.exports = router;
