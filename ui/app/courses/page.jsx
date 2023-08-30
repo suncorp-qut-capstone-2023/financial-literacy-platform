@@ -2,30 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import styles from "@/styles/page.module.css";
-import Header from "@/components/header";
 import CourseOverview from '@/components/courseOverview';
 
-export default function Home() {
-  const [courses, setCourses] = useState([]); // initialise state to store the courses data
-
-  useEffect(() => {
-    // Fetching the data when the component mounts
-    async function fetchData() {
-      try {
-        const response = await fetch("https://jcmg-api.herokuapp.com/api/learningModules");
-        const data = await response.json();
-        setCourses(data.available_courses.slice(0, 3));  // setting state with the first three fetched courses
-      } catch (error) {
-        console.error("Error fetching courses data:", error);
+export default function Courses() {
+    const [courses, setCourses] = useState([]);
+  
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          const response = await fetch("https://jcmg-api.herokuapp.com/api/learningModules");
+          const data = await response.json();
+          setCourses(data.available_courses);
+        } catch (error) {
+          console.error("Error fetching courses data:", error);
+        }
       }
-    }
-
-    fetchData();
-  }, []);
-
-  return (
-    <main className={styles.main}>
-      <Header />
+      fetchData();
+    }, []);
+  
+    return (
+      <main className={styles.main}>
         <div className={styles.contentWrapper}>
           <div className={styles.description}>
             <h1 className={styles.title}>Courses</h1>
@@ -40,7 +36,7 @@ export default function Home() {
             return (
               <CourseOverview
                 key={course.course_id}
-                courseId={course.course_id}  // <-- this is the change
+                courseId={course.course_id} 
                 courseName={course.course_name}
                 lastUpdated={course.course_last_updated.value}
                 materialsCount={course.material.length}
@@ -51,5 +47,5 @@ export default function Home() {
           })}
         </div>
       </main>
-  );
-}
+    );
+}  

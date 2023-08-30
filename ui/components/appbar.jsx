@@ -18,7 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchBar from "@/components/searchBar";
 import { SearchOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import logo from "../assets/logo.svg"; // Suncorp logo
 
@@ -29,7 +29,7 @@ import styles from "@/styles/appbar.module.css"; // Custom styling for
 
 const pages = [
   { label: "Home", path: "/" },
-  { label: "Articles", path: "/articles" },
+  { label: "Courses", path: "/courses" },
   { label: "Videos", path: "/videos" },
   { label: "Login", path: "/login" },
 ];

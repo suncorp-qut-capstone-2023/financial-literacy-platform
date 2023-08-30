@@ -12,6 +12,8 @@
   width: 100%;
   font-family: var(--font-mono);
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .contentWrapper p {
