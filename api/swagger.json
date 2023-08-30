@@ -2141,7 +2141,7 @@
     "/api/learningModules/delete/tags": {
       "delete": {
         "tags": ["Search function"],
-        "summary": "Get the result of deleting a course through its ID",
+        "summary": "Delete a course tag on a course",
         "requestBody": {
           "description": "An object containing the course ID and the tag to be deleted",
           "required": true,
@@ -2231,7 +2231,7 @@
     "/api/media/upload": {
       "post": {
         "tags": [
-          ""
+          "Media"
         ],
         "summary": "",
         "requestBody": {
@@ -2285,7 +2285,7 @@
     "/api/media/download": {
       "post": {
         "tags": [
-          ""
+          "Media"
         ],
         "summary": "",
         "requestBody": {
