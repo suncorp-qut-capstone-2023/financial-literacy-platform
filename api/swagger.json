@@ -690,12 +690,206 @@
     },
     "/api/learningModules/course/delete/{courseID}": {
       "delete": {
+        "tags": ["Learning Modules"],
         "summary": "Get the result of deleting a course through its ID",
         "parameters": [
           {
             "name": "courseID",
             "in": "path",
             "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/delete/{courseID}/material/{materialID}": {
+      "delete": {
+        "tags": ["Learning Modules"],
+        "summary": "Get the result of deleting a material through its ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "materialID",
+            "in": "path",
+            "description": "material ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/delete/{courseID}/lecture/{lectureID}": {
+      "delete": {
+        "tags": ["Learning Modules"],
+        "summary": "Get the result of deleting a lecture through its ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lectureID",
+            "in": "path",
+            "description": "lecture ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/delete/{courseID}/quiz/{quizID}": {
+      "delete": {
+        "tags": ["Learning Modules"],
+        "summary": "Get the result of deleting a quiz through its ID",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quizID",
+            "in": "path",
+            "description": "quiz ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/delete/{courseID}/quiz/{quizID}/quiz-question/{questionNumber}": {
+      "delete": {
+        "tags": ["Learning Modules"],
+        "summary": "Get the result of deleting a quiz question through its question number",
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "description": "ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quizID",
+            "in": "path",
+            "description": "quiz ID of the course",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "questionNumber",
+            "in": "path",
+            "description": "quiz question number",
             "required": true,
             "schema": {
               "type": "string"
@@ -938,7 +1132,7 @@
         ]
       }
     },
-    "/api/learningModules/course/quiz/question": {
+    "/api/learningModules/course/add/quiz/question": {
       "post": {
         "tags": ["Learning Modules"],
         "description": "Add new quiz question to a quiz",
@@ -1104,6 +1298,57 @@
                   "material_media": {
                     "type": "string",
                     "example": "ASX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/learningModules/course/update/lecture": {
+      "post": {
+        "tags": ["Learning Modules"],
+        "description": "update course-lecture",
+        "requestBody": {
+          "description": "An object containing the course id, lecture id and lecture type",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 11
+                  },
+                  "lecture_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "lecture_type": {
+                    "type": "string",
+                    "example": "COOL"
                   }
                 }
               }

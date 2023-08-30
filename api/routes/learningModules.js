@@ -79,67 +79,71 @@ function FindCourseIndex(course_ID) {
 }
 
 router.post("/course/add", auth, (req, res) => {
-  const last_data = course_information.available_courses.length - 1;
-  const course_id = course_information.available_courses[last_data].course_id + 1;
-
-  const course_name = req.body.course_name;
-  const category_type = req.body.category_type;
-  const course_last_updated = req.body.course_last_updated;
-
-  if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
-  }
-
-  if (!course_name || !category_type || ! course_last_updated) {
+  // Validate inputs
+  const { course_name, category_type, course_last_updated } = req.body;
+  if (!course_name || !category_type || !course_last_updated) {
     return res.status(400).json({
-      "success_addition": false,
+      success_addition: false,
       error: true,
-      message: "Bad request please specify the course name and category type"
+      message: "Bad request. Please specify the course name and category type."
     });
   }
 
-  /*
-  =================================NOTE========================================
-
-  check if the ISOdate format is already correct or not!
-  check all the other types too (string and int) if it's inputted correctly!
-  */
-
-  //course_information will be modified to accessing S3 or Azure blob storage soon
-  const new_course = {
-    "course_id": course_id,
-    "course_name": course_name,
-    "category_type": category_type,
-    "course_tag": [ ],
-    "course_last_updated": {
-      "@type": "ISODate",
-      "value": course_last_updated
-    },
-    "material": [ ],
-    "lectures": [ ],
-    "quiz": [ ]
-  }
-
-  course_information.available_courses.push(new_course);
-
-  return res.status(200).json({
-    "success_addition": true,
-    message: "A new course with the ID " + course_id + " has been added"
-  })
-
-})
-
-router.post("/course/add/material", auth, (req, res) => {
-  const course_ID = req.body.course_id;
-  const material_type = req.body.material_type;
-  const material_media = req.body.material_media;
-
   if (!req.isAuthorized) {
     return res.status(401).json({ error: true, message: "Not authorized!" });
   }
 
-  const index = FindCourseIndex(course_ID);
+  try {
+    // Generate a new course_id (TODO: MAKE IT MORE ROBUST)
+    const last_data = course_information.available_courses.length - 1;
+    const course_id = course_information.available_courses[last_data].course_id + 1;
 
+    //   /*
+    //   =================================NOTE========================================
+
+    //   check if the ISOdate format is already correct or not!
+    //   check all the other types too (string and int) if it's inputted correctly!
+    //   */
+  
+    const new_course = {
+      course_id,
+      course_name,
+      category_type,
+      course_tag: [],
+      course_last_updated: {
+        "@type": "ISODate",
+        "value": course_last_updated
+      },
+      material: [],
+      lectures: [],
+      quiz: []
+    }
+  
+    course_information.available_courses.push(new_course);
+  
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+  
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+  
+      return res.status(200).json({
+        success_addition: true,
+        message: 'A new course with the ID ' + course_id + ' has been added'
+      });
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+  }
+});
+
+router.post("/course/add/material", auth, (req, res) => {
+  const { course_id, material_type, material_media } = req.body;
   if (!material_type || !material_media) {
     return res.status(400).json({
       "success_addition": false,
@@ -148,22 +152,27 @@ router.post("/course/add/material", auth, (req, res) => {
     });
   }
 
-  if (index < 0) {
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
+
+  const courseIndex = FindCourseIndex(course_id);
+
+  if (courseIndex < 0) {
     return res.status(404).json({
       "success_addition": false,
       "error": true,
       message: "the provided course ID can not be found"
     })
   } else {
-    const total_data = course_information.available_courses[index].material.length;
+    const total_data = course_information.available_courses[courseIndex].material.length;
     let material_ID;
 
     if (total_data != 0) {
-      material_ID = course_information.available_courses[index].material[total_data - 1].material_id + 1;
+      material_ID = course_information.available_courses[courseIndex].material[total_data - 1].material_id + 1;
     } else {
       material_ID = 1;
     }
-
 
     const new_material = {
       "material_id": material_ID,
@@ -171,25 +180,29 @@ router.post("/course/add/material", auth, (req, res) => {
       "material_media": material_media
     }
 
-    course_information.available_courses[index].material.push(new_material);
+    course_information.available_courses[courseIndex].material.push(new_material);
 
-    return res.status(200).json({
-      "success_addition": true,
-      message: `A new course material with the ID ${material_ID} has been added to course ID ${course_ID}`
-    })
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+  
+      return res.status(200).json({
+        "success_addition": true,
+        "message": `A new course material with the ID ${material_ID} has been added to course ID ${course_id}`
+      })
+    });
   }
 })
 
 router.post("/course/add/lecture", auth, (req, res) => {
-  const course_ID = req.body.course_id;
-  const lecture_type = req.body.lecture_type;
-
-  const index = FindCourseIndex(course_ID);
-
-  if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
-  }
-
+  // Validate inputs
+  const { course_id, lecture_type } = req.body;
   if (!lecture_type) {
     return res.status(400).json({
       "success_addition": false,
@@ -197,6 +210,12 @@ router.post("/course/add/lecture", auth, (req, res) => {
       message: "Bad request please specify the course ID and lecture type"
     });
   }
+
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
+
+  const index = FindCourseIndex(course_id);
 
   if (index < 0) {
     return res.status(404).json({
@@ -206,18 +225,18 @@ router.post("/course/add/lecture", auth, (req, res) => {
     })
   } else {
     const total_data = course_information.available_courses[index].lectures.length;
-    let lecture_ID;
+    let lectureId;
 
     if (total_data != 0) {
-      lecture_ID = course_information.available_courses[index].lectures[total_data - 1].lectures_id + 1;
+      lectureId = course_information.available_courses[index].lectures[total_data - 1].lectures_id + 1;
     } else {
-      lecture_ID = 1;
+      lectureId = 1;
     }
 
     const currentDate = new Date();
 
     const new_lecture = {
-      "lectures_id": lecture_ID,
+      "lectures_id": lectureId,
       "lecture_date_and_time": {
         "@type": "ISODate",
         "value": currentDate.toISOString()
@@ -227,31 +246,39 @@ router.post("/course/add/lecture", auth, (req, res) => {
 
     course_information.available_courses[index].lectures.push(new_lecture);
 
-    return res.status(200).json({
-      "success_addition": true,
-      message: `A new course lecture with the ID ${lecture_ID} has been added to course ID ${course_ID}`
-    })
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+  
+      return res.status(200).json({
+        "success_addition": true,
+        message: `A new course lecture with the ID ${lectureId} has been added to course ID ${course_id}`
+      })
+    });
   }
 })
 
 router.post("/course/add/quiz", auth, (req, res) => {
-  const course_ID = req.body.course_id;
-  const quiz_description = req.body.description;
-  const quiz_max_tries = req.body.max_tries;
-
-  if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
-  }
-
-  const index = FindCourseIndex(course_ID);
-
-  if (!quiz_description || !quiz_max_tries) {
+  const {course_id, description, max_tries} = req.body;
+  if (!description || !max_tries) {
     return res.status(400).json({
       "success_addition": false,
       error: true,
       message: "Bad request please specify the quiz description and max tries"
     });
   }
+
+  if (!req.isAuthorized) {
+    return res.status(401).json({ error: true, message: "Not authorized!" });
+  }
+
+  const index = FindCourseIndex(course_id);
 
   if (index < 0) {
     return res.status(404).json({
@@ -261,28 +288,39 @@ router.post("/course/add/quiz", auth, (req, res) => {
     })
   } else {
     const total_data = course_information.available_courses[index].quiz.length;
-    let quiz_ID;
+    let quizId;
 
     if (total_data != 0) {
-      quiz_ID = course_information.available_courses[index].quiz[total_data - 1].quiz_id + 1;
+      quizId = course_information.available_courses[index].quiz[total_data - 1].quiz_id + 1;
     } else {
-      quiz_ID = 1;
+      quizId = 1;
     }
 
     //by default, at least a quiz can be added without any question
     const new_quiz = {
-      "quiz_id": quiz_ID,
-      "description": quiz_description,
-      "max_tries": quiz_max_tries,
+      "quiz_id": quizId,
+      "description": description,
+      "max_tries": max_tries,
       "questions": []
     }
 
     course_information.available_courses[index].quiz.push(new_quiz);
 
-    return res.status(200).json({
-      "success_addition": true,
-      message: `A new course quiz with the ID ${quiz_ID} has been added to course ID ${course_ID}`
-    })
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+  
+      return res.status(200).json({
+        "success_addition": true,
+        message: `A new course quiz with the ID ${quizId} has been added to course ID ${course_id}`
+      })
+    });
   }
 })
 
@@ -297,24 +335,16 @@ function FindQuizIndex(course_index, quiz_ID) {
 }
 
 router.post("/course/add/quiz/question", auth, (req, res) => {
-  const course_ID = req.body.course_id;
-  const quiz_ID = req.body.quiz_id;
-  const question_text = req.body.question_text;
-  const question_answers = req.body.question_answers;
-
-  const question_options = req.body.question_answer_options;
-  const option_A = question_options.A;
-  const option_B = question_options.B;
-  const option_C = question_options.C;
-  const option_D = question_options.D;
+  const {course_id, quiz_id, question_text, question_answers, question_answer_options } = req.body;
+  const {A, B, C, D} = question_answer_options;
 
   if (!req.isAuthorized) {
     return res.status(401).json({ error: true, message: "Not authorized!" });
   }
 
-  const index = FindCourseIndex(course_ID);
+  const index = FindCourseIndex(course_id);
 
-  if (!question_text || !question_answers || !question_answers.length || !question_options || !option_A || !option_B || !option_C || !option_D) {
+  if (!question_text || !question_answers || !question_answers.length || !question_answer_options || !A || !B || !C || !D ) {
     return res.status(400).json({
       "success_addition": false,
       error: true,
@@ -330,7 +360,7 @@ router.post("/course/add/quiz/question", auth, (req, res) => {
     })
   } else {
 
-    const quiz_index = FindQuizIndex(index, quiz_ID)
+    const quiz_index = FindQuizIndex(index, quiz_id)
 
     if (quiz_index < 0) {
       return res.status(404).json({
@@ -352,30 +382,38 @@ router.post("/course/add/quiz/question", auth, (req, res) => {
         "question_number": question_num,
         "question_text": question_text,
         "question_answer_options": {
-          "A": option_A,
-          "B": option_B,
-          "C": option_C,
-          "D": option_D
+          "A": A,
+          "B": B,
+          "C": C,
+          "D": D
         },
         "answers": question_answers  // Store answers array in the question
       }
 
       course_information.available_courses[index].quiz[quiz_index].questions.push(new_quiz);
 
-      return res.status(200).json({
-        "success_addition": true,
-        message: `A new course quiz question with the number ${question_num} has been added to quiz ID ${quiz_ID} of course ID ${course_ID}`
-      })
+      // Convert the course_information object to JSON format
+      const updatedData = JSON.stringify(course_information, null, 2);
+
+      // Write the updated JSON data back to the file
+      fs.writeFile('./course-information.json', updatedData, (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+          return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+        }
+    
+        return res.status(200).json({
+          "success_addition": true,
+          message: `A new course quiz question with the number ${question_num} has been added to quiz ID ${quiz_id} of course ID ${course_id}`
+        })
+      });
     }
 
   }
 })
 
 router.post("/course/update", auth, (req, res) => {
-  const course_id = req.body.course_id;
-  const course_name = req.body.course_name;
-  const category_type = req.body.category_type;
-  const course_last_updated = req.body.course_last_updated;
+  const {course_id, course_name, category_type, course_last_updated} = req.body;
 
   const index = FindCourseIndex(course_id);
 
@@ -404,10 +442,22 @@ router.post("/course/update", auth, (req, res) => {
     } 
 
     if (success == true) {
-      return res.status(200).json({
-        "success_update": true,
-        message: `A course with the ID ${course_id} has been updated`
-      })
+
+      // Convert the course_information object to JSON format
+      const updatedData = JSON.stringify(course_information, null, 2);
+
+      // Write the updated JSON data back to the file
+      fs.writeFile('./course-information.json', updatedData, (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+          return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+        }
+    
+        return res.status(200).json({
+          "success_update": true,
+          message: `A course with the ID ${course_id} has been updated`
+        })
+      });
     } else {
       return res.status(400).json({
         "success_update": false,
@@ -429,10 +479,7 @@ function FindMaterialIDIndex(course_index, material_ID) {
 }
 
 router.post("/course/update/material", auth, (req, res) => {
-  const course_id = req.body.course_id;
-  const material_id = req.body.material_id;
-  const material_type = req.body.material_type;
-  const material_media = req.body.material_media;
+  const {course_id, material_id, material_type, material_media} = req.body;
 
   const index = FindCourseIndex(course_id);
 
@@ -467,10 +514,22 @@ router.post("/course/update/material", auth, (req, res) => {
       }
 
       if (success == true) {
-        return res.status(200).json({
-          "success_update": true,
-          message: `the material on the material ID ${material_id} from course ID ${course_id} has been updated`
-        })
+        // Convert the course_information object to JSON format
+        const updatedData = JSON.stringify(course_information, null, 2);
+
+        // Write the updated JSON data back to the file
+        fs.writeFile('./course-information.json', updatedData, (err) => {
+          if (err) {
+            console.error('Error writing to file:', err);
+            return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+          }
+      
+          return res.status(200).json({
+            "success_update": true,
+            message: `the material on the material ID ${material_id} from course ID ${course_id} has been updated`
+          })
+        });
+
       } else {
         return res.status(400).json({
           "success_update": false,
@@ -493,9 +552,7 @@ function FindLectureIDIndex(course_index, lecture_ID) {
 }
 
 router.post("/course/update/lecture", auth, (req, res) => {
-  const course_id = req.body.course_id;
-  const lecture_id = req.body.lecture_id;
-  const lecture_type = req.body.lecture_type;
+  const {course_id, lecture_id, lecture_type} = req.body;
 
   const index = FindCourseIndex(course_id);
 
@@ -519,10 +576,21 @@ router.post("/course/update/lecture", auth, (req, res) => {
       if (lecture_type) {
         course_information.available_courses[index].lectures[lectureIndex].lectures_type = lecture_type;
 
-        return res.status(200).json({
-          "success_update": true,
-          message: `the material on the lecture ID ${lecture_id} from course ID ${course_id} has been updated`
-        })
+        // Convert the course_information object to JSON format
+        const updatedData = JSON.stringify(course_information, null, 2);
+
+        // Write the updated JSON data back to the file
+        fs.writeFile('./course-information.json', updatedData, (err) => {
+          if (err) {
+            console.error('Error writing to file:', err);
+            return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+          }
+      
+          return res.status(200).json({
+            "success_update": true,
+            message: `the material on the lecture ID ${lecture_id} from course ID ${course_id} has been updated`
+          })
+        });
 
       } else {
         return res.status(400).json({
@@ -546,10 +614,7 @@ function FindQuizIDIndex(course_index, quiz_ID) {
 }
 
 router.post("/course/update/quiz", auth, (req, res) => {
-  const course_id = req.body.course_id;
-  const quiz_id = req.body.quiz_id;
-  const description = req.body.description;
-  const maxTries = req.body.max_tries;
+  const {course_id, quiz_id, description, max_tries} = req.body;
 
   const index = FindCourseIndex(course_id);
 
@@ -576,16 +641,29 @@ router.post("/course/update/quiz", auth, (req, res) => {
         success = true;
       }
 
-      if (maxTries) {
-        course_information.available_courses[index].quiz[quizIndex].max_tries = maxTries;
+      if (max_tries) {
+        course_information.available_courses[index].quiz[quizIndex].max_tries = max_tries;
         success = true;
       }
 
-      if (success == true) {
-        return res.status(200).json({
-          "success_update": true,
-          message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
-        })
+      if (success === true) {
+
+        // Convert the course_information object to JSON format
+        const updatedData = JSON.stringify(course_information, null, 2);
+
+        // Write the updated JSON data back to the file
+        fs.writeFile('./course-information.json', updatedData, (err) => {
+          if (err) {
+            console.error('Error writing to file:', err);
+            return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+          }
+      
+          return res.status(200).json({
+            "success_update": true,
+            message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
+          })
+        });
+
       } else {
         return res.status(400).json({
           "success_update": false,
@@ -608,17 +686,8 @@ function FindQuestionNumberIndex(course_index, quiz_index, question_number) {
 }
 
 router.post("/course/update/quiz/question", auth, (req, res) => {
-  const course_id = req.body.course_id;
-  const quiz_id = req.body.quiz_id;
-  const question_number = req.body.question_number;
-  const question_text = req.body.question_text;
-  const question_answers = req.body.question_answers; // Now expecting an array of answers
-
-  const question_answer_options = req.body.question_answer_options;
-  const option_A = question_answer_options.A;
-  const option_B = question_answer_options.B;
-  const option_C = question_answer_options.C;
-  const option_D = question_answer_options.D;
+  const {course_id, quiz_id, question_number, question_text, question_answers, question_answer_options} = req.body;
+  const {A, B, C, D} = question_answer_options;
 
   const index = FindCourseIndex(course_id);
 
@@ -662,27 +731,39 @@ router.post("/course/update/quiz/question", auth, (req, res) => {
         }
 
         // Update the answer options if provided
-        if (option_A) {
-          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.A = option_A;
+        if (A) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.A = A;
           success = true;
         }
-        if (option_B) {
-          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.B = option_B;
+        if (B) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.B = B;
           success = true;
         }
-        if (option_C) {
-          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.C = option_C;
+        if (C) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.C = C;
           success = true;
         }
-        if (option_D) {
-          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.D = option_D;
+        if (D) {
+          course_information.available_courses[index].quiz[quizIndex].questions[quesNumIndex].question_answer_options.D = D;
           success = true;
         }
 
         if (success) {
-          return res.status(200).json({
-            "success_update": true,
-            message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
+
+          // Convert the course_information object to JSON format
+          const updatedData = JSON.stringify(course_information, null, 2);
+
+          // Write the updated JSON data back to the file
+          fs.writeFile('./course-information.json', updatedData, (err) => {
+            if (err) {
+              console.error('Error writing to file:', err);
+              return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+            }
+        
+            return res.status(200).json({
+              "success_update": true,
+              message: `the material on the quiz ID ${quiz_id} from course ID ${course_id} has been updated`
+            });
           });
         } else {
           return res.status(400).json({
@@ -696,6 +777,7 @@ router.post("/course/update/quiz/question", auth, (req, res) => {
   }
 });
 
+// delete the whole course
 router.delete("/course/delete/:course_id", auth, (req, res) => {
   const course_ID = req.params.course_id;
 
@@ -715,10 +797,204 @@ router.delete("/course/delete/:course_id", auth, (req, res) => {
       message: "the provided course ID can not be found"
     })
   } else {
-    return res.status(200).json({
-      "success_deletion": true,
-      message: "course ID with the ID " + course_ID + " has been deleted"
+
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+
+      return res.status(200).json({
+        "success_deletion": true,
+        message: "course ID with the ID " + course_ID + " has been deleted"
+      })
+    });
+
+  };
+});
+
+//delete a particular material
+router.delete("/course/delete/:course_id/material/:material_id", auth, (req, res) => {
+  const {course_id, material_id} = req.params;
+
+  let check = false;
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    if (course_information.available_courses[i].course_id == course_id) {
+      for (let j = 0; j < course_information.available_courses[i].material.length; j++) {
+        if (course_information.available_courses[i].material[j].material_id == material_id) {
+          course_information.available_courses[i].material.splice(j, 1);
+          check = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if (check == false) {
+    return res.status(404).json({
+      "success_deletion": false,
+      "error": true,
+      message: "the provided course ID or material ID can not be found"
     })
+  } else {
+
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+
+      return res.status(200).json({
+        "success_deletion": true,
+        message: "material with the ID " + material_id + " on course ID " + course_id + " has been deleted"
+      })
+    });
+
+  };
+});
+
+//delete a particular lecture
+router.delete("/course/delete/:course_id/lecture/:lecture_id", auth, (req, res) => {
+  const {course_id, lecture_id} = req.params;
+
+  let check = false;
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    if (course_information.available_courses[i].course_id == course_id) {
+      for (let j = 0; j < course_information.available_courses[i].lectures.length; j++) {
+        if (course_information.available_courses[i].lectures[j].lectures_id == lecture_id) {
+          course_information.available_courses[i].lectures.splice(j, 1);
+          check = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if (check == false) {
+    return res.status(404).json({
+      "success_deletion": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+
+      return res.status(200).json({
+        "success_deletion": true,
+        message: "lecture with the ID " + lecture_id + " on course ID " + course_id + " has been deleted"
+      })
+    });
+
+  };
+});
+
+//delete a particular quiz
+router.delete("/course/delete/:course_id/quiz/:quiz_id", auth, (req, res) => {
+  const {course_id, quiz_id} = req.params;
+
+  let check = false;
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    if (course_information.available_courses[i].course_id == course_id) {
+      for (let j = 0; j < course_information.available_courses[i].quiz.length; j++) {
+        if (course_information.available_courses[i].quiz[j].quiz_id == quiz_id) {
+          course_information.available_courses[i].quiz.splice(j, 1);
+          check = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if (check == false) {
+    return res.status(404).json({
+      "success_deletion": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+
+      return res.status(200).json({
+        "success_deletion": true,
+        message: "quiz with the ID " + quiz_id + " on course ID " + course_id + " has been deleted"
+      })
+    });
+
+  };
+});
+
+//delete a particular quiz
+router.delete("/course/delete/:course_id/quiz/:quiz_id/quiz-question/:question_number", auth, (req, res) => {
+  const {course_id, quiz_id, question_number} = req.params;
+
+  let check = false;
+  for (let i = 0; i < course_information.available_courses.length; i++) {
+    if (course_information.available_courses[i].course_id == course_id) {
+      for (let j = 0; j < course_information.available_courses[i].quiz.length; j++) {
+        if (course_information.available_courses[i].quiz[j].quiz_id == quiz_id) {
+          for (let k = 0; k < course_information.available_courses[i].quiz[j].questions.length; k++) {
+            if (course_information.available_courses[i].quiz[j].questions[k].question_number == question_number) {
+              console.log(course_information.available_courses[i].quiz[j].questions[k].question_number);
+              course_information.available_courses[i].quiz[j].questions.splice(k, 1);
+              check = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (check == false) {
+    return res.status(404).json({
+      "success_deletion": false,
+      "error": true,
+      message: "the provided course ID can not be found"
+    })
+  } else {
+
+    // Convert the course_information object to JSON format
+    const updatedData = JSON.stringify(course_information, null, 2);
+
+    // Write the updated JSON data back to the file
+    fs.writeFile('./course-information.json', updatedData, (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+        return res.status(500).json({ success_addition: false, message: 'Internal server error' });
+      }
+
+      return res.status(200).json({
+        "success_deletion": true,
+        message: "quiz with the ID " + quiz_id + " on course ID " + course_id + " has been deleted"
+      })
+    });
+
   };
 });
 
