@@ -30,10 +30,10 @@ import styles from "@/styles/appbar.module.css"; // Custom styling for
 const pages = [
   { label: "Home", path: "/" },
   { label: "Courses", path: "/courses" },
-  { label: "Videos", path: "/videos" },
   { label: "Login", path: "/login" },
 ];
 
+// good potential candidate for varies items based on admin privlidges here.
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
