@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { hashPassword, comparePassword } = require('../utils/auth');
 const User = require('../models/user');
+const constants = require('../utils/constants');
 
 // Register new user
 const registerUser = async (req, res, next) => {
@@ -70,7 +71,7 @@ const loginUser = async (req, res, next) => {
         if (users.length === 0) {
             res.status(401).json({
                 error: true,
-                message: "Incorrect email or password"
+                message: constants.errorMessages.incorrectCredentials
             });
         }
         else {
@@ -79,7 +80,7 @@ const loginUser = async (req, res, next) => {
             if (!match) {
                 res.status(401).json({
                     error: true,
-                    message: "Incorrect email or password"
+                    message: constants.errorMessages.incorrectCredentials
                 });
                 return;
             }
@@ -125,7 +126,7 @@ const getUser = async (req, res, next) => {
         if (users.length === 0) {
             res.status(404).json({
                 error: true,
-                message: "User not found"
+                message: constants.errorMessages.userNotFound
             });
         }
         else {
@@ -169,7 +170,7 @@ const updateUser = async (req, res, next) => {
         if (users.length === 0) {
             res.status(404).json({
                 error: true,
-                message: "User not found"
+                message: constants.errorMessages.userNotFound
             });
         }
         else {
@@ -219,7 +220,7 @@ const deleteUser = async (req, res, next) => {
         if (users.length === 0) {
             res.status(404).json({
                 error: true,
-                message: "User not found"
+                message: constants.errorMessages.userNotFound
             });
         }
         else {
@@ -253,10 +254,12 @@ const forgotPassword = async (req, res, next) => {
         if (users.length === 0) {
             res.status(404).json({
                 error: true,
-                message: "User not found"
+                message: constants.errorMessages.userNotFound
             });
         }
         else {
+            /* Unknown use of code block
+            // TODO(Meet): Do we need this?
             // send email
             // const user = users[0];
             // const expires_in = 24 * 60 * 60;
@@ -274,6 +277,7 @@ const forgotPassword = async (req, res, next) => {
             // res.status(200).json({
             //     message: "Password reset email sent"
             // });
+            */ 
         }
     } catch (error) {
         next(error);
