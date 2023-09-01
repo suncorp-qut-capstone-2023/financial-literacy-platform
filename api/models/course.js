@@ -2,17 +2,14 @@
 const knexOptions = require('../db/knexfile');
 const knex = require("knex")(knexOptions);
 
-// Change this to db connection for cloud
-const courses = require('../course-information.json');
+// TODO: Change this to db connection for cloud
 
-// Expand this class to include all the functions that you need.
 class Course {
     static getCourse(courseID) {
         return knex('modules').select("*").where('course_id', '=', courseID);
     }
 
     static getAllCourses() {
-        // return knex('modules').select("*");
         return course.available_courses;
     }
 

@@ -2,10 +2,6 @@
 const knexOptions = require('../db/knexfile');
 const knex = require("knex")(knexOptions);
 
-// Change this to db connection for cloud
-const courses = require('../course-information.json');
-
-// Expand this class to include all the functions that you need.
 class Quiz {
     static getQuiz(courseID, moduleID, quizID) {
         return knex('modules').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).andWhere('quiz_id', '=', quizID);

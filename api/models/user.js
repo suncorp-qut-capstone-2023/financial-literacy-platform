@@ -2,7 +2,6 @@
 const knexOptions = require('../db/knexfile');
 const knex = require("knex")(knexOptions);
 
-// Expand this class to include all the functions that you need.
 class User {
     static create(userData){
         return knex('users').insert(userData);

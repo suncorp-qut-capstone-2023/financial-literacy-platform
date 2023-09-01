@@ -27,7 +27,7 @@ class Forum {
         if (identifier.forumID) {
             return knex('forumcomments').where({ ForumID: identifier.forumID }).select();
         }
-        if (identifier.courseID) {
+        else if (identifier.courseID) {
             return knex('forumcomments').where({ CourseID: identifier.courseID }).select();
         }
         throw new Error('Invalid identifier provided');
@@ -38,7 +38,7 @@ class Forum {
         return knex('forumcomments').where({ CommentID: commentID }).first();
     }
 
-    // update a comment based on its ID.
+    // TODO: update a comment based on its ID.
     static updateForumComment(commentID, updatedData) {
         return knex('forumcomments').where({ CommentID: commentID }).update(updatedData);
     }
