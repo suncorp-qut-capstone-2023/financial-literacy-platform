@@ -1,5 +1,6 @@
 const axios = require("axios");
 const course_information = require("../course-information.json");
+const courses = require('../models/course');
 
 //TODO: create one FindController.js to be connected with every find functions
 function FindCourseIndex(course_ID) {
@@ -23,42 +24,69 @@ const searchModule = (req, res) => {
 
     //keep track of match modules
     let matchModules = [];
-  
-    axios
-    .get('http://127.0.0.1:443/api/learningModules')
-    .then((response) => {
 
-      //compare the search input query with the available courses name
-      response.data.available_courses.find(course => {
-        const courseName = course.course_name;
-        const result = ModuleSearchRegex(regex, courseName);
+    const allCourses = courses.getAllCourses();
+    
+    //compare the search input query with the available courses name
+    allCourses.find(course => {
+      const courseName = course.course_name;
+      const result = ModuleSearchRegex(regex, courseName);
 
-        if (result) {
-            matchModules.push(course); // Include the course if match
-        }
-      });
-  
-      //check if module has been found or not
-      if (matchModules.length === 0) {
-        return res.status(404).json({
-          "error": true,
-          "message": "no module with the provided module name has been found"
-        })
-      } else {
-        //TODO: add more result (but empty result is fine so wait until unit testing)
-        return res.status(200).json({
-          "error": false,
-          "message": "one or several modules has been found",
-          "module": matchModules
-        })        
+      if (result) {
+          matchModules.push(course); // Include the course if match
       }
-    })
-    .catch((error) => {
-      return res.status(400).json({
-        "error": true,
-        "message": "Learning modules endpoint is not working"
-      })  
     });
+
+    //check if module has been found or not
+    if (matchModules.length === 0) {
+      return res.status(404).json({
+        "error": true,
+        "message": "no module with the provided module name has been found"
+      })
+    } else {
+      //TODO: add more result (but empty result is fine so wait until unit testing)
+      return res.status(200).json({
+        "error": false,
+        "message": "one or several modules has been found",
+        "module": matchModules
+      })        
+    }
+  
+    // axios
+    // .get('http://127.0.0.1:443/api/learningModules')
+    // .then((response) => {
+
+    //   //compare the search input query with the available courses name
+    //   response.data.available_courses.find(course => {
+    //     const courseName = course.course_name;
+    //     const result = ModuleSearchRegex(regex, courseName);
+
+    //     if (result) {
+    //         matchModules.push(course); // Include the course if match
+    //     }
+    //   });
+  
+    //   //check if module has been found or not
+    //   if (matchModules.length === 0) {
+    //     return res.status(404).json({
+    //       "error": true,
+    //       "message": "no module with the provided module name has been found"
+    //     })
+    //   } else {
+    //     //TODO: add more result (but empty result is fine so wait until unit testing)
+    //     return res.status(200).json({
+    //       "error": false,
+    //       "message": "one or several modules has been found",
+    //       "module": matchModules
+    //     })        
+    //   }
+    // })
+    // .catch((error) => {
+    //   return res.status(400).json({
+    //     "error": true,
+    //     "message": "Learning modules endpoint is not working"
+    //   })  
+    // });
 };
 
 const addTag = async (req, res) => {

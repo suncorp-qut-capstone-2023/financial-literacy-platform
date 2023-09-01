@@ -13,7 +13,7 @@ class Course {
 
     static getAllCourses() {
         // return knex('modules').select("*");
-        return course.available_courses;
+        return courses.available_courses;
     }
 
     static createCourse(courseData) {
