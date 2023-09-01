@@ -8,6 +8,7 @@ const getForumComments = async (req, res) => {
     const comments = await forumModel.getForumComments(forumID || courseID);
     res.status(200).json(comments);
   } catch (error) {
+    // TODO(GEOFFREY): should we have this consistent for every function? line 12
     console.error(error);
     res.status(500).json({ message: constants.errorMessages.databaseError });
   }
@@ -15,7 +16,7 @@ const getForumComments = async (req, res) => {
 
 const createForumComment = async (req, res) => {
   if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
+    return res.status(401).json({ error: true, message: constants.errorMessages.notAuthorized });
   }
 
   const { body, forumID, courseID } = req.body;
@@ -53,7 +54,7 @@ const createForumComment = async (req, res) => {
 
 const createForum = async (req, res) => {
   if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
+    return res.status(401).json({ error: true, message: constants.errorMessages.notAuthorized });
   }
 
   const { ForumTitle, CourseID } = req.body;
