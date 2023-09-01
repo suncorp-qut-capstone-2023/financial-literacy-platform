@@ -1,3 +1,4 @@
+// TODO(Jason/Geoff): Create a controller for this and extract functionality.
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth.js");
