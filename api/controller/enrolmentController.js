@@ -1,4 +1,6 @@
+
 const course_information = require("../course-information.json");
+const constants  = require("../utils/constants");
 const User = require('../models/user.js');
 const user_registrations = require("../user-course-information.json");
 const path = require("path");
@@ -32,7 +34,7 @@ const addInterest = async (req, res) => {
   } catch(err) {
       res.status(500).json({
           error: true,
-          message: 'Internal Server Error.'
+          message: constants.errorMessages.serverError
       });
   }
 };
@@ -65,7 +67,7 @@ const removeInterest = async (req, res) => {
   } catch(err) {
       res.status(500).json({
           error: true,
-          message: 'Internal Server Error.'
+          message: constants.errorMessages.serverError
       });
   }
 };

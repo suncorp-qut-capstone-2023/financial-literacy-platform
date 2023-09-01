@@ -1,10 +1,17 @@
+// The controller of the course routes
 const courses = require('../models/course');
 const modules = require('../models/module');
 const quizzes = require('../models/quiz');
-
+const constants  = require("../utils/constants");
 
 // TODO: Not each function is working yet, need to fix the database first
-
+/**
+ * Gets all the courses from a Database table
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns a JSON object
+ */
 const getAllCourses = async (req, res) => {
     try {
         // get courses from database
@@ -17,11 +24,19 @@ const getAllCourses = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
 
+
+/**
+ * Gets a specific course from a Database table
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns A JSON object
+ */
 const getCourse = async (req, res) => {
     // get course id from url
     const courseID = req.params['courseID'];
@@ -37,11 +52,18 @@ const getCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
 
+/**
+ * Create a course in Database
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns JSON object
+ */
 const createCourse = async (req, res) => {
     // get course information from request body
     const course = req.body;
@@ -57,10 +79,18 @@ const createCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
+
+/**
+ * Permanently deletes a course in Database
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns a JSON object
+ */
 
 const deleteCourse = async (req, res) => {
     // get course id from url
@@ -77,10 +107,18 @@ const deleteCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
+
+/**
+ * Updates a course in the Database, requires to insert info in body
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns A JSON object
+ */
 
 const updateCourse = async (req, res) => {
     // get course id from url
@@ -100,7 +138,7 @@ const updateCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
@@ -123,7 +161,7 @@ const getModule = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }
@@ -149,7 +187,7 @@ const getQuiz = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: constants.errorMessages.serverError
         });
     }
 }

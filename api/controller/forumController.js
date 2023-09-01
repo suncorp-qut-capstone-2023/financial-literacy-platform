@@ -1,4 +1,5 @@
 const forumModel = require("../models/forum.js");
+const constants  = require("../utils/constants");
 
 const getForumComments = async (req, res) => {
   const { forumID, courseID } = req.params;
@@ -8,7 +9,7 @@ const getForumComments = async (req, res) => {
     res.status(200).json(comments);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
@@ -46,7 +47,7 @@ const createForumComment = async (req, res) => {
     });
   } catch (error) {
     console.error(error); // Log the error for debugging
-    res.status(500).json({ message: "Database error!", error: error.message });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
@@ -76,7 +77,7 @@ const createForum = async (req, res) => {
     console.log("Result from createForum:", _result);
     res.status(201).json({ message: "Forum created!", forumID: _result[0] });
   } catch (error) {
-    res.status(500).json({ message: "Database error!" });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
@@ -85,7 +86,7 @@ const getForums = async (req, res) => {
     const forums = await forumModel.getForums();
     res.status(200).json(forums);
   } catch (error) {
-    res.status(500).json({ message: "Database error!" });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
@@ -100,7 +101,7 @@ const getForumComment = async (req, res) => {
       res.status(404).json({ message: "Comment not found." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Database error!" });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
@@ -116,7 +117,7 @@ const updateForumComment = async (req, res) => {
     await forumModel.updateForumComment(commentID, body);
     res.status(200).json({ message: "Forum comment updated successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Database error!" });
+    res.status(500).json({ message: constants.errorMessages.databaseError });
   }
 };
 
