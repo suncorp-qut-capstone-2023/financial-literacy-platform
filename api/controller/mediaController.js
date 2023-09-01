@@ -4,9 +4,9 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storag
 
 function azureCredentials () {
     const credentials = {
-        accountName: "jasonfinfileuploadstor",
+        accountName: "jcmg",
         accountKey: process.env.ACCOUNT_KEY,
-        containerName: "upload"       
+        containerName: "media"       
     }
 
     return credentials;
