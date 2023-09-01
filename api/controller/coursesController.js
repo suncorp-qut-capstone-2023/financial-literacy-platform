@@ -127,6 +127,14 @@ const updateCourse = async (req, res) => {
     // get course information from request body
     const course = req.body;
 
+    // TODO(Geoffrey): Test
+    if (!course) {
+        return res.json({
+            error:true,
+            message:constants.errorMessages.missingInformation
+        })
+    }
+
     try {
         // update course in database
         const updatedCourse = await courses.updateCourse(courseID, course);
@@ -175,6 +183,14 @@ const getQuiz = async (req, res) => {
 
     // get quiz id from url
     const quizID = req.params['quizID'];
+
+    // TODO(Geoffrey): Decide if we want to pass into body instead. Here is a template
+    if (!courseID || moduleID || quizID) {
+        return res.status(400).json({
+            error:true,
+            message: constants.errorMessages.missingInformation
+        })
+    }
 
     try {
         // get quiz from database

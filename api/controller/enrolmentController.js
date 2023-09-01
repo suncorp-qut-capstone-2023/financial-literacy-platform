@@ -1,7 +1,6 @@
-
 const course_information = require("../course-information.json");
-const constants  = require("../utils/constants");
-const User = require('../models/user.js');
+const constants = require("../utils/constants");
+const User = require("../models/user.js");
 const user_registrations = require("../user-course-information.json");
 const path = require("path");
 const fs = require("fs");
@@ -11,31 +10,32 @@ const addInterest = async (req, res) => {
   const interest = req.body.interest;
 
   try {
-      let serializedInterests = await User.getInterestsFromDB(userId);
+    const serializedInterests = await User.getInterestsFromDB(userId);
+    const interests = serializedInterests
+      ? JSON.parse(serializedInterests)
+      : [];
 
-      let interests = serializedInterests ? JSON.parse(serializedInterests) : [];
-      
-      // Check if the interest already exists
-      if (!interests.includes(interest)) {
-          interests.push(interest);
+    // Check if the interest already exists
+    if (!interests.includes(interest)) {
+      interests.push(interest);
 
-          let updatedSerializedInterests = JSON.stringify(interests);
-          await User.updateInterestsInDB(userId, updatedSerializedInterests);
-          
-          res.status(200).json({
-              message: `Interest ${interest} added for user ID ${userId}.`
-          });
-      } else {
-          res.status(400).json({
-              error: true,
-              message: `Interest ${interest} already exists for user ID ${userId}.`
-          });
-      }
-  } catch(err) {
-      res.status(500).json({
-          error: true,
-          message: constants.errorMessages.serverError
+      const updatedSerializedInterests = JSON.stringify(interests);
+      await User.updateInterestsInDB(userId, updatedSerializedInterests);
+
+      res.status(200).json({
+        message: `Interest ${interest} added for user ID ${userId}.`,
       });
+    } else {
+      res.status(409).json({
+        error: true,
+        message: `Interest ${interest} already exists for user ID ${userId}.`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: constants.errorMessages.serverError,
+    });
   }
 };
 
@@ -44,34 +44,35 @@ const removeInterest = async (req, res) => {
   const interest = req.body.interest;
 
   try {
-      let serializedInterests = await User.getInterestsFromDB(userId);
+    const serializedInterests = await User.getInterestsFromDB(userId);
 
-      let interests = serializedInterests ? JSON.parse(serializedInterests) : [];
-      
-      if (interests.includes(interest)) {
-          // Remove the interest
-          interests = interests.filter(int => int !== interest);
+    const interests = serializedInterests
+      ? JSON.parse(serializedInterests)
+      : [];
 
-          let updatedSerializedInterests = JSON.stringify(interests);
-          await User.updateInterestsInDB(userId, updatedSerializedInterests);
-          
-          res.status(200).json({
-              message: `Interest ${interest} removed for user ID ${userId}.`
-          });
-      } else {
-          res.status(400).json({
-              error: true,
-              message: `Interest ${interest} doesn't exist for user ID ${userId}.`
-          });
-      }
-  } catch(err) {
-      res.status(500).json({
-          error: true,
-          message: constants.errorMessages.serverError
+    if (interests.includes(interest)) {
+      // Remove the interest
+      interests = interests.filter((int) => int !== interest);
+
+      const updatedSerializedInterests = JSON.stringify(interests);
+      await User.updateInterestsInDB(userId, updatedSerializedInterests);
+
+      res.status(200).json({
+        message: `Interest ${interest} removed for user ID ${userId}.`,
       });
+    } else {
+      res.status(409).json({
+        error: true,
+        message: `Interest ${interest} doesn't exist for user ID ${userId}.`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: constants.errorMessages.serverError,
+    });
   }
 };
-
 
 function checkCourseCompletion(userId, courseId) {
   // Find the user's registration for the specified course
@@ -79,31 +80,21 @@ function checkCourseCompletion(userId, courseId) {
     (reg) => reg.user_id === userId && reg.course_id === courseId
   );
 
-  if (!registration) {
-    return false; // No registration found
-  }
-
   // Fetch the course information from the available_courses
   const courseInfo = course_information.available_courses.find(
     (course) => course.course_id === courseId
   );
 
-  if (!courseInfo) {
-    return false; // No course information found
+  if (!registration || !courseInfo) {
+    return false; // No registration or CourseInfo found
   }
 
-  // Check if all materials have been viewed
-  if (courseInfo.material.length !== registration.materials_viewed.length) {
-    return false;
-  }
-
-  // Check if all lectures have been attended
-  if (courseInfo.lectures.length !== registration.lectures_attended.length) {
-    return false;
-  }
-
-  // Check if all quizzes have been attempted
-  if (courseInfo.quiz.length !== registration.quizzes_attempted.length) {
+  // Check if all materials have been viewed, lectures watched and quizzes attempted.
+  else if (
+    courseInfo.material.length !== registration.materials_viewed.length ||
+    courseInfo.lectures.length !== registration.lectures_attended.length ||
+    courseInfo.quiz.length !== registration.quizzes_attempted.length
+  ) {
     return false;
   }
 
@@ -133,8 +124,11 @@ function updateUserCourseInformationFile(res, successMessage) {
 const registerCourse = async (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
-  // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
-  const currentDate = new Date().toISOString();
+  
+  /* TODO(GEOFFREY): Should we register when someone has enrolled in class? 
+  * example:
+  * const currentDate = new Date().toISOString();
+  */
 
   if (!userId || !courseId) {
     return res.status(400).json({
@@ -149,7 +143,7 @@ const registerCourse = async (req, res) => {
   );
 
   if (existingRegistration) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: true,
       message: "User is already registered to this course.",
     });
@@ -170,8 +164,6 @@ const registerCourse = async (req, res) => {
   // After adding the new registration to the in-memory representation
   user_registrations.registrations.push(newRegistration);
 
-  // Write the updated registrations back to the JSON file
-  //TODO(): Change directory to the correct one
   updateUserCourseInformationFile(
     res,
     `User with ID ${userId} has been registered to course ID ${courseId}`
@@ -202,7 +194,7 @@ const attendedLecture = async (req, res) => {
   }
 
   if (registration.lectures_attended.includes(lectureId)) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: true,
       message: "Lecture already attended by the user for this course.",
     });
@@ -248,7 +240,7 @@ const viewedMaterial = async (req, res) => {
   }
 
   if (registration.materials_viewed.includes(materialId)) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: true,
       message: "Material already viewed by the user for this course.",
     });
@@ -294,7 +286,7 @@ const attemptedQuiz = async (req, res) => {
   }
 
   if (registration.quizzes_attempted.includes(quizId)) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: true,
       message: "Quiz already attempted by the user for this course.",
     });
@@ -316,14 +308,11 @@ const attemptedQuiz = async (req, res) => {
   }
 };
 
-
-
-
 module.exports = {
   registerCourse,
   attendedLecture,
   viewedMaterial,
   attemptedQuiz,
   addInterest,
-  removeInterest
+  removeInterest,
 };
