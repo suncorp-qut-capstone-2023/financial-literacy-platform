@@ -145,6 +145,13 @@ const updateCourse = async (req, res) => {
   }
 };
 
+/**
+ * Gets a course from database from arguments in body
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns a JSON object.
+ */
 const getModule = async (req, res) => {
   // get course id from url
   const courseID = req.params["courseID"];
@@ -167,6 +174,13 @@ const getModule = async (req, res) => {
   }
 };
 
+/**
+ * Gets a quiz from the database
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns a JSON object
+ */
 const getQuiz = async (req, res) => {
   // get course id from url
   const courseID = req.params["courseID"];

@@ -3,7 +3,13 @@ const { hashPassword, comparePassword } = require("../utils/auth");
 const User = require("../models/user");
 const constants = require("../utils/constants");
 
-// Register new user
+/**
+ * Register a new user.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const registerUser = async (req, res, next) => {
   // get body values
   const email = req.body.email;
@@ -50,7 +56,13 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-// Login user
+/**
+ * Login a user.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const loginUser = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -106,7 +118,13 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-// Get user info
+/**
+ * Get a user's information.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const getUser = async (req, res, next) => {
   try {
     // grab the userId from the jwt header
@@ -144,7 +162,13 @@ const getUser = async (req, res, next) => {
   }
 };
 
-// Update user info
+/**
+ * Update a user's information.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const updateUser = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -197,7 +221,13 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-// Delete user
+/**
+ * Delete a user.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const deleteUser = async (req, res, next) => {
   try {
     // grab the userId from the jwt header
@@ -233,7 +263,13 @@ const deleteUser = async (req, res, next) => {
 };
 
 // TODO: For future implementation, not functional yet
-// Forgot password
+/**
+ * Handle a user's forgot password request.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ */
 const forgotPassword = async (req, res, next) => {
   const email = req.body.email;
 

@@ -5,6 +5,12 @@ const user_registrations = require("../user-course-information.json");
 const path = require("path");
 const fs = require("fs");
 
+/**
+ * Adds an interest/tag for a user
+ *
+ * @param {*} req request
+ * @param {*} res response
+ */
 const addInterest = async (req, res) => {
   const userId = req.body.user_id;
   const interest = req.body.interest;
@@ -39,6 +45,12 @@ const addInterest = async (req, res) => {
   }
 };
 
+/**
+ * Removes an interest/tag from a user
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ */
 const removeInterest = async (req, res) => {
   const userId = req.body.user_id;
   const interest = req.body.interest;
@@ -74,6 +86,13 @@ const removeInterest = async (req, res) => {
   }
 };
 
+/**
+ * Checks if the user has interacted with a course as a whole
+ * 
+ * @param {*} userId ID of user
+ * @param {*} courseId The course to check
+ * @returns A JSON object with confirmation.
+ */
 function checkCourseCompletion(userId, courseId) {
   // Find the user's registration for the specified course
   const registration = user_registrations.registrations.find(
@@ -121,6 +140,13 @@ function updateUserCourseInformationFile(res, successMessage) {
   });
 }
 
+/**
+ * Registers a user to a course
+ * 
+ * @param {*} req request 
+ * @param {*} res response
+ * @returns a JSON object with confirmation
+ */
 const registerCourse = async (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;

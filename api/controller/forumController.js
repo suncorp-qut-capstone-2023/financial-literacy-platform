@@ -1,6 +1,13 @@
 const forumModel = require("../models/forum.js");
 const constants = require("../utils/constants");
 
+/**
+ * Gets all the comments associated to a forum
+ * 
+ * @param {*} req request
+ * @param {*} res response
+ * @returns a JSON array
+ */
 const getForumComments = async (req, res) => {
   const { forumID, courseID } = req.params;
 

@@ -2,6 +2,12 @@ const axios = require("axios");
 const course_information = require("../course-information.json");
 
 //TODO: create one FindController.js to be connected with every find functions
+/**
+ * Find the index of a course in the available courses list.
+ *
+ * @param {string} course_ID - The ID of the course to find.
+ * @return {number} The index of the course in the available courses list, or -1 if not found.
+ */
 function FindCourseIndex(course_ID) {
   for (let i = 0; i < course_information.available_courses.length; i++) {
     if (course_information.available_courses[i].course_id == course_ID) {
@@ -12,12 +18,25 @@ function FindCourseIndex(course_ID) {
   return -1;
 }
 
+/**
+ * Search for a regular expression pattern in a given input string.
+ *
+ * @param {string} regex - The regular expression pattern to search for.
+ * @param {string} input - The input string to search in.
+ * @return {Array} The result of the regular expression execution, or null if no match is found.
+ */
 function SearchRegex(regex, input) {
   const pattern = new RegExp(`^${regex}`, "i"); // The 'i' flag makes the match case-insensitive
   const result = pattern.exec(input);
   return result;
 }
 
+/**
+ * Search for learning modules that match a given query.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ */
 const searchModule = (req, res) => {
   const regex = req.body.search_query; //search input query to be search for
 
@@ -60,6 +79,12 @@ const searchModule = (req, res) => {
     });
 };
 
+/**
+ * Add a new tag to a course.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ */
 const addTag = async (req, res) => {
   const newTag = req.body.new_tag;
   const courseId = req.body.course_id;
@@ -86,6 +111,12 @@ const addTag = async (req, res) => {
   }
 };
 
+/**
+ * Delete a tag from a course.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ */
 const deleteTag = async (req, res) => {
   const courseId = req.body.course_id;
   const deleteTag = req.body.delete_tag;
@@ -135,6 +166,12 @@ const deleteTag = async (req, res) => {
     });
 };
 
+/**
+ * Search for courses that have tags matching a given query.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ */
 const searchTag = async (req, res) => {
   const searchQuery = req.body.search_query;
 
