@@ -1,44 +1,43 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/knexfile');
+const knexOptions = require("../db/knexfile");
 const knex = require("knex")(knexOptions);
 
 class User {
-    static create(userData){
-        return knex('users').insert(userData);
-    }
+  static create(userData) {
+    return knex("users").insert(userData);
+  }
 
-    static update(id, userData){
-        return knex('users').where('id', '=', id).update(userData);
-    }
+  static update(id, userData) {
+    return knex("users").where("id", "=", id).update(userData);
+  }
 
-    static delete(id){
-        return knex('users').where('id', '=', id).del();
-    }
+  static delete(id) {
+    return knex("users").where("id", "=", id).del();
+  }
 
-    static getById(id){
-        return knex('users').select("*").where('id', '=', id);
-    }
+  static getById(id) {
+    return knex("users").select("*").where("id", "=", id);
+  }
 
-    static getByEmail(email){
-        return knex('users').select("*").where('email', '=', email);
-    }
+  static getByEmail(email) {
+    return knex("users").select("*").where("email", "=", email);
+  }
 
-    static getInterestsFromDB(userId) {
-        return knex('users')
-            .select('interests') 
-            .where('id', '=', userId)
-            .first() 
-            .then(result => {
-                return result ? result.interests : null; 
-            });
-    }
+  static getInterestsFromDB(userId) {
+    return knex("users")
+      .select("interests")
+      .where("id", "=", userId)
+      .first()
+      .then((result) => {
+        return result ? result.interests : null;
+      });
+  }
 
-    static updateInterestsInDB(userId, serializedInterests) {
-        return knex('users')
-            .where('id', '=', userId)
-            .update({ interests: serializedInterests });
-    }
-
+  static updateInterestsInDB(userId, serializedInterests) {
+    return knex("users")
+      .where("id", "=", userId)
+      .update({ interests: serializedInterests });
+  }
 }
 
 module.exports = User;

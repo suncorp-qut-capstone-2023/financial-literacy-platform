@@ -1,5 +1,5 @@
 const forumModel = require("../models/forum.js");
-const constants  = require("../utils/constants");
+const constants = require("../utils/constants");
 
 const getForumComments = async (req, res) => {
   const { forumID, courseID } = req.params;
@@ -16,7 +16,9 @@ const getForumComments = async (req, res) => {
 
 const createForumComment = async (req, res) => {
   if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: constants.errorMessages.notAuthorized });
+    return res
+      .status(401)
+      .json({ error: true, message: constants.errorMessages.notAuthorized });
   }
 
   const { body, forumID, courseID } = req.body;
@@ -54,7 +56,9 @@ const createForumComment = async (req, res) => {
 
 const createForum = async (req, res) => {
   if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: constants.errorMessages.notAuthorized });
+    return res
+      .status(401)
+      .json({ error: true, message: constants.errorMessages.notAuthorized });
   }
 
   const { ForumTitle, CourseID } = req.body;

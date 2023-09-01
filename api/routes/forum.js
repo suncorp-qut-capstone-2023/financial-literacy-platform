@@ -1,14 +1,14 @@
-const express = require('express');
-const auth = require('../middleware/auth.js');
+const express = require("express");
+const auth = require("../middleware/auth.js");
 const router = express.Router();
 
 const {
-    getForumComments,
-    createForumComment,
-    createForum,
-    getForums,
-    getForumComment,
-    updateForumComment
+  getForumComments,
+  createForumComment,
+  createForum,
+  getForums,
+  getForumComment,
+  updateForumComment,
 } = require("../controller/forumController.js");
 
 router.get("/", auth, getForums);

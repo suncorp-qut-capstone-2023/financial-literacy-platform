@@ -124,11 +124,11 @@ function updateUserCourseInformationFile(res, successMessage) {
 const registerCourse = async (req, res) => {
   const userId = req.body.user_id;
   const courseId = req.body.course_id;
-  
-  /* TODO(GEOFFREY): Should we register when someone has enrolled in class? 
-  * example:
-  * const currentDate = new Date().toISOString();
-  */
+
+  /* TODO(GEOFFREY): Should we register when someone has enrolled in class?
+   * example:
+   * const currentDate = new Date().toISOString();
+   */
 
   if (!userId || !courseId) {
     return res.status(400).json({
