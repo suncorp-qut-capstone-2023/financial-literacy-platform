@@ -54,34 +54,39 @@ export default function SearchResults() {
 
   return (
     <ThemeProvider theme={theme}>
-    <main className={styles.main}>
-      <div className={styles.contentWrapper}>
-        <div className={styles.description}>
-          <h1 className={styles.title}>Search Results</h1>
-        </div>
-        <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={query} />
-        <Grid container spacing={2}>
-          {isLoading ? (
-            <div
-              styles={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress color="suncorpgreen"
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
+      <main className={styles.main}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.description}>
+            <h1 className={styles.title}>Search Results</h1>
+          </div>
+          <SearchBar
+            sx={{ marginTop: "2rem", marginBottom: 0 }}
+            query={query}
+          />
+          <Grid container spacing={2}>
+            {isLoading ? (
+              <div
+                styles={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-              />
-            </div>
-          ) : (
-            console.log(results)
-          )}
-        </Grid>
-      </div>
-    </main></ThemeProvider>
+              >
+                <CircularProgress
+                  color="suncorpgreen"
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                  }}
+                />
+              </div>
+            ) : (
+              console.log(results)
+            )}
+          </Grid>
+        </div>
+      </main>
+    </ThemeProvider>
   );
 }
