@@ -28,19 +28,19 @@ export default function Home() {
       <Header />
         <div className={styles.contentWrapper}>
           <div className={styles.description}>
-            <h1 className={styles.title}>Courses</h1>
+            <h1 className={styles.title}>Featured Courses</h1>
           </div>
           {courses.map(course => {
             // Look for a thumbnail in the materials array
             const thumbnailItem = course.material.find(m => m.material_type === "thumbnail");
   
             // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
-            const thumbnailURL = thumbnailItem ? thumbnailItem.material_media : "no_thumbnail"; // replace with your default or fallback URL if needed
+            const thumbnailURL = thumbnailItem ? thumbnailItem.material_media : "no_thumbnail"; // replace with default or fallback URL if needed
   
             return (
               <CourseOverview
                 key={course.course_id}
-                courseId={course.course_id}  // <-- this is the change
+                courseId={course.course_id}
                 courseName={course.course_name}
                 lastUpdated={course.course_last_updated.value}
                 materialsCount={course.material.length}

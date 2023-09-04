@@ -45,48 +45,52 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
 
     return (
     <ThemeProvider theme={theme}>
-      <Item>
-        <Grid xs={12}>
-          <Grid container spacing={1}>
-            <Grid xs={3}>
-              <div style={{ width: "10rem", height: "10rem", position: "relative" }}>
-              <Image
-                  loader={() => thumbnailURL}
-                  src={thumbnailURL}
-                  fill={true}
-                  alt="Course Thumbnail"
-                  style={{objectFit:'cover'}}
-                />
-              </div>
-            </Grid>
-            <Grid xs={9}>
-              <Grid direction="column" container spacing={1}>
-                <Grid xs={12}>
-                <Typography variant="h5" fontWeight="bold">{courseName}</Typography>
-                </Grid>
-                <Grid xs={12}>
-                    <b>Last updated:</b> {new Date(lastUpdated).toLocaleDateString()}
-                </Grid>
-                <Grid xs={12}>
-                    <b>Total Materials:</b> {materialsCount}
-                </Grid>
-                <Grid xs={12}>
-                <b>Total Lectures:</b> {lecturesCount}
-                </Grid>
-                <Grid xs={6}>
-                    <NextLink href={`/courses/${courseId}`} passHref>
-                        <Link>
-                            <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
-                                View Course
-                            </Button>
-                        </Link>
-                    </NextLink>
-                </Grid>
-              </Grid>   
+      <div style={{ maxWidth: '80%', minWidth:'80%'}}> {/* This div will wrap your CourseOverview */}
+        <Item>
+          <Grid xs={12}>
+            <Grid container spacing={1}>
+              {/* image container */}
+              <Grid xs={3}>
+                <div style={{ width: "10rem", height: "10rem", position: "relative" }}>
+                <Image
+                    loader={() => thumbnailURL}
+                    src={thumbnailURL}
+                    fill={true}
+                    alt="Course Thumbnail"
+                    style={{objectFit:'cover'}}
+                  />
+                </div>
+              </Grid>
+              {/* Course Info container */}
+              <Grid xs={9}>
+                <Grid direction="column" container spacing={1}>
+                  <Grid xs={12}>
+                  <Typography variant="h5" fontWeight="bold">{courseName}</Typography>
+                  </Grid>
+                  <Grid xs={6}>
+                      <b>Last updated:</b> {new Date(lastUpdated).toLocaleDateString()}
+                  </Grid>
+                  <Grid xs={6}>
+                      <b>Total Materials:</b> {materialsCount}
+                  </Grid>
+                  <Grid xs={6}>
+                  <b>Total Lectures:</b> {lecturesCount}
+                  </Grid>
+                  <Grid xs={6}>
+                      <NextLink href={`/courses/${courseId}`} passHref>
+                          <Link>
+                              <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
+                                  View Course
+                              </Button>
+                          </Link>
+                      </NextLink>
+                  </Grid>
+                </Grid>   
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Item>
+        </Item>
+      </div>
     </ThemeProvider>
   );
 }

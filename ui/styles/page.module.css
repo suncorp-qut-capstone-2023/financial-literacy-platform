@@ -14,6 +14,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .contentWrapper p {
@@ -175,6 +176,7 @@ font-size: 0.75rem;
 .logo {
   position: relative;
 }
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {

@@ -36,11 +36,9 @@ export default function Courses() {
             return (
               <CourseOverview
                 key={course.course_id}
-                courseId={course.course_id} 
+                courseId={course.course_id}
                 courseName={course.course_name}
                 lastUpdated={course.course_last_updated.value}
-                materialsCount={course.material.length}
-                lecturesCount={course.lectures.length}
                 thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
               />
             );
