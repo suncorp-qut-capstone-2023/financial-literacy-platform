@@ -6,10 +6,32 @@ import ArticleOverview from "@/components/articleOverview";
 import VideoOverview from "@/components/videoOverview";
 import SearchBar from "@/components/searchBar";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
+  const [results, setResults] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  let searchQuery = {
+    "search_query": query,
+  };
+
+  // Send data to the backend via POST
+  fetch("https://jcmg-api.herokuapp.com/api/learningModules/search", {
+    method: "POST",
+    mode: "cors",
+    body: JSON.stringify(searchQuery),
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+        setResults(responseData.results)
+        setLoading(false)
+    })
+    .catch((error) => {
+      console.log("Error fetching and parsing data", error);
+    });
 
   return (
     <main className={styles.main}>
@@ -19,10 +41,7 @@ export default function SearchResults() {
         </div>
         <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={query} />
         <Grid container spacing={2}>
-          <ArticleOverview />
-          <VideoOverview />
-          <ArticleOverview />
-          <VideoOverview />
+          {results}
         </Grid>
       </div>
     </main>

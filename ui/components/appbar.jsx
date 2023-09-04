@@ -18,7 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchBar from "@/components/searchBar";
 import { SearchOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import logo from "../assets/logo.svg"; // Suncorp logo
 
@@ -29,11 +29,11 @@ import styles from "@/styles/appbar.module.css"; // Custom styling for
 
 const pages = [
   { label: "Home", path: "/" },
-  { label: "Articles", path: "/articles" },
-  { label: "Videos", path: "/videos" },
+  { label: "Courses", path: "/courses" },
   { label: "Login", path: "/login" },
 ];
 
+// good potential candidate for varies items based on admin privlidges here.
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
