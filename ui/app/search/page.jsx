@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import styles from "@/styles/page.module.css";
 import SearchBar from "@/components/searchBar";
+import CourseOverview from "@/components/courseOverview";
 import { CircularProgress } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -20,7 +21,7 @@ const theme = createTheme({
 export default function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
-  const [results, setResults] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   let searchQuery = {
@@ -43,7 +44,7 @@ export default function SearchResults() {
         );
 
         const data = await response.json();
-        setResults(data);
+        setCourses(data.module);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching courses data:", error);
@@ -63,7 +64,6 @@ export default function SearchResults() {
             sx={{ marginTop: "2rem", marginBottom: 0 }}
             query={query}
           />
-          <Grid container spacing={2}>
             {isLoading ? (
               <div
                 styles={{
@@ -82,9 +82,30 @@ export default function SearchResults() {
                 />
               </div>
             ) : (
-              console.log(results)
+              courses.map((course) => {
+                // Look for a thumbnail in the materials array
+                const thumbnailItem = course.material.find(
+                  (m) => m.material_type === "thumbnail"
+                );
+
+                // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
+                const thumbnailURL = thumbnailItem
+                  ? thumbnailItem.material_media
+                  : "no_thumbnail"; // replace with default or fallback URL if needed
+
+                return (
+                  <CourseOverview
+                    key={course.course_id}
+                    courseId={course.course_id}
+                    courseName={course.course_name}
+                    lastUpdated={course.course_last_updated.value}
+                    materialsCount={course.material.length}
+                    lecturesCount={course.lectures.length}
+                    thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
+                  />
+                );
+              })
             )}
-          </Grid>
         </div>
       </main>
     </ThemeProvider>
