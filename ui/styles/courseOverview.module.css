@@ -1,0 +1,45 @@
+.courseContainer {
+    border: 1px solid #e5e5e5;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  .courseTitle {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  
+  .tag {
+    margin-right: 5px;
+    background-color: #e5e5e5;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  .updatedDate {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .materials, .lectures {
+    margin-top: 10px;
+  }
+  
+  .material, .lecture {
+    margin-top: 5px;
+  }
+  
+  .material a, .lecture a {
+    color: blue;
+    text-decoration: underline;
+    font-size: 14px;
+  }
+  
