@@ -8,15 +8,6 @@ import { CircularProgress, Paper } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const theme = createTheme({
-  palette: {
-    suncorpgreen: {
-      main: "#009877",
-      contrastText: "#000000",
-    },
-  },
-});
-
 export default function SearchResults() {
   // const [query, setQuery] = useState(q);
   const searchParams = useSearchParams();
@@ -131,6 +122,34 @@ export default function SearchResults() {
             </div>
           )}
         </div>
+        <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={query} />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          courses.map((course) => {
+            // Look for a thumbnail in the materials array
+            const thumbnailItem = course.material.find(
+              (m) => m.material_type === "thumbnail"
+            );
+
+            // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
+            const thumbnailURL = thumbnailItem
+              ? thumbnailItem.material_media
+              : "no_thumbnail"; // replace with default or fallback URL if needed
+
+            return (
+              <CourseOverview
+                key={course.course_id}
+                courseId={course.course_id}
+                courseName={course.course_name}
+                lastUpdated={course.course_last_updated.value}
+                materialsCount={course.material.length}
+                lecturesCount={course.lectures.length}
+                thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
+              />
+            );
+          })
+        )}
       </main>
     </ThemeProvider>
   );

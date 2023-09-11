@@ -1,9 +1,20 @@
 .footer {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem; 
+  overflow-y: hidden;
+}
+
+.footerGrid{
+  width: 100%;
+}
+
+.footerGridItem{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer p {
@@ -16,4 +27,13 @@
 
 .f_socials {
   margin-left: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .footer p {
+    text-align: center;
+  }
+  .footer img {
+    margin-left: 2rem;
+  }
 }
