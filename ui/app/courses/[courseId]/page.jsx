@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Loading from "@/components/loading";
 import styles from "@/styles/page.module.css";
 
 export default function CoursePage({ params }) { 
   const [course, setCourse] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     async function fetchData() {
@@ -13,6 +15,7 @@ export default function CoursePage({ params }) {
         const data = await response.json();
         
         setCourse(data.id); // The course details are nested inside an `id` key
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -22,7 +25,7 @@ export default function CoursePage({ params }) {
   }, [params.courseId]);
 
   // Return early if the course hasn't been fetched yet
-  if (!course) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   console.log("Course Page is being accessed!");
 
