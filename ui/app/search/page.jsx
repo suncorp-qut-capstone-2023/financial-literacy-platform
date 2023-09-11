@@ -18,13 +18,11 @@ const theme = createTheme({
 });
 
 export default function SearchResults() {
-  // const [query, setQuery] = useState(q);
   const searchParams = useSearchParams();
   const [courses, setCourses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [reload, setReload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  let q= searchParams.get("q");
+  let q = searchParams.get("q");
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,10 +64,7 @@ export default function SearchResults() {
           <div className={styles.description}>
             <h1 className={styles.title}>Search Results</h1>
           </div>
-          <SearchBar
-            sx={{ marginTop: "2rem", marginBottom: 0 }}
-            query={q}
-          />
+          <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={q} />
           {isLoading ? (
             <div
               styles={{
