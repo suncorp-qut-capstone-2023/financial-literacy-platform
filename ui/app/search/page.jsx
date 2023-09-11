@@ -22,13 +22,13 @@ export default function SearchResults() {
   const searchParams = useSearchParams();
   const [courses, setCourses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [reload, setReload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  let q;
+  let q= searchParams.get("q");
 
   useEffect(() => {
     setIsLoading(true);
     setCourses([]);
-    q = searchParams.get("q");
     const searchQuery = {
       search_query: q,
     };
@@ -57,7 +57,7 @@ export default function SearchResults() {
       }
     }
     fetchData();
-  }, [searchParams]);
+  }, [q]);
 
   return (
     <ThemeProvider theme={theme}>
