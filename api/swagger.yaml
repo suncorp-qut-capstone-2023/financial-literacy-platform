@@ -1030,4 +1030,158 @@ paths:
 
 
 
-# 
+# Search function
+  /api/learningModules/search:
+    post:
+      tags:
+        - Search function
+      description: Search for modules
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search_query:
+                  type: string
+                  example: c
+      responses:
+        '200':
+          description: Module search result has been found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User deleted
+                  module:
+                    type: object
+                    properties:
+                      course_id:
+                        type: integer
+                        example: 1
+                      course_name:
+                        type: string
+                        example: C# course
+                      category_type:
+                        type: string
+                        example: basic/intermediate/advance
+        '400':
+          description: Other URL issue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: 'true'
+                  message:
+                    type: string
+                    example: Learning modules endpoint is not working
+        '404':
+          description: Module not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: 'true'
+                  message:
+                    type: string
+                    example: no module with the provided module name has been found
+  /api/learningModules/add/tags:
+    post:
+      tags:
+        - Search function
+      summary: Add new tag to an existing course
+      requestBody:
+        description: Add a new tag
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search_query:
+                  type: new_tag
+                  example: C#
+                course_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+  /api/learningModules/delete/tags:
+    delete:
+      tags:
+        - Search function
+      summary: Get the result of deleting a course through its ID
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  example: 1
+                delete_tag:
+                  type: string
+                  example: C#
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/learningModules/search/tags:
+    post:
+      tags:
+        - Search function
+      summary: Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search_query:
+                  type: string
+                  example: C
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
