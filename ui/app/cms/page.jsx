@@ -5,9 +5,10 @@ import styles from "@/styles/page.module.css";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
 
-export default function Courses() {
+export default function CMS() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -29,7 +30,7 @@ export default function Courses() {
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
         <div className={styles.description}>
-          <h1 className={styles.title}>Courses</h1>
+          <h1 className={styles.title}>Content Management System</h1>
         </div>
         {isLoading ? (
           <Loading />
@@ -47,13 +48,14 @@ export default function Courses() {
 
             return (
               <CourseOverview
-              key={course.course_id}
-              courseId={course.course_id}
-              courseName={course.course_name}
-              lastUpdated={course.course_last_updated.value}
-              materialsCount={course.material.length}
-              lecturesCount={course.lectures.length}
-              thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
+                key={course.course_id}
+                courseId={course.course_id}
+                courseName={course.course_name}
+                lastUpdated={course.course_last_updated.value}
+                materialsCount={course.material.length}
+                lecturesCount={course.lectures.length}
+                thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
+                cms = {true}
               />
             );
           })

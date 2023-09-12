@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { createTheme, ThemeProvider, styled, responsiveFontSizes } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
@@ -11,6 +12,13 @@ import Typography from "@mui/material/Typography";
 
 import Image from "next/image";
 import styles from "../styles/page.module.css";
+
+// for delete/success dialog boxes
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -38,13 +46,85 @@ theme = responsiveFontSizes(theme, {
     }
 });
 
-
-function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lecturesCount, thumbnail }) {
+function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lecturesCount, thumbnail, cms }) {
     var defaultSrc = "https://placehold.co/1024x1024";
     const thumbnailURL = (thumbnail && thumbnail !== "no_thumbnail") ? thumbnail : defaultSrc;
+    const [open, setOpen] = useState(false); // for delete dialog box
+    const [successOpen, setSuccessOpen] = useState(false);
 
+    
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {setOpen(false);};
+
+    const handleSuccessOpen = () => {setSuccessOpen(true);};
+  
+    const handleSuccessClose = () => { setSuccessOpen(false);};
+  
+    const handleDelete = async () => {
+      try {
+          const response = await fetch(`https://jcmg-api.herokuapp.com/api/learningModules/course/delete/${courseId}`, {
+              method: 'DELETE',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              }});
+          if (response.ok) { // Delete was successful
+              handleSuccessOpen();
+          } else {
+              // Handle the error response accordingly.
+              console.error('Failed to delete the course. Status:', response.status);
+          }
+      } catch (error) {
+          console.error('An error occurred while deleting the course:', error);
+      }
+  };
     return (
     <ThemeProvider theme={theme}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">{"Delete Course"}</DialogTitle>
+        <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Are you sure you want to delete this course? This action cannot be undone.
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleClose} color="primary">
+                Cancel
+            </Button>
+            <Button 
+                onClick={() => {
+                    handleDelete();
+                    handleClose();
+                }} 
+                color="primary" autoFocus>
+                Delete
+            </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={successOpen}
+        onClose={handleSuccessClose}
+        aria-labelledby="success-dialog-title"
+        aria-describedby="success-dialog-description">
+        <DialogTitle id="success-dialog-title">{"Success!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="success-dialog-description">
+              Course has been successfully deleted.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSuccessClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div style={{ maxWidth: '80%', minWidth:'80%'}}> {/* This div will wrap your CourseOverview */}
         <Item>
           <Grid xs={12}>
@@ -78,12 +158,16 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
                   </Grid>
                   <Grid xs={6}>
                       <NextLink href={`/courses/${courseId}`} passHref>
-                          <Link>
-                              <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
-                                  View Course
-                              </Button>
-                          </Link>
+                        <Link>
+                          <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
+                            {cms ? 'Edit Course' : 'View Course'}
+                          </Button>
+                        </Link>
                       </NextLink>
+                        {cms && (
+                          <Button onClick={handleClickOpen} variant="outlined" color="secondary">
+                            Delete Course
+                          </Button>)}
                   </Grid>
                 </Grid>   
               </Grid>
