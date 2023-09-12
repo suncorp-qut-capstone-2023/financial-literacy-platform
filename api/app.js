@@ -4,6 +4,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const yaml = require('js-yaml'); // For swagger
+const fs = require ('fs'); // For swagger
 const pug = require('pug');
 
 // security setup
@@ -13,7 +15,11 @@ require("dotenv").config();
 
 // swagger setup
 const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+try {
+    swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+  } catch (e) {
+    console.error("Failed to load swagger document", e);
+  }
 
 // create express app
 const app = express();

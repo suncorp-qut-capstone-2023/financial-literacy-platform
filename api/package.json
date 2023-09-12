@@ -23,6 +23,7 @@
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
     "http-server": "^14.1.1",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.0",
     "knex": "^2.5.1",
     "luxon": "^3.3.0",
@@ -33,7 +34,6 @@
     "objection": "^3.1.1",
     "pug": "^3.0.2",
     "sequelize": "^6.32.1",
-    "swagger-autogen": "^2.23.1",
     "swagger-ui-express": "^4.6.3",
     "tedious": "^16.4.0"
   },
