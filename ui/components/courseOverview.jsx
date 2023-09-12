@@ -46,16 +46,13 @@ theme = responsiveFontSizes(theme, {
     }
 });
 
-function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lecturesCount, thumbnail, cms }) {
+function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lecturesCount, thumbnail, cms, onCourseRemoved }) {
     var defaultSrc = "https://placehold.co/1024x1024";
     const thumbnailURL = (thumbnail && thumbnail !== "no_thumbnail") ? thumbnail : defaultSrc;
     const [open, setOpen] = useState(false); // for delete dialog box
     const [successOpen, setSuccessOpen] = useState(false);
 
-    
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
+    const handleClickOpen = () => {setOpen(true);};
   
     const handleClose = () => {setOpen(false);};
 
@@ -72,9 +69,11 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
                   'Content-Type': 'application/json',
               }});
           if (response.ok) { // Delete was successful
-              handleSuccessOpen();
+            onCourseRemoved(courseId);  
+            setTimeout(() => handleSuccessOpen(), 500); // Delay by 500ms
+            handleSuccessOpen();
           } else {
-              // Handle the error response accordingly.
+              // Handle error response. Possibly add another dialog.
               console.error('Failed to delete the course. Status:', response.status);
           }
       } catch (error) {

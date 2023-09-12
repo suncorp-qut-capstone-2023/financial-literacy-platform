@@ -7,8 +7,14 @@ import Loading from "@/components/loading";
 
 export default function CMS() {
   const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
+const handleCourseRemoved = (removedCourseId) => {
+    const updatedCourses = courses.filter(course => course.course_id !== removedCourseId);
+    setCourses(updatedCourses);
+};
+
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +62,7 @@ export default function CMS() {
                 lecturesCount={course.lectures.length}
                 thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
                 cms = {true}
+                onCourseRemoved={handleCourseRemoved}
               />
             );
           })
