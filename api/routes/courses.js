@@ -13,9 +13,13 @@ const {
     updateCourse,
     updateModule,
     updateQuiz,
-    deleteCourse,
+    deleteData,
     deleteModule,
-    deleteQuiz
+    deleteQuiz,
+    createLecture,
+    createLectureContent,
+    createMaterial,
+    createQuizQuestions
 } = require('../controller/coursesController.js');
 
 router.get('/', auth, getAllCourses);
@@ -25,7 +29,13 @@ router.get('/:courseID/:moduleID', auth, getModule);
 router.get('/:courseID/:moduleID/:quizID', auth, getQuiz);
 
 // TODO: Uncomment these routes when you have implemented the corresponding functions in the controller
-// router.post('/:courseID', auth, createCourse);
+router.post('/course', auth, createCourse);
+router.post('/lecture', auth, createLecture);
+router.post('/lecture/content', auth, createLectureContent);
+router.post('/material', auth, createMaterial);
+router.post('/module', auth, createModule);
+router.post('/quiz', auth, createQuiz);
+router.post('/quiz/questions', auth, createQuizQuestions);
 // router.post('/:courseID/:moduleID', auth, createModule);
 // router.post('/:courseID/:moduleID/:quizID', auth, createQuiz);
 //
@@ -34,6 +44,8 @@ router.get('/:courseID/:moduleID/:quizID', auth, getQuiz);
 // router.put('/:courseID/:moduleID', auth, updateModule);
 // router.put('/:courseID/:moduleID/:quizID', auth, updateQuiz);
 //
+
+router.delete('/delete', auth, deleteData);
 // router.delete('/:courseID', auth, deleteCourse);
 // router.delete('/:courseID/:moduleID', auth, deleteModule);
 // router.delete('/:courseID/:moduleID/:quizID', auth, deleteQuiz);
