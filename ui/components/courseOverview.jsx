@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import styles from "../styles/page.module.css";
 
-// for delete/success dialog boxes
+// for delete/success feedback
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
