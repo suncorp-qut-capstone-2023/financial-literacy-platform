@@ -683,21 +683,12 @@ paths:
   
   
 # Learning modules and course 
-  /api/learningModules:
-    get:
-      tags:
-        - Learning Modules
-      summary: View all available learning modules
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
+  
   /api/learningModules/course:
     get:
       tags:
         - Learning Modules
-      summary: Get course by ID
+      summary: ?? is this changed?? Get course by ID
       parameters:
         - name: id
           in: query
@@ -718,133 +709,12 @@ paths:
           description: Not Found
           content:
             application/json: {}
-  /api/learningModules/course/add:
-    post:
-      tags:
-        - Learning Modules
-      description: Add new course
-      requestBody:
-        description: An object containing the course name and category type
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                course_name:
-                  type: string
-                  example: C# basic
-                category_type:
-                  type: string
-                  example: basic
-                course_last_updated:
-                  type: string
-                  example: '2022-10-31T09:00:00.504Z'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
-        '400':
-          description: Bad Request
-          content:
-            application/json: {}
-  /api/learningModules/course/delete/{courseID}:
-    delete:
-      tags:
-        - Learning Modules
-      summary: Get the result of deleting a course through its ID
-      parameters:
-        - name: courseID
-          in: path
-          description: ID of the course
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
-        '400':
-          description: Bad Request
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json: {}
-  /api/learningModules/course/add/material:
-    post:
-      tags:
-        - Learning Modules
-      description: Add new material information to a course
-      requestBody:
-        description: An object containing the course ID, material type and material media
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                course_id:
-                  type: integer
-                  example: 1
-                material_type:
-                  type: string
-                  example: video
-                material_media:
-                  type: string
-                  example: http://127.0.0.1:443/api/learningModules/1/video
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
-        '400':
-          description: Bad Request
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json: {}
-  /api/learningModules/course/add/lecture:
-    post:
-      tags:
-        - Learning Modules
-      description: Add new material information to a course
-      requestBody:
-        description: An object containing the course ID, material type and material media
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                course_id:
-                  type: integer
-                  example: 1
-                lecture_type:
-                  type: string
-                  example: unknown
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
-        '400':
-          description: Bad Request
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json: {}
+  
   /api/learningModules/course/update:
     post:
       tags:
         - Learning Modules
+      summary: To be changed??
       description: update course
       requestBody:
         description: An object containing the course name and category type
@@ -880,9 +750,10 @@ paths:
     post:
       tags:
         - Learning Modules
+      summary: To be changed??
       description: update course-material
       requestBody:
-        description: An object containing the course name and category type
+        description: ??to be changed?? An object containing the course name and category type
         required: true
         content:
           application/json:
@@ -918,7 +789,7 @@ paths:
     get:
       tags:
         - Learning Modules
-      summary: Retrieve media associated with a specific course.
+      summary: ??to be changed?? Retrieve media associated with a specific course.
       security:
         - bearerAuth: []
       parameters:
@@ -964,28 +835,13 @@ paths:
               example:
                 error: true
                 message: 'Module file not found'
-  /api/learningmodules/{moduleID}/viewContent:
-    get:
-      tags:
-        - Learning Moduless
-      summary: View content of a learning module
-      parameters:
-        - name: moduleID
-          in: path
-          description: ID of the learning module
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
+
+
   /api/modules/{courseID}:
     get:
       tags:
-        - Learning Moduless
-      summary: View content of a learning module
+        - Learning Moduless (Not sure if this is kept)
+      summary: ???Is this going to be changed??? View content of a learning module
       parameters:
         - name: courseID
           in: path
@@ -1035,6 +891,7 @@ paths:
     post:
       tags:
         - Search function
+      summary: To be changed??
       description: Search for modules
       requestBody:
         description: An object containing the search queries to be search to. Match modules will appear if found.
@@ -1100,7 +957,7 @@ paths:
     post:
       tags:
         - Search function
-      summary: Add new tag to an existing course
+      summary: ??is this changed?? Add new tag to an existing course
       requestBody:
         description: Add a new tag
         required: true
@@ -1124,43 +981,12 @@ paths:
           description: Bad Request
           content:
             application/json: {}
-  /api/learningModules/delete/tags:
-    delete:
-      tags:
-        - Search function
-      summary: Get the result of deleting a course through its ID
-      requestBody:
-        description: An object containing the search queries to be search to. Match modules will appear if found.
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                course_id:
-                  type: integer
-                  example: 1
-                delete_tag:
-                  type: string
-                  example: C#
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json: {}
-        '400':
-          description: Bad Request
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json: {}
+  
   /api/learningModules/search/tags:
     post:
       tags:
         - Search function
-      summary: Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.
+      summary: ??is this changed?? Search course based on the most related tags to the lowest related tags. Not include modules with unrelated tags.
       requestBody:
         description: An object containing the search queries to be search to. Match modules will appear if found.
         required: true
@@ -1185,3 +1011,323 @@ paths:
           description: Not Found
           content:
             application/json: {}
+            
+  /api/modules:
+    get:
+      tags:
+        - Course (using DB) 
+      summary: View all available learning modules
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        security:
+          - bearerAuth: []
+  /api/modules/course:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new course
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_name:
+                  type: string
+                  example: 'Security: Phishing'
+                course_lastUpdated:
+                  type: datetime
+                  example: '2023-09-13 14:30:00'
+                category_type:
+                  type: string
+                  example: security
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/lecture:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new lecture
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_name:
+                  type: string
+                  example: week 1
+                module_id:
+                  type: integer
+                  example: 1
+                lecture_order:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/lecture/content:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new lecture content
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_id:
+                  type: integer
+                  example: 101
+                material_id:
+                  type: integer
+                  example: 101
+                material_order:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/material:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new material
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  example: file 33
+                material_url:
+                  type: string
+                  example: https://www.fakeURL.com
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/module:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new material
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  example: 1
+                module_name:
+                  type: string
+                  example: what is github?
+                module_order:
+                  type: integer
+                  example: 2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/quiz:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new quiz
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quiz_name:
+                  type: string
+                  example: Github - Intro
+                quiz_blob_url:
+                  type: string
+                  example: github.com
+                module_id:
+                  type: integer
+                  example: 1
+                quiz_maxtries:
+                  type: integer
+                  example: 3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/quiz/questions:
+    post:
+      tags:
+        - Course (using DB)
+      summary: Add new quiz question
+      requestBody:
+        description: An object containing the search queries to be search to. Match modules will appear if found.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question_text:
+                  type: string
+                  example: What is the purpose of Github?
+                question_option:
+                  type: object
+                  properties:
+                    A:
+                      type: string
+                      example: Github is a platform to store git repo.
+                    B:
+                      type: string
+                      example: GitHub is a platform and cloud-based service for software development and version control using Git, allowing developers to store and manage their code.
+                    C:
+                      type: string
+                      example: Both of the options above are correct.
+                    D:
+                      type: string
+                      example: Both of the options above are not correct.
+                question_answer:
+                  type: string
+                  example: B
+                quiz_id:
+                  type: integer
+                  example: 1
+                question_order:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+  /api/modules/delete:
+    delete:
+      tags:
+        - Course (using DB)
+      summary: Add new quiz question
+      requestBody:
+        description: Delete some data with specific condition
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_type:
+                  type: string
+                  example: QUESTION_ANSWER
+                condition:
+                  type: string
+                  example: '='
+                value:
+                  type: string
+                  example: B
+                table:
+                  type: string
+                  example: quiz_question
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json: {}
+
+            
+            
+            
+            
+            
