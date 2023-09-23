@@ -2891,6 +2891,87 @@
           }
         }
       }
+    },
+    "/api/modules/update": {
+      "put": {
+        "tags": ["modules"],
+        "summary": "Add new quiz question",
+        "requestBody": {
+          "description": "Delete some data with specific condition",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "set_data_type": {
+                    "type": "string",
+                    "example": "QUESTION_ANSWER"
+                  },
+                  "set_condition": {
+                    "type": "string",
+                    "example": "="
+                  },
+                  "setValue": {
+                    "type": "string",
+                    "example": "B"
+                  },
+                  "where_data_type": {
+                    "type": "string",
+                    "example": "QUESTION_ID"
+                  },
+                  "where_condition": {
+                    "type": "string",
+                    "example": "="
+                  },
+                  "whereValue": {
+                    "type": "string",
+                    "example": "217"
+                  },
+                  "table": {
+                    "type": "string",
+                    "example": "quiz_question"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/modules/course/sort": {
+      "get": {
+        "tags": ["modules"],
+        "summary": "Sort course based on the latest updated date",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
     }
   }
 }

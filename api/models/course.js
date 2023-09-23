@@ -20,7 +20,7 @@ function queryData(sql) {
         });
 }
 
-function insertQueryData(sql, value) {
+function mysqlQuery(sql, value) {
     return new Promise((resolve, reject) => {
         conn.query(sql, value, (err, results, fields) => {
             if (err) {
@@ -75,7 +75,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}) VALUES (?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}) VALUES (?);`, value);
                 // const mess1 = {result: mess}
                 // console.log("mess1:\n");
                 // console.log("FUIYOOOO:\n");
@@ -90,7 +90,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}) VALUES (?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}) VALUES (?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -103,7 +103,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}) VALUES (?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}) VALUES (?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -116,7 +116,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}) VALUES (?, ?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}) VALUES (?, ?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -129,7 +129,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}) VALUES (?, ?, ?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}) VALUES (?, ?, ?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -145,7 +145,7 @@ function insertQueryStatement(queryData, value, table) {
             try {
                 console.log("query 7 data? check2");
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}) VALUES (?, ?, ?, ?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}) VALUES (?, ?, ?, ?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -158,7 +158,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}, ${queryData[6]}) VALUES (?, ?, ?, ?, ?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}, ${queryData[6]}) VALUES (?, ?, ?, ?, ?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -171,7 +171,7 @@ function insertQueryStatement(queryData, value, table) {
         return new Promise(async (resolve, reject) => {
             try {
     
-                const mess = await insertQueryData(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}, ${queryData[6]}, ${queryData[7]}) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`, value);
+                const mess = await mysqlQuery(`INSERT INTO ${table} (${queryData[0]}, ${queryData[1]}, ${queryData[2]}, ${queryData[3]}, ${queryData[4]}, ${queryData[5]}, ${queryData[6]}, ${queryData[7]}) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`, value);
                 console.log("mess:\n");
     
                 console.log(mess);
@@ -183,22 +183,39 @@ function insertQueryStatement(queryData, value, table) {
     }
 }
 
-function deleteQueryStatement(dataType, value, condition, table) {
-    return new Promise(async (resolve, reject) => {
-        try {
+// function deleteQueryStatement(dataType, value, condition, table) {
+//     return new Promise(async (resolve, reject) => {
+//         try {
 
-            const mess = await insertQueryData(`DELETE FROM ${table} WHERE ${dataType} ${condition} ?`, value);
-            // const mess1 = {result: mess}
-            // console.log("mess1:\n");
-            // console.log("FUIYOOOO:\n");
+//             const mess = await insertQueryData(`DELETE FROM ${table} WHERE ${dataType} ${condition} ?`, value);
+//             // const mess1 = {result: mess}
+//             // console.log("mess1:\n");
+//             // console.log("FUIYOOOO:\n");
 
-            // console.log(mess1);
-            resolve(mess);
-        } catch (err) {
-            reject(err);
-        }
-    })
-}
+//             // console.log(mess1);
+//             resolve(mess);
+//         } catch (err) {
+//             reject(err);
+//         }
+//     })
+// }
+
+// function updateQueryStatement(set_data_type, set_condition, where_data_type, where_condition, table, value) {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+
+//             const mess = await insertQueryData(`UPDATE ${table} SET ${set_data_type} ${set_condition} ? WHERE ${where_data_type} ${where_condition}`, value);
+//             // const mess1 = {result: mess}
+//             // console.log("mess1:\n");
+//             // console.log("FUIYOOOO:\n");
+
+//             // console.log(mess1);
+//             resolve(mess);
+//         } catch (err) {
+//             reject(err);
+//         }
+//     })
+// }
 
 var config =
 {
@@ -258,24 +275,41 @@ class Course {
         })
     }
 
-    static updateCourse(courseID, courseData) {
-        return this.db('modules').where('course_id', '=', courseID).update(courseData);
+    static updateCourse(set_data_type, set_condition, where_data_type, where_condition, table, value) {
+        //return this.db('modules').where('course_id', '=', courseID).update(courseData);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const result = await mysqlQuery(`UPDATE ${table} SET ${set_data_type} ${set_condition} ? WHERE ${where_data_type} ${where_condition} ?`, value);
+                
+                if (result.affectedRows > 0) {
+                    result['info'] = 'found';
+                    resolve(result);
+                } else {
+                    result['info'] = 'not found';
+                    resolve(result);
+                }
+            } catch (err) {
+                reject(err);
+            }
+        })
     }
 
-    static deleteCourse(dataType, dataValue, condition, table) {
+    static deleteCourse(dataType, value, condition, table) {
         //return this.db('modules').where('course_id', '=', courseID).del();
         console.log("test?")
 
         return new Promise(async (resolve, reject) => {
             try {
+                const result = await mysqlQuery(`DELETE FROM ${table} WHERE ${dataType} ${condition} ?`, value);
 
-                console.log("in?");
-    
-                const mess = await deleteQueryStatement(dataType , dataValue, condition, table);
-                console.log("mess:\n");
-    
-                console.log(mess);
-                resolve(mess);
+                if (result.affectedRows > 0) {
+                    result['info'] = 'found';
+                    resolve(result);
+                } else {
+                    result['info'] = 'not found';
+                    resolve(result);
+                }
+                
             } catch (err) {
                 reject(err);
             }

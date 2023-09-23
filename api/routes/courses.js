@@ -10,7 +10,7 @@ const {
     createCourse,
     createModule,
     createQuiz,
-    updateCourse,
+    updateData,
     updateModule,
     updateQuiz,
     deleteData,
@@ -19,7 +19,8 @@ const {
     createLecture,
     createLectureContent,
     createMaterial,
-    createQuizQuestions
+    createQuizQuestions,
+    sortNewestModule
 } = require('../controller/coursesController.js');
 
 router.get('/', auth, getAllCourses);
@@ -40,7 +41,7 @@ router.post('/quiz/questions', auth, createQuizQuestions);
 // router.post('/:courseID/:moduleID/:quizID', auth, createQuiz);
 //
 //
-// router.put('/:courseID', auth, updateCourse);
+router.put('/update', auth, updateData);
 // router.put('/:courseID/:moduleID', auth, updateModule);
 // router.put('/:courseID/:moduleID/:quizID', auth, updateQuiz);
 //
@@ -50,5 +51,6 @@ router.delete('/delete', auth, deleteData);
 // router.delete('/:courseID/:moduleID', auth, deleteModule);
 // router.delete('/:courseID/:moduleID/:quizID', auth, deleteQuiz);
 
+router.get('/course/sort', auth, sortNewestModule);
 
 module.exports = router;

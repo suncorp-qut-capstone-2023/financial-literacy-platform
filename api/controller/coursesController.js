@@ -50,6 +50,28 @@ const getCourse = async (req, res) => {
     }
 }
 
+const sortNewestModule = async (req, res) => {
+    let dates = [];
+    for (let i = 0; i < getAllCourses.course.length; i++) {
+      dates.push(getAllCourses.course[i].COURSE_LASTUPDATED);
+    }
+  
+    const indexedDates = dates.map((date, index) => ({ date, index }));
+  
+    indexedDates.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+    const sortedIndices = indexedDates.map(item => item.index);
+  
+    let sortedNewestModule = []
+    for (let i = 0; i < sortedIndices.length; i++) {
+      sortedNewestModule.push(getAllCourses.course[sortedIndices[i]]);
+    }
+    
+    return res.status(200).json({
+      "sorted": sortedNewestModule
+    })
+}
+
 const createCourse = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
@@ -69,35 +91,11 @@ const createCourse = async (req, res) => {
         newValue.push(course_name);
     }
 
-    // if (course_video) {
-    //     // count++;
-    //     newData.push("COURSE_VIDEO");
-    //     newValue.push(course_video);
-    // }
-
-    // if (lecture) {
-    //     // count++;
-    //     newData.push("LECTURE");
-    //     newValue.push({lectures: lecture});
-    // }
-
-    // if (content_order) {
-    //     // count++;
-    //     newData.push("CONTENT_ORDER");
-    //     newValue.push({content_order: content_order});
-    // }
-
     if (course_lastUpdated) {
         // count++;
         newData.push("COURSE_LASTUPDATED");
         newValue.push(course_lastUpdated);
     }
-
-    // if (course_tag) {
-    //     // count++;
-    //     newData.push("COURSE_TAG");
-    //     newValue.push(course_tag);
-    // }
 
     if (category_type) {
         // count++;
@@ -110,12 +108,13 @@ const createCourse = async (req, res) => {
     
     try {
         // create course in database
-        const createdCourse = await courses.createData(newData, newValue, "course");
+        await courses.createData(newData, newValue, "course");
 
         // return course
-        return res.status(200).json(createdCourse);
+        return res.status(200).json({"message": "new course data has been successfully added!"});
     }
     catch (err) {
+        const data = err.sqlMessage.match(/'([^']+)'/);
 
         if (err.errno === 1452) {
             return res.status(500).json({
@@ -124,10 +123,14 @@ const createCourse = async (req, res) => {
             });            
         }
 
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect datetime value: ${data[0]}`
+            });            
+        }
+
         if (err.errno === 1406) {
-
-            const data = err.sqlMessage.match(/'([^']+)'/);
-
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
@@ -683,38 +686,62 @@ const deleteData = async (req, res) => {
 
     if (!data_type || !condition || !value || !table ) {
         return res.status(400).json({
-            success_addition: false,
             error: true,
             message: "Bad request. Please specify the data type, condition, and value"
           });
     }
 
-    // Attempt to convert the string to an integer
-    let integerValue = parseInt(value, 10);
-
-    // Check if it's a valid integer
-    if (!isNaN(integerValue)) {
-        value = integerValue;
-    }
+    value = isValidInt(value);
     
     try {
-        console.log("in?")
         // create course in database
-        await courses.deleteCourse(data_type, value, condition, table);
+        const result = await courses.deleteCourse(data_type, value, condition, table);
 
         // return course
-        return res.status(200).json({"message": `data on ${table} table with condition ${data_type} ${condition} ${value[0]} has been deleted`});
+        if (result.info === 'found') {
+            return res.status(200).json({"message": `data on ${table} table with condition ${data_type} ${condition} ${value[0]} has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on ${table} table with condition ${data_type} ${condition} ${value[0]} has not been found`
+              });
+        }
+        
     }
     catch (err) {
+        console.log(err)
 
-        if (err.errno === 1451) {
+        if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });            
         }
 
-        // return error
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
         return res.status(500).json({
             error: true,
             message: err
@@ -742,25 +769,81 @@ const deleteData = async (req, res) => {
 //     }
 // }
 
-const updateCourse = async (req, res) => {
-    // get course id from url
-    const courseID = req.params['courseID'];
+function isValidInt(value) {
 
-    // get course information from request body
-    const course = req.body;
+    // Attempt to convert the string to an integer
+    let integerValue = parseInt(value, 10);
+
+    // Check if it's a valid integer
+    if (!isNaN(integerValue)) {
+        value = integerValue;
+    }
+
+    return value;
+}
+
+const updateData = async (req, res) => {
+    // get course id from url
+    const { set_data_type, set_condition, where_data_type, where_condition, table } = req.body; //value is a list
+    let { setValue, whereValue } = req.body; //value is a list
+
+    if (!set_data_type || !set_condition || !where_data_type || !where_condition || !table
+        || !setValue || !whereValue ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    whereValue = isValidInt(whereValue);
+
+    const value = [ setValue, whereValue ];
 
     try {
         // update course in database
-        const updatedCourse = await courses.updateCourse(courseID, course);
+        const result = await courses.updateCourse(set_data_type, set_condition, where_data_type, where_condition, table, value);
 
         // return course
-        return res.status(200).json(updatedCourse);
+        if (result.info === 'found') {
+            return res.status(200).json({"message": `table ${table} has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on ${table} table with condition ${where_data_type} ${where_condition} ${value[1]} has not been found`
+            });
+        }
     }
     catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: err
         });
     }
 }
@@ -825,7 +908,8 @@ module.exports = {
     createQuiz,
     createQuizQuestions,
     deleteData,
-    updateCourse,
+    updateData,
     getModule,
-    getQuiz
+    getQuiz,
+    sortNewestModule
 }
