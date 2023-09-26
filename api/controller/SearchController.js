@@ -1,6 +1,7 @@
 const axios = require("axios");
 const course_information = require("../course-information.json");
 const courses = require('../models/course');
+const forum = require('../models/forum');
 
 //TODO: create one FindController.js to be connected with every find functions
 function FindCourseIndex(course_ID) {
@@ -122,95 +123,174 @@ const deleteTag = async (req, res) => {
   courseIdIndex = FindCourseIndex(courseId);
 
   //search through the database
-  await axios
-  .get('http://127.0.0.1:443/api/learningModules')
-  .then((response) => {
 
-    const course = response.data.available_courses.find(course => course.course_id === courseId );
+  const allCourses = courses.getAllCourses();
 
-    if (course === undefined) {
-      return res.status(404).json({
-        "success": false,
-        "error": true,
-        message: `course ID ${courseId} is not available`
-      }) 
-    }
+  const course = allCourses.find(course => course.course_id === courseId );
 
-    const courseTag = course.course_tag.find( courseTag => courseTag === deleteTag );
+  if (course === undefined) {
+    return res.status(404).json({
+      "success": false,
+      "error": true,
+      message: `course ID ${courseId} is not available`
+    }) 
+  }
 
-    if (courseTag === undefined) {
-      return res.status(404).json({
-        "success": false,
-        "error": true,
-        message: `current tag with the name '${deleteTag}' has been not been found`
-      }) 
-    } else {
-      const courseTagList = course_information.available_courses[courseIdIndex].course_tag;
-      const deleteTagIndex = courseTagList.indexOf(deleteTag);
+  const courseTag = course.course_tag.find( courseTag => courseTag === deleteTag );
 
-      //TODO: in cloud development, 
-      //later we need to modify the file and put it back to the learning modules database.
-      //at the moment, this is the solution first.
-      courseTagList.splice(deleteTagIndex, 1);
+  if (courseTag === undefined) {
+    return res.status(404).json({
+      "success": false,
+      "error": true,
+      message: `current tag with the name '${deleteTag}' has been not been found`
+    }) 
+  } else {
+    const courseTagList = allCourses[courseIdIndex].course_tag;
+    const deleteTagIndex = courseTagList.indexOf(deleteTag);
 
-      return res.status(200).json({
-          "success": true,
-          message: `The targeted tag has been deleted on course ID ${courseId}`
-      })      
-    }
-  })
+    //TODO: in cloud development, 
+    //later we need to modify the file and put it back to the learning modules database.
+    //at the moment, this is the solution first.
+    courseTagList.splice(deleteTagIndex, 1);
+
+    return res.status(200).json({
+        "success": true,
+        message: `The targeted tag has been deleted on course ID ${courseId}`
+    })      
+  }
+
+  // await axios
+  // .get('http://127.0.0.1:443/api/learningModules')
+  // .then((response) => {
+
+  //   const course = response.data.available_courses.find(course => course.course_id === courseId );
+
+  //   if (course === undefined) {
+  //     return res.status(404).json({
+  //       "success": false,
+  //       "error": true,
+  //       message: `course ID ${courseId} is not available`
+  //     }) 
+  //   }
+
+  //   const courseTag = course.course_tag.find( courseTag => courseTag === deleteTag );
+
+  //   if (courseTag === undefined) {
+  //     return res.status(404).json({
+  //       "success": false,
+  //       "error": true,
+  //       message: `current tag with the name '${deleteTag}' has been not been found`
+  //     }) 
+  //   } else {
+  //     const courseTagList = course_information.available_courses[courseIdIndex].course_tag;
+  //     const deleteTagIndex = courseTagList.indexOf(deleteTag);
+
+  //     //TODO: in cloud development, 
+  //     //later we need to modify the file and put it back to the learning modules database.
+  //     //at the moment, this is the solution first.
+  //     courseTagList.splice(deleteTagIndex, 1);
+
+  //     return res.status(200).json({
+  //         "success": true,
+  //         message: `The targeted tag has been deleted on course ID ${courseId}`
+  //     })      
+  //   }
+  // })
 };
 
 const searchTag = async (req, res) => {
   const searchQuery = req.body.search_query;
 
-  //search through the database
-  await axios
-  .get('http://127.0.0.1:443/api/learningModules')
-  .then((response) => {
+  const allCourses = courses.getAllCourses();
 
-    let tagCounts = {};
-    let sortDataResult = [];
+  let tagCounts = {};
+  let sortDataResult = [];
 
-    for (let i = 0; i < response.data.available_courses.length; i++) {
-      const courseID = String(response.data.available_courses[i].course_id);
-      tagCounts[courseID] = 0;
+  for (let i = 0; i < allCourses.length; i++) {
+    const courseID = String(allCourses[i].course_id);
+    tagCounts[courseID] = 0;
 
-      response.data.available_courses[i].course_tag.find( courseTag => {
+    allCourses[i].course_tag.find( courseTag => {
 
-        const match = ModuleSearchRegex(searchQuery, courseTag);
-        
-        if (match !== null) {
-          tagCounts[`${response.data.available_courses[i].course_id}`]++;
-        }
-      })      
-    }
-
-    const tagCountArray = Object.entries(tagCounts);
-
-    for (const [index, [key, value]] of tagCountArray.entries()) {
-      if (value === 0) {
-        tagCountArray.splice(index, 1);
-        delete tagCounts[key];
-        break;
+      const match = ModuleSearchRegex(searchQuery, courseTag);
+      
+      if (match !== null) {
+        tagCounts[`${allCourses[i].course_id}`]++;
       }
+    })      
+  }
+
+  const tagCountArray = Object.entries(tagCounts);
+
+  for (const [index, [key, value]] of tagCountArray.entries()) {
+    if (value === 0) {
+      tagCountArray.splice(index, 1);
+      delete tagCounts[key];
+      break;
     }
+  }
 
-    // Sort the array based on the values
-    tagCountArray.sort((a, b) => b[1] - a[1]);
+  // Sort the array based on the values
+  tagCountArray.sort((a, b) => b[1] - a[1]);
 
-    tagCountArray.find(tagData => {
-      const index = FindCourseIndex(tagData[0]);
+  tagCountArray.find(tagData => {
+    const index = FindCourseIndex(tagData[0]);
 
-      sortDataResult.push(response.data.available_courses[index]);
-    })
-
-    return res.status(200).json({
-      "success": true,
-      "result": sortDataResult
-    })     
-        
+    sortDataResult.push(allCourses[index]);
   })
+
+  return res.status(200).json({
+    "success": true,
+    "result": sortDataResult
+  }) 
+
+  // //search through the database
+  // await axios
+  // .get('http://127.0.0.1:443/api/learningModules')
+  // .then((response) => {
+
+  //   let tagCounts = {};
+  //   let sortDataResult = [];
+
+  //   for (let i = 0; i < response.data.available_courses.length; i++) {
+  //     const courseID = String(response.data.available_courses[i].course_id);
+  //     tagCounts[courseID] = 0;
+
+  //     response.data.available_courses[i].course_tag.find( courseTag => {
+
+  //       const match = ModuleSearchRegex(searchQuery, courseTag);
+        
+  //       if (match !== null) {
+  //         tagCounts[`${response.data.available_courses[i].course_id}`]++;
+  //       }
+  //     })      
+  //   }
+
+  //   const tagCountArray = Object.entries(tagCounts);
+
+  //   for (const [index, [key, value]] of tagCountArray.entries()) {
+  //     if (value === 0) {
+  //       tagCountArray.splice(index, 1);
+  //       delete tagCounts[key];
+  //       break;
+  //     }
+  //   }
+
+  //   // Sort the array based on the values
+  //   tagCountArray.sort((a, b) => b[1] - a[1]);
+
+  //   tagCountArray.find(tagData => {
+  //     const index = FindCourseIndex(tagData[0]);
+
+  //     sortDataResult.push(response.data.available_courses[index]);
+  //   })
+
+  //   return res.status(200).json({
+  //     "success": true,
+  //     "result": sortDataResult
+  //   })     
+        
+  // })
 };
 
 function ForumSearchRegex(regex, input) {
@@ -221,47 +301,80 @@ function ForumSearchRegex(regex, input) {
   return result;
 }
 
+//==================================================================================
+// TODO: CREATE A FORUM DATABASE
+//==================================================================================
+
 const SearchForum = async (req, res) => {
   const searchQuery = req.body.search_query;
 
-  await axios
-  .get('http://127.0.0.1:443/api/forum')
-  .then((response) => {
-    
-    //keep track of match modules
-    let matchForums = [];
+  const allForums = forum.getForums();
 
-    for (let i = 0; i < response.data.length; i++) {
-      const title = response.data[i].ForumTitle;
-      const result = ForumSearchRegex(searchQuery, title);
+  //keep track of match modules
+  let matchForums = [];
 
-      if (result) {
-        matchForums.push(response.data[i]); // Include the course if match
-      }
+  for (let i = 0; i < allForums.length; i++) {
+    const title = allForums[i].ForumTitle;
+    const result = ForumSearchRegex(searchQuery, title);
+
+    if (result) {
+      matchForums.push(allForums[i]); // Include the course if match
     }
+  }
 
-    //check if module has been found or not
-    if (matchForums.length === 0) {
-      return res.status(404).json({
-        "error": true,
-        "message": "no module with the provided module name has been found"
-      })
-    } else {
-      //TODO: add more result (but empty result is fine so wait until unit testing)
-      return res.status(200).json({
-        "error": false,
-        "message": "one or several modules has been found",
-        "forum": matchForums
-      })        
-    }    
-        
-  })    
-  .catch((error) => {
-    return res.status(400).json({
+  //check if module has been found or not
+  if (matchForums.length === 0) {
+    return res.status(404).json({
       "error": true,
-      "message": "Learning modules endpoint is not working"
-    })  
-  });
+      "message": "no module with the provided module name has been found"
+    })
+  } else {
+    //TODO: add more result (but empty result is fine so wait until unit testing)
+    return res.status(200).json({
+      "error": false,
+      "message": "one or several modules has been found",
+      "forum": matchForums
+    })        
+  }    
+
+  // await axios
+  // .get('http://127.0.0.1:443/api/forum')
+  // .then((response) => {
+    
+  //   //keep track of match modules
+  //   let matchForums = [];
+
+  //   for (let i = 0; i < response.data.length; i++) {
+  //     const title = response.data[i].ForumTitle;
+  //     const result = ForumSearchRegex(searchQuery, title);
+
+  //     if (result) {
+  //       matchForums.push(response.data[i]); // Include the course if match
+  //     }
+  //   }
+
+  //   //check if module has been found or not
+  //   if (matchForums.length === 0) {
+  //     return res.status(404).json({
+  //       "error": true,
+  //       "message": "no module with the provided module name has been found"
+  //     })
+  //   } else {
+  //     //TODO: add more result (but empty result is fine so wait until unit testing)
+  //     return res.status(200).json({
+  //       "error": false,
+  //       "message": "one or several modules has been found",
+  //       "forum": matchForums
+  //     })        
+  //   }    
+        
+  // })    
+  // .catch((error) => {
+  //   return res.status(400).json({
+  //     "error": true,
+  //     "message": "Learning modules endpoint is not working"
+  //   })  
+  // });
 }
 
 module.exports = {
