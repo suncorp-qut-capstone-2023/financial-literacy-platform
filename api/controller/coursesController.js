@@ -17,18 +17,24 @@ const getAllCourses = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: err
         });
     }
 }
 
 const getCourse = async (req, res) => {
     // get course id from url
-    const courseID = req.params['courseID'];
+    const ID = req.params['ID'];
+    const dataType = req.query['dataType'];
+    const table = req.query['table'];
+
+    console.log(ID);
+
+    //const { table, where_data_type, value } = req.body;
 
     try {
         // get course from database
-        const course = await courses.getCourse(courseID);
+        const course = await courses.getCourse(table, dataType, ID);
 
         // return course
         return res.status(200).json(course);
@@ -75,9 +81,8 @@ const sortNewestModule = async (req, res) => {
 const createCourse = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
-    const { course_name, course_lastUpdated, category_type } = req.body;
-    let newData = [];
-    let newValue = [];
+    const { course_name, category_type } = req.body;
+    let data = {}
     // let count = 1;
 
     if (!course_name) {
@@ -87,28 +92,32 @@ const createCourse = async (req, res) => {
             message: "Bad request. Please specify the course name and category type."
           });
     } else {
-        newData.push("COURSE_NAME");
-        newValue.push(course_name);
+        data["COURSE_NAME"] = course_name;
     }
 
-    if (course_lastUpdated) {
-        // count++;
-        newData.push("COURSE_LASTUPDATED");
-        newValue.push(course_lastUpdated);
-    }
+    // Get the current date and time
+    const currentDateTime = new Date();
+
+    // Convert the current date and time to a string
+    data["COURSE_LASTUPDATED"] = currentDateTime.getFullYear() +
+    '-' +
+    String(currentDateTime.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(currentDateTime.getDate()).padStart(2, '0') +
+    ' ' +
+    String(currentDateTime.getHours()).padStart(2, '0') +
+    ':' +
+    String(currentDateTime.getMinutes()).padStart(2, '0') +
+    ':' +
+    String(currentDateTime.getSeconds()).padStart(2, '0');
 
     if (category_type) {
-        // count++;
-        newData.push("CATEGORY_TYPE");
-        newValue.push(category_type);
+        data["CATEGORY_TYPE"] = category_type;
     }
-
-    console.log("newvalue : ");
-    console.log(newValue);
     
     try {
         // create course in database
-        await courses.createData(newData, newValue, "course");
+        await courses.insertData(data, "course");
 
         // return course
         return res.status(200).json({"message": "new course data has been successfully added!"});
@@ -149,9 +158,7 @@ const createLecture = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { lecture_name, module_id, lecture_order } = req.body;
-    let newData = [];
-    let newValue = [];
-    // let count = 1;
+    let data = {};
 
     if (!lecture_name) {
         return res.status(400).json({
@@ -160,40 +167,24 @@ const createLecture = async (req, res) => {
             message: "Bad request. Please specify the course name and category type."
           });
     } else {
-        newData.push("LECTURE_NAME");
-        newValue.push(lecture_name);
+        data["LECTURE_NAME"] = lecture_name;
     }
 
     if (module_id) {
-        // count++;
-        newData.push("MODULE_ID");
-        newValue.push(module_id);
+        data["MODULE_ID"] = module_id;
     }
 
     if (lecture_order) {
-
-        // if (lecture_order > 2147483647) {
-        //     return res.status(500).json({
-        //         error: true,
-        //         message: "lecture order value is too large"
-        //     });  
-        // }
-
-        // count++;
-        newData.push("LECTURE_ORDER");
-        newValue.push(lecture_order);
+        data["LECTURE_ORDER"] = lecture_order;
     }
-
-    console.log("newvalue : ");
-    console.log(newValue);
     
     try {
         // create course in database
-        const createdCourse = await courses.createData(newData, newValue, "lecture");
+        await courses.insertData(data, "lecture");
 
         // return course
         return res.status(200).json({
-            
+            "message": "new lecture data has been successfully added!"
         });
     }
     catch (err) {
@@ -233,35 +224,26 @@ const createLectureContent = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { lecture_id, material_id, material_order } = req.body;
-    let newData = [];
-    let newValue = [];
+    data = {};
 
     if (!lecture_id || !material_id) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the course name and category type."
+            message: "Bad request. Please specify the lecture ID and material ID."
           });
     } else {
-        newData.push("LECTURE_ID");
-        newValue.push(lecture_id);
-
-        newData.push("MATERIAL_ID");
-        newValue.push(material_id);
+        data["LECTURE_ID"] = lecture_id;
+        data["MATERIAL_ID"] = material_id;
     }
 
     if (material_order) {
-        // count++;
-        newData.push("MATERIAL_ORDER");
-        newValue.push(material_order);
+        data["MATERIAL_ORDER"] = material_order;   
     }
-
-    console.log("newvalue : ");
-    console.log(newValue);
     
     try {
         // create course in database
-        const createdCourse = await courses.createData(newData, newValue, "lecture_content");
+        await courses.insertData(data, "lecture_content");
 
         // return course
         return res.status(200).json({"message": "new lecture content data has been successfully added!"});
@@ -304,9 +286,7 @@ const createMaterial = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { material_name, material_url } = req.body;
-    let newData = [];
-    let newValue = [];
-    // let count = 1;
+    data = {};
 
     if (!material_name) {
         return res.status(400).json({
@@ -315,22 +295,16 @@ const createMaterial = async (req, res) => {
             message: "Bad request. Please specify the course name and category type."
           });
     } else {
-        newData.push("MATERIAL_NAME");
-        newValue.push(material_name);
+        data["MATERIAL_NAME"] = material_name;
     }
 
     if (material_url) {
-        // count++;
-        newData.push("MATERIAL_URL");
-        newValue.push(material_url);
+        data["MATERIAL_URL"] = material_url;
     }
-
-    console.log("newvalue : ");
-    console.log(newValue);
     
     try {
         // create course in database
-        await courses.createData(newData, newValue, "material");
+        await courses.insertData(data, "material");
 
         // return course
         return res.status(200).json({
@@ -368,40 +342,30 @@ const createModule = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { course_id, module_name, module_order } = req.body;
-    let newData = [];
-    let newValue = [];
-    // let count = 1;
+    data = {};
 
     if (!course_id || !module_name) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the course name and category type."
+            message: "Bad request. Please specify the module name and course ID."
           });
     } else {
-        newData.push("COURSE_ID");
-        newValue.push(course_id);
-
-        newData.push("MODULE_NAME");
-        newValue.push(module_name);
+        data["COURSE_ID"] = course_id;
+        data["MODULE_NAME"] = module_name;
     }
 
     if (module_order) {
-        // count++;
-        newData.push("MODULE_ORDER");
-        newValue.push(module_order);
+        data["MODULE_ORDER"] = module_order;
     }
 
-    console.log("newvalue : ");
-    console.log(newValue);
-    
     try {
         // create course in database
-        await courses.createData(newData, newValue, "module");
+        await courses.insertData(data, "module");
 
         // return course
         return res.status(200).json({
-            message: "new material data has been successfully added!"
+            message: "new module data has been successfully added!"
         });
     }
     catch (err) {
@@ -441,52 +405,38 @@ const createQuiz = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { quiz_name, quiz_blob_url, module_id, question_order, quiz_maxtries } = req.body;
-    let newData = [];
-    let newValue = [];
-    // let count = 1;
+    let data = {};
 
     if (!quiz_name || !quiz_blob_url) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the course name and category type."
+            message: "Bad request. Please specify the quiz name and quiz blob URL."
           });
     } else {
-        newData.push("QUIZ_NAME");
-        newValue.push(quiz_name);
-
-        newData.push("QUIZ_BLOB_URL");
-        newValue.push(quiz_blob_url);
+        data["QUIZ_NAME"] = quiz_name;
+        data["QUIZ_BLOB_URL"] = quiz_blob_url;
     }
 
     if (module_id) {
-        // count++;
-        newData.push("MODULE_ID");
-        newValue.push(module_id);
+        data["MODULE_ID"] = module_id;
     }
 
     if (question_order) {
-        // count++;
-        newData.push("QUESTION_ORDER");
-        newValue.push(question_order);
+        data["QUESTION_ORDER"] = question_order;
     }
 
     if (quiz_maxtries) {
-        // count++;
-        newData.push("QUIZ_MAXTRIES");
-        newValue.push(quiz_maxtries);
+        data["QUIZ_MAXTRIES"] = quiz_maxtries;
     }
-
-    console.log("newvalue : ");
-    console.log(newValue);
     
     try {
         // create course in database
-        await courses.createData(newData, newValue, "quiz");
+        await courses.insertData(data, "quiz");
 
         // return course
         return res.status(200).json({
-            message: "new material data has been successfully added!"
+            message: "new quiz data has been successfully added!"
         });
     }
     catch (err) {
@@ -495,7 +445,7 @@ const createQuiz = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails"
-            });            
+            });
         }
 
         const data = err.sqlMessage.match(/'([^']+)'/);
@@ -527,24 +477,13 @@ const createQuizQuestions = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
     const { question_text, question_option, question_answer, quiz_id, question_order } = req.body;
-    let newData = [];
-    let newValue = [];
-    // let count = 1;
+    let data = {};
 
     if (question_text) {
-        // count++;
-        newData.push("QUESTION_TEXT");
-        newValue.push(question_text);
-    }
-
-    console.log("question options:" + question_option.A);
-    for (let i = 0; i < question_option.length; i++) {
-        console.log(question_option[i])
+        data["QUESTION_TEXT"] = question_text;
     }
 
     if (question_option) {
-        // count++;
-        newData.push("QUESTION_OPTION");
         //newValue.push('"A": ' + question_option.A + ', "B": ' + question_option.B + ', "C": ' + question_option.C + ', "D": ' + question_option.D);
         //newValue.push('{"A": "aku mao", "B": "aku tidak mao", "C": "aku suka", "D": "aku panik"}');
         if ((question_option.A === undefined && question_option.B === undefined && question_option.C === undefined && question_option.D === undefined) ||
@@ -582,61 +521,53 @@ const createQuizQuestions = async (req, res) => {
 
             //==========================================================
 
-            // newValue.push(available_options);
             // if (question_option.C === undefined && question_option.D === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "B": "${question_option.B}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "B": "${question_option.B}}`;
             // } else if (question_option.B === undefined && question_option.D === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "C": "${question_option.C}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "C": "${question_option.C}}`;
             // }  else if (question_option.B === undefined && question_option.C === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "D": "${question_option.D}}`;
             // }  else if (question_option.A === undefined && question_option.D === undefined) {
-            //     newValue.push(`{"B": "${question_option.B}", "C": "${question_option.C}}`);
+            //     data["QUESTION_OPTION"] = `{"B": "${question_option.B}", "C": "${question_option.C}}`;
             // }  else if (question_option.A === undefined && question_option.C === undefined) {
-            //     newValue.push(`{"B": "${question_option.B}", "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"B": "${question_option.B}", "D": "${question_option.D}}`;
             // }  else if (question_option.A === undefined && question_option.B === undefined) {
-            //     newValue.push(`{"C": "${question_option.C}", "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"C": "${question_option.C}", "D": "${question_option.D}}`;
             // } else if (question_option.D === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "B": "${question_option.B}, "C": "${question_option.C}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "B": "${question_option.B}, "C": "${question_option.C}}`;
             // } else if (question_option.C === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "B": "${question_option.B}, "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "B": "${question_option.B}, "D": "${question_option.D}}`;
             // } else if (question_option.B === undefined) {
-            //     newValue.push(`{"A": "${question_option.A}", "C": "${question_option.C}, "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "C": "${question_option.C}, "D": "${question_option.D}}`;
             // } else if (question_option.A === undefined) {
-            //     newValue.push(`{"B": "${question_option.B}", "C": "${question_option.C}, "D": "${question_option.D}}`);
+            //     data["QUESTION_OPTION"] = `{"B": "${question_option.B}", "C": "${question_option.C}, "D": "${question_option.D}}`;
             // } else {
-            //     newValue.push(`{"A": "${question_option.A}", "B": "${question_option.B}", "C": "${question_option.C}", "D": "${question_option.D}"}`);
+            //     data["QUESTION_OPTION"] = `{"A": "${question_option.A}", "B": "${question_option.B}", "C": "${question_option.C}", "D": "${question_option.D}"}`;
             // }
             //==========================================================
 
-            newValue.push(`{"A": "${question_option.A}", "B": "${question_option.B}", "C": "${question_option.C}", "D": "${question_option.D}"}`);
+            const question_options = `{"A": "${question_option.A}", "B": "${question_option.B}", "C": "${question_option.C}", "D": "${question_option.D}"}`;
+
+            data["QUESTION_OPTION"] = question_options;
         }
         
     }
 
     if (question_answer) {
-        // count++;
-        newData.push("QUESTION_ANSWER");
-        newValue.push(question_answer);
+        data["QUESTION_ANSWER"] = question_answer;
     }
     
     if (quiz_id) {
-        // count++;
-        newData.push("QUIZ_ID");
-        newValue.push(quiz_id);
+        data["QUIZ_ID"] = quiz_id;
     }
 
     if (question_order) {
-        // count++;
-        newData.push("QUESTION_ORDER");
-        newValue.push(question_order);
+        data["QUESTION_ORDER"] = question_order;
     }
 
-    console.log("newvalue : ");
-    console.log(newValue);
-    
     try {
         // create course in database
-        await courses.createData(newData, newValue, "quiz_question");
+        await courses.insertData(data, "quiz_question");
 
         // return course
         return res.status(200).json({
@@ -680,36 +611,59 @@ const createQuizQuestions = async (req, res) => {
 const deleteData = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
-    const { data_type, condition, table } = req.body; //value is a list
+    const { table } = req.body; //value is a list
     let { value } = req.body; //value is a list
     // let count = 1;
 
-    if (!data_type || !condition || !value || !table ) {
+    if ( !table ) {
         return res.status(400).json({
             error: true,
-            message: "Bad request. Please specify the data type, condition, and value"
+            message: "Bad request. Please specify the table"
           });
     }
 
     value = isValidInt(value);
     
     try {
-        // create course in database
-        const result = await courses.deleteCourse(data_type, value, condition, table);
 
-        // return course
-        if (result.info === 'found') {
-            return res.status(200).json({"message": `data on ${table} table with condition ${data_type} ${condition} ${value[0]} has been deleted`});
+        let result;
+
+        // update course in database
+        if (table === "course") {
+            result = await courses.deleteCourse(value);
+        } else if (table === "lecture") {
+            result = await courses.deleteLecture(value);
+        } else if (table === "lecture_content") {
+            result = await courses.deleteLectureContent(value);
+        } else if (table === "material") {
+            result = await courses.deleteMaterial(value);
+        } else if (table === "module") {
+            result = await courses.deleteModule(value);
+        } else if (table === "quiz") {
+            result = await courses.deleteQuiz(value);
+        } else if (table === "quiz_question") {
+            result = await courses.deleteQuizQuestion(value);
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on ${table} table with condition ${data_type} ${condition} ${value[0]} has not been found`
-              });
+                message:  `table with the name '${table}' has not been found`
+            });
+        }
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${value} on table '${table}' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on '${table}' table with condition ID = ${value} has not been found`
+            });
         }
         
     }
     catch (err) {
-        console.log(err)
+        console.log(err);
+        const data = err.sqlMessage.match(/'([^']+)'/);
 
         if (err.errno === 1452) {
             return res.status(500).json({
@@ -717,8 +671,6 @@ const deleteData = async (req, res) => {
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });            
         }
-
-        const data = err.sqlMessage.match(/'([^']+)'/);
 
         if (err.errno === 1264) {
             return res.status(500).json({
@@ -782,13 +734,13 @@ function isValidInt(value) {
     return value;
 }
 
-const updateData = async (req, res) => {
+const updateData = async (req, res) => { //update course table
     // get course id from url
-    const { set_data_type, set_condition, where_data_type, where_condition, table } = req.body; //value is a list
-    let { setValue, whereValue } = req.body; //value is a list
+    const { table, set_data_type } = req.body; //value is a list
+    let { setValue, whereIdValue } = req.body; //value is a list
 
-    if (!set_data_type || !set_condition || !where_data_type || !where_condition || !table
-        || !setValue || !whereValue ) {
+    if (!set_data_type 
+        || !setValue || !whereIdValue ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -797,21 +749,51 @@ const updateData = async (req, res) => {
     }
 
     setValue = isValidInt(setValue);
-    whereValue = isValidInt(whereValue);
+    whereIdValue = isValidInt(whereIdValue);
 
-    const value = [ setValue, whereValue ];
+    const value = [ setValue, whereIdValue ];
 
     try {
-        // update course in database
-        const result = await courses.updateCourse(set_data_type, set_condition, where_data_type, where_condition, table, value);
 
-        // return course
-        if (result.info === 'found') {
-            return res.status(200).json({"message": `table ${table} has been updated`});
+        let result;
+        let whereDataType;
+
+        // update course in database
+        if (table === "course") {
+            result = await courses.updateCourse(set_data_type, value);
+            whereDataType = "COURSE_ID";
+        } else if (table === "lecture") {
+            result = await courses.updateLecture(set_data_type, value);
+            whereDataType = "LECTURE_ID";
+        } else if (table === "lecture_content") {
+            result = await courses.updateLectureContent(set_data_type, value);
+            whereDataType = "LECTURE_CONTENT_ID";
+        } else if (table === "material") {
+            result = await courses.updateMaterial(set_data_type, value);
+            whereDataType = "MATERIAL_ID";
+        } else if (table === "module") {
+            result = await courses.updateModule(set_data_type, value);
+            whereDataType = "MODULE_ID";
+        } else if (table === "quiz") {
+            result = await courses.updateQuiz(set_data_type, value);
+            whereDataType = "QUIZ_ID";
+        } else if (table === "quiz_question") {
+            result = await courses.updateQuizQuestion(set_data_type, value);
+            whereDataType = "QUESTION_ID";
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on ${table} table with condition ${where_data_type} ${where_condition} ${value[1]} has not been found`
+                message:  `table with the name '${table}' has not been found`
+            });
+        }
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table '${table}' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on '${table}' table with condition ${whereDataType} = ${value[1]} has not been found`
             });
         }
     }

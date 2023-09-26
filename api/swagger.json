@@ -1964,41 +1964,6 @@
         }
       }
     },
-    "/api/modules/{courseID}": {
-      "get": {
-        "tags": ["Learning Modules"],
-        "summary": "View content of a learning module",
-        "parameters": [
-          {
-            "name": "courseID",
-            "in": "path",
-            "description": "ID of the learning module",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/learningModules/search": {
       "post": {
         "tags": ["Search function"],
@@ -2434,8 +2399,6 @@
         }
       }
     },
-
-    
     "/api/modules": {
       "get": {
         "tags": ["modules"],
@@ -2470,10 +2433,6 @@
                   "course_name": {
                     "type": "string",
                     "example": "Security: Phishing"
-                  },
-                  "course_lastUpdated": {
-                    "type": "datetime",
-                    "example": "2023-09-13 14:30:00"
                   },
                   "category_type": {
                     "type": "string",
@@ -2849,17 +2808,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "data_type": {
-                    "type": "string",
-                    "example": "QUESTION_ANSWER"
-                  },
-                  "condition": {
-                    "type": "string",
-                    "example": "="
-                  },
                   "value": {
                     "type": "string",
-                    "example": "B"
+                    "example": "225"
                   },
                   "table": {
                     "type": "string",
@@ -2904,33 +2855,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "table": {
+                    "type": "string",
+                    "example": "quiz_question"
+                  },
                   "set_data_type": {
                     "type": "string",
                     "example": "QUESTION_ANSWER"
-                  },
-                  "set_condition": {
-                    "type": "string",
-                    "example": "="
                   },
                   "setValue": {
                     "type": "string",
                     "example": "B"
                   },
-                  "where_data_type": {
-                    "type": "string",
-                    "example": "QUESTION_ID"
-                  },
-                  "where_condition": {
-                    "type": "string",
-                    "example": "="
-                  },
-                  "whereValue": {
+                  "whereIdValue": {
                     "type": "string",
                     "example": "217"
-                  },
-                  "table": {
-                    "type": "string",
-                    "example": "quiz_question"
                   }
                 }
               }
@@ -2963,6 +2902,49 @@
       "get": {
         "tags": ["modules"],
         "summary": "Sort course based on the latest updated date",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/modules/{ID}": {
+      "get": {
+        "tags": ["modules"],
+        "summary": "Sort course based on the latest updated date",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID of the intended table",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "description": "the name of the database",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataType",
+            "in": "query",
+            "description": "the type of the data",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

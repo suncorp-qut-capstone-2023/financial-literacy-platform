@@ -25,7 +25,8 @@ const {
 
 router.get('/', auth, getAllCourses);
 
-router.get('/:courseID', auth, getCourse);
+//router.get('/:courseID', auth, getCourse);
+router.get('/:ID', auth, getCourse);
 router.get('/:courseID/:moduleID', auth, getModule);
 router.get('/:courseID/:moduleID/:quizID', auth, getQuiz);
 

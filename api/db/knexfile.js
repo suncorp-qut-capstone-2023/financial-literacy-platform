@@ -6,6 +6,7 @@
  */
 
 // TODO(): Update with your config settings.
+const fs = require('fs');
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -18,7 +19,8 @@ module.exports = {
         database: process.env.SQL_DATABASE,
         user: process.env.SQL_USER,
         password: process.env.SQL_PASSWORD,
-        dateStrings: true
+        dateStrings: true,
+        ssl: {ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")}
     }
 };
 
