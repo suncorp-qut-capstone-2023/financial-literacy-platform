@@ -31,6 +31,7 @@ const pages = [
   { label: "Home", path: "/" },
   { label: "Courses", path: "/courses" },
   { label: "Login", path: "/login" },
+  { label: "Manage Site Content", path: "/cms" }, // TO DO - LINK TO ADMIN AUTHENTICATION
 ];
 
 // good potential candidate for varies items based on admin privlidges here.
@@ -102,7 +103,7 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: "block",
               }}
             >
               {pages.map((page) => (
@@ -127,10 +128,7 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           {/* centered mobile logo */}
-          <Box
-            sx={{ mx: "auto", display: { xs: "flex", md: "none" } }}
-            className={styles.mobile_image}
-          >
+          <Box sx={{ mx: "auto", display: "flex" }}>
             {isSearchOpen && pathname != "/search" ? (
               <Grid container>
                 <Grid xs={10}>
@@ -143,7 +141,7 @@ function ResponsiveAppBar() {
                 </Grid>
               </Grid>
             ) : (
-              <Box>
+              <Box className={styles.mobile_image}>
                 <Link href="/">
                   <Image src={logo} height={50} width={100} />
                 </Link>
@@ -151,7 +149,7 @@ function ResponsiveAppBar() {
             )}
           </Box>
 
-          <Box sx={{ display: "flex", ml: { xs: 2, md: 0 } }}>
+          <Box sx={{ display: "flex" }}>
             {!isSearchOpen && (
               <IconButton onClick={toggleSearch}>
                 <SearchOutlined />
