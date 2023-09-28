@@ -1,4 +1,3 @@
-const course_information = require("../course-information.json");
 const User = require("../models/user.js");
 const Enrolment = require("../models/enrolment");
 
@@ -68,47 +67,28 @@ const removeInterest = async (req, res) => {
   }
 };
 
-// TODO: redundant. migrate or remove
-// function checkCourseCompletion(userId, courseId) {
-//   // Find the user's registration for the specified course
-//   const registration = user_registrations.registrations.find(
-//     (reg) => reg.user_id === userId && reg.course_id === courseId
-//   );
+async function checkCourseCompletion(userId, courseId) {
+  try {
+    const registration = await CourseModel.findRegistration(userId, courseId);
+    
+    if (!registration) {
+      return false;
+    }
 
-//   if (!registration) {
-//     return false; // No registration found
-//   }
+    const totalQuizzes = await CourseModel.countTotalQuizzes(courseId);
+    const attemptedQuizzes = await CourseModel.countAttemptedQuizzes(registration.registration_id);
 
-//   // Fetch the course information from the available_courses
-//   const courseInfo = course_information.available_courses.find(
-//     (course) => course.course_id === courseId
-//   );
+    if (totalQuizzes[0].total !== attemptedQuizzes[0].total) {
+      return false;
+    }
 
-//   if (!courseInfo) {
-//     return false; // No course information found
-//   }
+    await CourseModel.markCourseCompleted(registration.registration_id);
+    return true;
+  } catch (err) {
+    throw new Error("Error checking course completion: " + err.message);
+  }
+}
 
-//   // Check if all materials have been viewed
-//   if (courseInfo.material.length !== registration.materials_viewed.length) {
-//     return false;
-//   }
-
-//   // Check if all lectures have been attended
-//   if (courseInfo.lectures.length !== registration.lectures_attended.length) {
-//     return false;
-//   }
-
-//   // Check if all quizzes have been attempted
-//   if (courseInfo.quiz.length !== registration.quizzes_attempted.length) {
-//     return false;
-//   }
-
-//   // If all checks pass, mark the course as completed
-//   registration.completed = true;
-//   // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
-//   registration.completion_date = new Date().toISOString();
-//   return true; // Course is marked as completed
-// }
 
 const registerCourse = async (req, res, next) => {
   const userId = req.body.user_id;
@@ -140,8 +120,6 @@ const registerCourse = async (req, res, next) => {
       completion_date: null,
       expiration_date: null,
     };
-
-    // After adding the new registration to the in-memory representation
     const registration_id = await Enrolment.enrol(enrolmentData);
 
     res.status(201).json({
@@ -153,12 +131,11 @@ const registerCourse = async (req, res, next) => {
   }
 };
 
+const EnrolmentModel = require('./EnrolmentModel.js');
+const checkCourseCompletion = require('./checkCourseCompletion.js');
+
 const attemptedQuiz = async (req, res, next) => {
-  const userId = req.body.user_id;
-  const courseId = req.body.course_id;
-  const quizId = req.body.quiz_id;
-  const score = req.body.score;
-  const feedback = req.body.feedback;
+  const { user_id: userId, course_id: courseId, quiz_id: quizId, score, feedback } = req.body;
 
   if (!userId || !courseId || !quizId) {
     return res.status(400).json({
@@ -168,7 +145,7 @@ const attemptedQuiz = async (req, res, next) => {
   }
 
   try {
-    const registration = await Enrolment.checkenrol(userId, courseId);
+    const registration = await EnrolmentModel.checkenrol(userId, courseId);
 
     if (!registration) {
       return res.status(404).json({
@@ -177,43 +154,27 @@ const attemptedQuiz = async (req, res, next) => {
       });
     }
 
+    // TODO: If you want to check if a quiz has already been attempted, rework logic
 
-    // TODO: Figure out if we want to keep this
-    // if (registration.quizzes_attempted.includes(quizId)) {
-    //   return res.status(400).json({
-    //     error: true,
-    //     message: "Quiz already attempted by the user for this course.",
-    //   });
-    // }
+    const attemptData = { quiz_id: quizId, score, feedback };
 
-    try {
-      attempdata = {
-        quiz_id: quizId,
-        score: score,
-        feedback: feedback,
-      };
+    const attempted = await EnrolmentModel.addQuizAttempt(attemptData);
 
-      const attempted = await Enrolment.addQuizAttempt(attempdata);
-      res.status(201).json({
-        message: "User attempted quiz",
-        registration_id: attempted[0],
+    if (await checkCourseCompletion(userId, courseId)) {
+      await CourseModel.markCourseCompleted(registration.registration_id);
+      
+      // Course complete
+      return res.status(200).json({
+        message: "Congratulations on finishing the course!",
+        registration_id: registration.registration_id,
       });
-    } catch (error) {
-      next(error);
     }
+    
 
-    // TODO: Check course completion after marking a quiz as attempted
-    // if (checkCourseCompletion(userId, courseId)) {
-    //   updateUserCourseInformationFile(
-    //     res,
-    //     `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}. The course is now completed.`
-    //   );
-    // } else {
-    //   updateUserCourseInformationFile(
-    //     res,
-    //     `Quiz with ID ${quizId} has been marked as attempted for user ID ${userId} in course ID ${courseId}`
-    //   );
-    // }
+    res.status(201).json({
+      message: "User attempted quiz",
+      registration_id: attempted[0],
+    });
   } catch (error) {
     next(error);
   }
