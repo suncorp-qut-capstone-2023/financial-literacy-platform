@@ -131,9 +131,6 @@ const registerCourse = async (req, res, next) => {
   }
 };
 
-const EnrolmentModel = require('./EnrolmentModel.js');
-const checkCourseCompletion = require('./checkCourseCompletion.js');
-
 const attemptedQuiz = async (req, res, next) => {
   const { user_id: userId, course_id: courseId, quiz_id: quizId, score, feedback } = req.body;
 
