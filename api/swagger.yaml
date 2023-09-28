@@ -350,39 +350,236 @@ paths:
 
 
 
+  /api/forum/{forumID}:
+    get:
+      summary: Get forum comments
+      tags:
+      - Forum
+      parameters:
+        - name: forumID
+          in: path
+          required: false
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of forum comments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Define properties based on the structure of a comment
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/comment:
+    post:
+      summary: Create a forum comment
+      tags:
+      - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: Comment content.
+                forumID:
+                  type: integer
+                  description: ID of the forum.
+                courseID:
+                  type: integer
+                  description: ID of the course.
+      responses:
+        '201':
+          description: Comment created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumComment:
+                    type: object
+                    properties:
+                      # Define properties based on the structure of a comment
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
   /api/forum/create:
     post:
-      description: Endpoint to create a new forum thread. Requires JWT token in the
-        Authorization header.
-      parameters:
-      - description: Forum thread object that needs to be added.
-        in: body
-        name: forumPost
-        required: true
-        schema:
-          $ref: '#/definitions/ForumPost'
-      responses:
-        '201':
-          description: Forum thread successfully created.
-          schema:
-            properties:
-              forumID:
-                type: integer
-              message:
-                type: string
-            type: object
-        '400':
-          description: Invalid input.
-        '401':
-          description: Authentication error.
-        '500':
-          description: Internal server error.
-      security:
-      - bearerAuth: []
-      summary: Create a new forum **Needs Fixing**
+      summary: Create a forum 
       tags:
       - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ForumTitle:
+                  type: string
+                  description: Title of the forum.
+                CourseID:
+                  type: integer
+                  description: ID of the course, if related. Optional
+      responses:
+        '201':
+          description: Forum created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumID:
+                    type: integer
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum:
+    get:
+      summary: Get all forums
+      tags:
+      - Forum
+      responses:
+        '200':
+          description: Successful retrieval of forums.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Define properties based on the structure of a forum
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/{commentID}:
+    get:
+      summary: Get a specific forum comment
+      tags:
+      - Forum
+      parameters:
+        - name: commentID
+          in: path
+          required: true
+          description: ID of the comment.
+          schema:
+            type: integer
+        - name: forumID
+          in: path
+          required: true
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of the comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  # Define properties based on the structure of a comment
+        '404':
+          description: Comment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  
   /api/forum/search:
     post:
       description: Search for forum
@@ -447,61 +644,6 @@ paths:
                     type: string
                 type: object
           description: Module not found
-      tags:
-      - Forum
-  /api/forum/{forumID}/comment:
-    post:
-      description: Endpoint to create a new forum comment. Requires JWT token in the
-        Authorization header.
-      parameters:
-      - description: Forum comment object that needs to be added.
-        in: body
-        name: forumComment
-        required: true
-        schema:
-          properties:
-            body:
-              description: Main content of the comment.
-              type: string
-            forumID:
-              description: Id of the forum to post the comment to.
-              type: integer
-          required:
-          - body
-          - forumID
-          type: object
-      responses:
-        '201':
-          description: Forum comment successfully created.
-          schema:
-            properties:
-              forumComment:
-                properties:
-                  Body:
-                    description: Main content of the comment
-                    type: string
-                  DateCommented:
-                    description: Date when the comment was created.
-                    type: string
-                  ForumID:
-                    description: ID of the forum to which the comment belongs.
-                    type: integer
-                  UserID:
-                    description: ID of the user who created the comment.
-                    type: integer
-                type: object
-              message:
-                type: string
-            type: object
-        '400':
-          description: Invalid input.
-        '401':
-          description: Authentication error.
-        '500':
-          description: Internal server error.
-      security:
-      - bearerAuth: []
-      summary: Create a forum comment **Needs fixing**
       tags:
       - Forum
   /api/learningModules:
