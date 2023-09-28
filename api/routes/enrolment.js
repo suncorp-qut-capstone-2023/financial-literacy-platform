@@ -13,10 +13,6 @@ const {
 
 router.post("/course/register", auth, registerCourse);
 
-router.post("/lectures/attended", auth, attendedLecture);
-
-router.post("/materials/viewed", auth, viewedMaterial);
-
 router.post("/quizzes/attempted", auth, attemptedQuiz);
 
 router.post("/interests/add", auth, addInterest);

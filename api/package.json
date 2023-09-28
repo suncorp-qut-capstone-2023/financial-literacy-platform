@@ -36,7 +36,6 @@
     "path": "^0.12.7",
     "pug": "^3.0.2",
     "sequelize": "^6.32.1",
-    "swagger-autogen": "^2.23.1",
     "swagger-ui-express": "^4.6.3",
     "tedious": "^16.4.0"
   },

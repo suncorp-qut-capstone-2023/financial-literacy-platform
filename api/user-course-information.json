@@ -77,6 +77,33 @@
       "completed": true,
       "completion_date": "2023-08-10T13:32:10.667Z",
       "expiration_date": null
+    },
+    {
+      "user_id": 6,
+      "course_id": 1,
+      "materials_viewed": [],
+      "lectures_attended": [],
+      "quizzes_attempted": [
+        1
+      ],
+      "completed": false,
+      "completion_date": null,
+      "expiration_date": null
+    },
+    {
+      "user_id": 1,
+      "course_id": 101,
+      "materials_viewed": [],
+      "lectures_attended": [],
+      "quizzes_attempted": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "completed": false,
+      "completion_date": null,
+      "expiration_date": null
     }
   ]
 }
