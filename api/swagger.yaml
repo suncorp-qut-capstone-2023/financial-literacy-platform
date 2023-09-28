@@ -85,112 +85,154 @@ paths:
           description: An object containing information about the project.
       tags:
       - Administration
+
   /api/enrolment/course/register:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  description: Course's unique identifier
-                  example: 1
-                  type: integer
-                user_id:
-                  description: User's unique identifier
-                  example: 6
-                  type: integer
-              type: object
-        required: true
-      responses:
-        '200':
+      post:
+        summary: Register for a course
+        tags:
+        - User Interactions
+        description: Enroll a user in a course.
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
-                properties:
-                  message:
-                    example: User with ID 1 has been registered to course ID 101
-                    type: string
                 type: object
-          description: User successfully registered to the course
-        '400':
-          content:
-            application/json:
-              schema:
+                required:
+                  - user_id
+                  - course_id
                 properties:
-                  error:
-                    example: true
-                    type: boolean
-                  message:
-                    example: User is already registered to this course.
-                    type: string
-                type: object
-          description: Bad request, such as user already registered to the course
-      summary: Register a user to a course
-      tags:
-      - User Interactions
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  course_id:
+                    type: integer
+                    description: ID of the course.
+        responses:
+          '201':
+            description: User registered successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User Enrolled"
+                    registration_id:
+                      type: integer
+                      description: ID of the new registration.
+          '400':
+            description: Invalid input or user already registered.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+  
   /api/enrolment/quizzes/attempted:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  description: Course's unique identifier
-                  example: 1
-                  type: integer
-                quiz_id:
-                  description: Quiz's unique identifier
-                  example: 1
-                  type: integer
-                user_id:
-                  description: User's unique identifier
-                  example: 6
-                  type: integer
-              type: object
-        required: true
-      responses:
-        '200':
+      post:
+        summary: Attempt a quiz for a course
+        tags:
+        - User Interactions
+        description: Record a user's quiz attempt for a course. If all quizzes attempted, course marked completed
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
-                properties:
-                  message:
-                    example: Quiz with ID 404 has been marked as attempted for user
-                      ID 1 in course ID 101
-                    type: string
                 type: object
-          description: Quiz marked as attempted successfully or course completed
-        '400':
-          content:
-            application/json:
-              schema:
+                required:
+                  - user_id
+                  - course_id
+                  - quiz_id
                 properties:
-                  error:
-                    example: true
-                    type: boolean
-                  message:
-                    example: Quiz already attempted by the user for this course.
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  course_id:
+                    type: integer
+                    description: ID of the course.
+                  quiz_id:
+                    type: integer
+                    description: ID of the quiz.
+                  score:
+                    type: integer
+                    description: Score of the quiz attempt.
+                  feedback:
                     type: string
-                type: object
-          description: Bad request, such as quiz already attempted by the user
-        '404':
-          content:
-            application/json:
-              schema:
-                properties:
-                  error:
-                    example: true
-                    type: boolean
-                  message:
-                    example: User is not registered for this course.
-                    type: string
-                type: object
-          description: User or course not found
-      summary: Mark a quiz as attempted for a user
-      tags:
-      - User Interactions
+                    description: Feedback for the quiz attempt.
+        responses:
+          '201':
+            description: Quiz attempt recorded successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User attempted quiz"
+                    registration_id:
+                      type: integer
+                      description: ID of the new quiz attempt.
+          '200':
+            description: Course completed.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Congratulations on finishing the course!"
+                    registration_id:
+                      type: integer
+                      description: ID of the course registration.
+          '400':
+            description: Invalid input.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          '404':
+            description: User not registered for the course.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
   /api/enrolment/interests/add:
     post:
       summary: Add interest for a user
@@ -302,6 +344,8 @@ paths:
                       type: boolean
                     message:
                       type: string
+
+
 
 
 
