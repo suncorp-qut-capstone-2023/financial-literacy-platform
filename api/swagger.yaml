@@ -191,6 +191,122 @@ paths:
       summary: Mark a quiz as attempted for a user
       tags:
       - User Interactions
+  /api/enrolment/interests/add:
+    post:
+      summary: Add interest for a user
+      tags: 
+      - User Interactions
+      description: Add an interest for a given user ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - interest
+              properties:
+                user_id:
+                  type: integer
+                  description: ID of the user.
+                interest:
+                  type: string
+                  description: Interest to be added.
+      responses:
+        '200':
+          description: Interest added successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Interest {interest} added for user ID {user_id}."
+        '400':
+          description: Interest already exists or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/enrolment/interests/remove:
+      post:
+        summary: Remove interest for a user
+        tags:
+          - User Interactions
+        description: Remove an interest for a given user ID.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - interest
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  interest:
+                    type: string
+                    description: Interest to be removed.
+        responses:
+          '200':
+            description: Interest removed successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Interest {interest} removed for user ID {user_id}."
+          '400':
+            description: Interest doesn't exist or invalid input.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          '500':
+            description: Internal Server Error.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+
+
+
+
+
   /api/forum/create:
     post:
       description: Endpoint to create a new forum thread. Requires JWT token in the
@@ -1862,66 +1978,74 @@ paths:
     post:
       description: Log in to an existing user account. A request body containing the
         user credentials must be sent.
+      summary: Authenticate a user
+      tags:
+      - Authentication
       requestBody:
+        required: true
         content:
           application/json:
             schema:
+              type: object
+              required:
+                - email
+                - password
               properties:
                 email:
-                  example: mike@gmail.com
                   type: string
+                  format: email
+                  description: User's email address.
                 password:
-                  example: password
                   type: string
-              type: object
-        description: The credentials of the user to log in.
-        required: true
+                  description: User's password.
       responses:
         '200':
+          description: Authentication successful.
           content:
             application/json:
               schema:
+                type: object
                 properties:
-                  expires_in:
-                    example: 86400
-                    type: number
-                  token:
-                    example: ajsonwebtoken
-                    type: string
                   token_type:
+                    type: string
                     example: Bearer
+                  token:
                     type: string
-                type: object
-          description: Log in successful
+                    description: JWT token for the authenticated session.
+                  expires_in:
+                    type: integer
+                    description: Token expiration time in seconds.
         '400':
+          description: Invalid input.
           content:
             application/json:
               schema:
+                type: object
                 properties:
                   error:
-                    example: 'true'
                     type: boolean
                   message:
-                    example: Request body incomplete, both email and password are
-                      required
                     type: string
-                type: object
-          description: Invalid log in request
         '401':
+          description: Authentication failed.
           content:
             application/json:
               schema:
+                type: object
                 properties:
                   error:
-                    example: 'true'
                     type: boolean
                   message:
-                    example: Incorrect email or password
                     type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
                 type: object
-          description: Log in failed
-      tags:
-      - Authentication
+                properties:
+                  error:
+                    type: string
   /api/user/logout:
     get:
       description: Logout from the user account.
@@ -1941,58 +2065,75 @@ paths:
     post:
       description: Creates a new user account. A request body containing the user
         to be registered must be sent.
+      tags:
+      - Authentication
       requestBody:
+        required: true
         content:
           application/json:
             schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
               properties:
                 email:
-                  example: mike@gmail.com
                   type: string
+                  format: email
+                  description: User's email address.
                 password:
-                  example: password
                   type: string
-              type: object
-        description: An object containing the email and password of the user to be
-          registered.
-        required: true
+                  description: User's password.
+                firstName:
+                  type: string
+                  description: User's first name.
+                lastName:
+                  type: string
+                  description: User's last name.
       responses:
         '201':
+          description: User registration successful.
           content:
             application/json:
               schema:
+                type: object
                 properties:
                   message:
-                    example: User created
                     type: string
-                type: object
-          description: User successfully created
+                    example: "User created"
+                  userId:
+                    type: integer
+                    description: ID of the newly created user.
         '400':
+          description: Invalid input.
           content:
             application/json:
               schema:
+                type: object
                 properties:
                   error:
-                    example: 'true'
                     type: boolean
                   message:
-                    example: Request body incomplete, both email and password are
-                      required
                     type: string
-                type: object
-          description: Bad request
         '409':
+          description: User already exists.
           content:
             application/json:
               schema:
+                type: object
                 properties:
                   error:
-                    example: 'true'
                     type: boolean
                   message:
-                    example: User already exists
                     type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
                 type: object
-          description: User already exists
-      tags:
-      - Authentication
+                properties:
+                  error:
+                    type: string
