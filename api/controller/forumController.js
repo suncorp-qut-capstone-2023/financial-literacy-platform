@@ -104,6 +104,7 @@ const getForumComment = async (req, res) => {
   }
 };
 
+// TODO: Not working
 const updateForumComment = async (req, res) => {
   const { commentID } = req.params;
   const { body } = req.body;

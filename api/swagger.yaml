@@ -1,0 +1,2325 @@
+components:
+  schemas:
+    InvalidJWT:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Invalid JWT token
+          type: string
+      type: object
+    MalformedAuthHeader:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Authorization header is malformed
+          type: string
+      type: object
+    MissingAuthHeader:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Authorization header ('Bearer token') not found
+          type: string
+      type: object
+    TokenExpired:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: JWT token has expired
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      description: Enter JWT Bearer token **_only_**
+      scheme: bearer
+      type: http
+info:
+  description: This API has been created to support Capstone Project in IFB398, Capstone
+    Unit. It exposes a number of REST endpoints. The API endpoints and their usage
+    are described in detail below.
+  title: IFB398 - Capstone Project 2023
+  version: 2.0.0
+openapi: 3.0.3
+paths:
+  /api/about:
+    get:
+      description: A route to know more about the project team.
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  company:
+                    example: Company Name
+                    type: string
+                  description:
+                    example: Project Team Description
+                    type: string
+                  members:
+                    items:
+                      properties:
+                        email:
+                          example: Member Email
+                          type: string
+                        name:
+                          example: Member Name
+                          type: string
+                        student_id:
+                          example: Member Student ID
+                          type: string
+                      type: object
+                    type: array
+                  name:
+                    example: Project Team Name
+                    type: string
+                type: object
+          description: An object containing information about the project.
+      tags:
+      - Administration
+
+  /api/enrolment/course/register:
+      post:
+        summary: Register for a course
+        tags:
+        - User Interactions
+        description: Enroll a user in a course.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - course_id
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  course_id:
+                    type: integer
+                    description: ID of the course.
+        responses:
+          '201':
+            description: User registered successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User Enrolled"
+                    registration_id:
+                      type: integer
+                      description: ID of the new registration.
+          '400':
+            description: Invalid input or user already registered.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+  
+  /api/enrolment/quizzes/attempted:
+      post:
+        summary: Attempt a quiz for a course
+        tags:
+        - User Interactions
+        description: Record a user's quiz attempt for a course. If all quizzes attempted, course marked completed
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - course_id
+                  - quiz_id
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  course_id:
+                    type: integer
+                    description: ID of the course.
+                  quiz_id:
+                    type: integer
+                    description: ID of the quiz.
+                  score:
+                    type: integer
+                    description: Score of the quiz attempt.
+                  feedback:
+                    type: string
+                    description: Feedback for the quiz attempt.
+        responses:
+          '201':
+            description: Quiz attempt recorded successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User attempted quiz"
+                    registration_id:
+                      type: integer
+                      description: ID of the new quiz attempt.
+          '200':
+            description: Course completed.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Congratulations on finishing the course!"
+                    registration_id:
+                      type: integer
+                      description: ID of the course registration.
+          '400':
+            description: Invalid input.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          '404':
+            description: User not registered for the course.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+  /api/enrolment/interests/add:
+    post:
+      summary: Add interest for a user
+      tags: 
+      - User Interactions
+      description: Add an interest for a given user ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - interest
+              properties:
+                user_id:
+                  type: integer
+                  description: ID of the user.
+                interest:
+                  type: string
+                  description: Interest to be added.
+      responses:
+        '200':
+          description: Interest added successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Interest {interest} added for user ID {user_id}."
+        '400':
+          description: Interest already exists or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/enrolment/interests/remove:
+      post:
+        summary: Remove interest for a user
+        tags:
+          - User Interactions
+        description: Remove an interest for a given user ID.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - interest
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  interest:
+                    type: string
+                    description: Interest to be removed.
+        responses:
+          '200':
+            description: Interest removed successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Interest {interest} removed for user ID {user_id}."
+          '400':
+            description: Interest doesn't exist or invalid input.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          '500':
+            description: Internal Server Error.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+
+
+
+
+
+
+  /api/forum/{forumID}:
+    get:
+      summary: Get forum comments
+      tags:
+      - Forum
+      parameters:
+        - name: forumID
+          in: path
+          required: false
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of forum comments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Define properties based on the structure of a comment
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/comment:
+    post:
+      summary: Create a forum comment
+      tags:
+      - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: Comment content.
+                forumID:
+                  type: integer
+                  description: ID of the forum.
+                courseID:
+                  type: integer
+                  description: ID of the course.
+      responses:
+        '201':
+          description: Comment created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumComment:
+                    type: object
+                    properties:
+                      # Define properties based on the structure of a comment
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/create:
+    post:
+      summary: Create a forum 
+      tags:
+      - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ForumTitle:
+                  type: string
+                  description: Title of the forum.
+                CourseID:
+                  type: integer
+                  description: ID of the course, if related. Optional
+      responses:
+        '201':
+          description: Forum created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumID:
+                    type: integer
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum:
+    get:
+      summary: Get all forums
+      tags:
+      - Forum
+      responses:
+        '200':
+          description: Successful retrieval of forums.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Define properties based on the structure of a forum
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/{commentID}:
+    get:
+      summary: Get a specific forum comment
+      tags:
+      - Forum
+      parameters:
+        - name: commentID
+          in: path
+          required: true
+          description: ID of the comment.
+          schema:
+            type: integer
+        - name: forumID
+          in: path
+          required: true
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of the comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  # Define properties based on the structure of a comment
+        '404':
+          description: Comment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  
+  /api/forum/search:
+    post:
+      description: Search for forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                search_query:
+                  example: test
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    example: User deleted
+                    type: string
+                  module:
+                    properties:
+                      category_type:
+                        example: basic/intermediate/advance
+                        type: string
+                      course_id:
+                        example: 1
+                        type: integer
+                      course_name:
+                        example: C# course
+                        type: string
+                    type: object
+                type: object
+          description: Module search result has been found
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: Learning modules endpoint is not working
+                    type: string
+                type: object
+          description: Other URL issue
+        '404':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: no module with the provided module name has been found
+                    type: string
+                type: object
+          description: Module not found
+      tags:
+      - Forum
+  /api/learningModules:
+    get:
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: View all available learning modules
+  /api/learningModules/add/tags:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                search_query:
+                  example: C#
+                  type: new_tag
+              type: object
+        description: Add a new tag
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+      summary: Add new tag to an existing course
+      tags:
+      - Search function
+  /api/learningModules/course:
+    get:
+      parameters:
+      - description: ID of the course
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get course by ID
+  /api/learningModules/course/add:
+    post:
+      description: Add new course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                category_type:
+                  example: basic
+                  type: string
+                course_last_updated:
+                  example: '2022-10-31T09:00:00.504Z'
+                  type: string
+                course_name:
+                  example: C# basic
+                  type: string
+              type: object
+        description: An object containing the course name and category type
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+      security:
+      - bearerAuth: []
+      tags:
+      - Learning Modules
+  /api/learningModules/course/add/lecture:
+    post:
+      description: Add new material information to a course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                lecture_type:
+                  example: unknown
+                  type: string
+              type: object
+        description: An object containing the course ID, material type and material
+          media
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      tags:
+      - Learning Modules
+  /api/learningModules/course/add/material:
+    post:
+      description: Add new material information to a course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                material_media:
+                  example: http://127.0.0.1:443/api/learningModules/1/video
+                  type: string
+                material_type:
+                  example: video
+                  type: string
+              type: object
+        description: An object containing the course ID, material type and material
+          media
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      tags:
+      - Learning Modules
+  /api/learningModules/course/add/quiz:
+    post:
+      description: Add new quiz information to a course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                description:
+                  example: A quiz will be more intended for technical understanding.
+                  type: string
+                max_tries:
+                  example: 5
+                  type: integer
+              type: object
+        description: An object containing the course ID, quiz description and maximum
+          tries of doing the quiz.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      tags:
+      - Learning Modules
+  /api/learningModules/course/add/quiz/question:
+    post:
+      description: Add new quiz question to a quiz
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                question_answer_options:
+                  properties:
+                    A:
+                      example: Apple
+                      type: string
+                    B:
+                      example: Carrot
+                      type: string
+                    C:
+                      example: Banana
+                      type: string
+                    D:
+                      example: Lettuce
+                      type: string
+                  type: object
+                question_answers:
+                  example:
+                  - A
+                  - C
+                  items:
+                    type: string
+                  type: array
+                question_text:
+                  example: Which of the following are fruits?
+                  type: string
+                quiz_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the course ID, quiz ID, question text, and
+          all answer options
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      tags:
+      - Learning Modules
+  /api/learningModules/course/delete/{courseID}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get the result of deleting a course through its ID
+      tags:
+      - Learning Modules
+  /api/learningModules/course/delete/{courseID}/lecture/{lectureID}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: lecture ID of the course
+        in: path
+        name: lectureID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get the result of deleting a lecture through its ID
+      tags:
+      - Learning Modules
+  /api/learningModules/course/delete/{courseID}/material/{materialID}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: material ID of the course
+        in: path
+        name: materialID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get the result of deleting a material through its ID
+      tags:
+      - Learning Modules
+  /api/learningModules/course/delete/{courseID}/quiz/{quizID}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: quiz ID of the course
+        in: path
+        name: quizID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get the result of deleting a quiz through its ID
+      tags:
+      - Learning Modules
+  /api/learningModules/course/delete/{courseID}/quiz/{quizID}/quiz-question/{questionNumber}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: quiz ID of the course
+        in: path
+        name: quizID
+        required: true
+        schema:
+          type: string
+      - description: quiz question number
+        in: path
+        name: questionNumber
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get the result of deleting a quiz question through its question number
+      tags:
+      - Learning Modules
+  /api/learningModules/course/quiz/question:
+    post:
+      description: Add new quiz question to a quiz
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                question_answer_options:
+                  properties:
+                    A:
+                      example: Apple
+                      type: string
+                    B:
+                      example: Carrot
+                      type: string
+                    C:
+                      example: Banana
+                      type: string
+                    D:
+                      example: Lettuce
+                      type: string
+                  type: object
+                question_answers:
+                  example:
+                  - A
+                  - C
+                  items:
+                    type: string
+                  type: array
+                question_text:
+                  example: Which of the following are fruits?
+                  type: string
+                quiz_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the course ID, quiz ID, question text, and
+          all answer options
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/course/update:
+    post:
+      description: update course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                category_type:
+                  example: basic
+                  type: string
+                course_id:
+                  example: 1
+                  type: integer
+                course_last_updated:
+                  example: '2022-10-31T09:00:00.504Z'
+                  type: string
+                course_name:
+                  example: C# basic
+                  type: string
+              type: object
+        description: An object containing the course name and category type
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/course/update/lecture:
+    post:
+      description: update course-lecture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 11
+                  type: integer
+                lecture_id:
+                  example: 1
+                  type: integer
+                lecture_type:
+                  example: COOL
+                  type: string
+              type: object
+        description: An object containing the course id, lecture id and lecture type
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/course/update/material:
+    post:
+      description: update course-material
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                material_id:
+                  example: 1
+                  type: integer
+                material_media:
+                  example: ASX
+                  type: string
+                material_type:
+                  example: COOL
+                  type: string
+              type: object
+        description: An object containing the course name and category type
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/course/update/quiz:
+    post:
+      description: Add new quiz information to a course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                description:
+                  example: A quiz will be more intended for technical understanding.
+                  type: string
+                max_tries:
+                  example: 5
+                  type: integer
+                quiz_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the course ID, quiz description and maximum
+          tries of doing the quiz.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/course/update/quiz/question:
+    post:
+      description: Update quiz question in a quiz
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                question_answer_options:
+                  properties:
+                    A:
+                      example: London
+                      type: string
+                    B:
+                      example: Paris
+                      type: string
+                    C:
+                      example: Berlin
+                      type: string
+                    D:
+                      example: Madrid
+                      type: string
+                  type: object
+                question_answers:
+                  example:
+                  - B
+                  - C
+                  items:
+                    type: string
+                  type: array
+                question_number:
+                  example: 1
+                  type: integer
+                question_text:
+                  example: What is the capital of France?
+                  type: string
+                quiz_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the course ID, quiz ID, question number,
+          question text, and all answer options
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      tags:
+      - Learning Modules
+  /api/learningModules/delete/tags:
+    delete:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                delete_tag:
+                  example: C#
+                  type: string
+              type: object
+        description: An object containing the course ID and the tag to be deleted
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Delete a course tag on a course
+      tags:
+      - Search function
+  /api/learningModules/search:
+    post:
+      description: Search for modules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                search_query:
+                  example: c
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    example: User deleted
+                    type: string
+                  module:
+                    properties:
+                      category_type:
+                        example: basic/intermediate/advance
+                        type: string
+                      course_id:
+                        example: 1
+                        type: integer
+                      course_name:
+                        example: C# course
+                        type: string
+                    type: object
+                type: object
+          description: Module search result has been found
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: Learning modules endpoint is not working
+                    type: string
+                type: object
+          description: Other URL issue
+        '404':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: no module with the provided module name has been found
+                    type: string
+                type: object
+          description: Module not found
+      tags:
+      - Search function
+  /api/learningModules/search/tags:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                search_query:
+                  example: C
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Search course based on the most related tags to the lowest related
+        tags. Not include modules with unrelated tags.
+      tags:
+      - Search function
+  /api/learningModules/sort-newest-module:
+    get:
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Sort module from the latest to the oldest
+  /api/learningModules/{courseID}/media:
+    get:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: Image ID
+        in: query
+        name: image
+        required: false
+        schema:
+          type: string
+      - description: Video ID
+        in: query
+        name: video
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      summary: Get media file by course ID
+  /api/learningModules/{courseID}/quiz:
+    get:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      - description: ID of the quiz
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Get quiz by course ID and quiz ID
+  /api/learningmodules:
+    get:
+      parameters:
+      - description: ID of the course
+        in: query
+        name: course
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Not Found
+      summary: View all available learning modules
+      tags:
+      - Learning Modules
+  /api/learningmodules/media:
+    get:
+      parameters:
+      - description: ID of the image
+        in: query
+        name: image
+        required: false
+        schema:
+          type: string
+      - description: ID of the video
+        in: query
+        name: video
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Not Found
+      summary: Get media content
+      tags:
+      - Learning Modules
+  /api/learningmodules/{moduleID}/viewContent:
+    get:
+      parameters:
+      - description: ID of the learning module
+        in: path
+        name: moduleID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Not Found
+      summary: View content of a learning module
+      tags:
+      - Learning Modules
+  /api/media/download:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: '1'
+                  type: string
+                file_name:
+                  example: image1.jpeg
+                  type: string
+              type: object
+        description: ''
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      summary: ''
+      tags:
+      - Media
+  /api/media/upload:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: '1'
+                  type: string
+                file_name:
+                  example: image1.jpeg
+                  type: string
+              type: object
+        description: ''
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      summary: ''
+      tags:
+      - Media
+  /api/modules:
+    get:
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        security:
+        - bearerAuth: []
+      summary: View all available learning modules
+      tags:
+      - modules
+  /api/modules/course:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                category_type:
+                  example: security
+                  type: string
+                course_name:
+                  example: 'Security: Phishing'
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new course
+      tags:
+      - modules
+  /api/modules/course/sort:
+    get:
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Sort course based on the latest updated date
+      tags:
+      - modules
+  /api/modules/delete:
+    delete:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                table:
+                  example: quiz_question
+                  type: string
+                value:
+                  example: '225'
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/lecture:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                lecture_name:
+                  example: week 1
+                  type: string
+                lecture_order:
+                  example: 1
+                  type: integer
+                module_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new lecture
+      tags:
+      - modules
+  /api/modules/lecture/content:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                lecture_id:
+                  example: 101
+                  type: integer
+                material_id:
+                  example: 101
+                  type: integer
+                material_order:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new lecture content
+      tags:
+      - modules
+  /api/modules/material:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                material_name:
+                  example: file 33
+                  type: string
+                material_url:
+                  example: https://www.fakeURL.com
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new material
+      tags:
+      - modules
+  /api/modules/module:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: 1
+                  type: integer
+                module_name:
+                  example: what is github?
+                  type: string
+                module_order:
+                  example: 2
+                  type: integer
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new material
+      tags:
+      - modules
+  /api/modules/quiz:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                module_id:
+                  example: 1
+                  type: integer
+                quiz_blob_url:
+                  example: github.com
+                  type: string
+                quiz_maxtries:
+                  example: 3
+                  type: integer
+                quiz_name:
+                  example: Github - Intro
+                  type: string
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz
+      tags:
+      - modules
+  /api/modules/quiz/questions:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                question_answer:
+                  example: B
+                  type: string
+                question_option:
+                  properties:
+                    A:
+                      example: Github is a platform to store git repo.
+                      type: string
+                    B:
+                      example: GitHub is a platform and cloud-based service for software
+                        development and version control using Git, allowing developers
+                        to store and manage their code.
+                      type: string
+                    C:
+                      example: Both of the options above are correct.
+                      type: string
+                    D:
+                      example: Both of the options above are not correct.
+                      type: string
+                  type: object
+                question_order:
+                  example: 1
+                  type: integer
+                question_text:
+                  example: What is the purpose of Github?
+                  type: string
+                quiz_id:
+                  example: 1
+                  type: integer
+              type: object
+        description: An object containing the search queries to be search to. Match
+          modules will appear if found.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: B
+                  type: string
+                set_data_type:
+                  example: QUESTION_ANSWER
+                  type: string
+                table:
+                  example: quiz_question
+                  type: string
+                whereIdValue:
+                  example: '217'
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/{ID}:
+    get:
+      parameters:
+      - description: ID of the intended table
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      - description: the name of the database
+        in: query
+        name: table
+        required: false
+        schema:
+          type: string
+      - description: the type of the data
+        in: query
+        name: dataType
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Sort course based on the latest updated date
+      tags:
+      - modules
+  /api/modules/{courseID}:
+    get:
+      parameters:
+      - description: ID of the learning module
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Not Found
+      summary: View content of a learning module
+      tags:
+      - Learning Modules
+  /api/user/:email/delete:
+    post:
+      description: Delete a user account. A request body containing the user email
+        to be deleted must be sent.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  example: mike@gmail.com
+                  type: string
+              type: object
+        description: An object containing the email of the user to be deleted.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    example: User deleted
+                    type: string
+                type: object
+          description: User successfully deleted
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: 'Request body incomplete: email is required.'
+                    type: string
+                type: object
+          description: Bad request
+        '404':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: 'true'
+                    type: boolean
+                  message:
+                    example: User not found
+                    type: string
+                type: object
+          description: Invalid User
+      tags:
+      - Authentication
+  /api/user/login:
+    post:
+      description: Log in to an existing user account. A request body containing the
+        user credentials must be sent.
+      summary: Authenticate a user
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address.
+                password:
+                  type: string
+                  description: User's password.
+      responses:
+        '200':
+          description: Authentication successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                    example: Bearer
+                  token:
+                    type: string
+                    description: JWT token for the authenticated session.
+                  expires_in:
+                    type: integer
+                    description: Token expiration time in seconds.
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Authentication failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /api/user/logout:
+    get:
+      description: Logout from the user account.
+      requestBody:
+        content: {}
+        description: Nothing required.
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: User logged out
+      tags:
+      - Authentication
+  /api/user/register:
+    post:
+      description: Creates a new user account. A request body containing the user
+        to be registered must be sent.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address.
+                password:
+                  type: string
+                  description: User's password.
+                firstName:
+                  type: string
+                  description: User's first name.
+                lastName:
+                  type: string
+                  description: User's last name.
+      responses:
+        '201':
+          description: User registration successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User created"
+                  userId:
+                    type: integer
+                    description: ID of the newly created user.
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '409':
+          description: User already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

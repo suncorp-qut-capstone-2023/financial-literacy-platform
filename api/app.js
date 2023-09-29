@@ -4,6 +4,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const yaml = require('js-yaml'); // For swagger
+const fs = require ('fs'); // For swagger
 const pug = require('pug');
 
 // security setup
@@ -13,7 +15,11 @@ require("dotenv").config();
 
 // swagger setup
 const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+try {
+    swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+  } catch (e) {
+    console.error("Failed to load swagger document", e);
+  }
 
 // create express app
 const app = express();
@@ -24,7 +30,6 @@ const usersRouter = require('./routes/users.js');
 const learningModulesRouter = require('./routes/learningModules.js');
 const enrolmentRouter = require('./routes/enrolment.js');
 const modulesRouter = require('./routes/courses.js');
-const mediaRouter = require('./routes/media.js');
 const forumRouter = require('./routes/forum.js');
 
 // security implementation
@@ -65,7 +70,6 @@ app.use('/api/user', usersRouter);
 app.use('/api/learningModules', learningModulesRouter);
 app.use('/api/enrolment', enrolmentRouter);
 app.use('/api/modules', modulesRouter);
-app.use('/api/media', mediaRouter);
 app.use('/api/forum', forumRouter);
 
 // catch 404 and forward to error handler
