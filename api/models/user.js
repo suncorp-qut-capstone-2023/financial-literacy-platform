@@ -1,36 +1,45 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/knexfile');
+const knexOptions = require('../db/userdb-connection');
 const knex = require("knex")(knexOptions);
 
 // Expand this class to include all the functions that you need.
 class User {
     static create(userData){
-        return knex('users').insert(userData);
+        return knex('users')
+            .insert(userData);
     }
 
     static update(id, userData){
-        return knex('users').where('id', '=', id).update(userData);
+        return knex('users')
+            .where('id', '=', id).update(userData);
     }
 
     static delete(id){
-        return knex('users').where('id', '=', id).del();
+        return knex('users')
+            .where('id', '=', id)
+            .del();
     }
 
     static getById(id){
-        return knex('users').select("*").where('id', '=', id);
+        return knex('users')
+            .select("*")
+            .where('id', '=', id);
     }
 
     static getByEmail(email){
-        return knex('users').select("*").where('email', '=', email);
+        return knex('users')
+            .select("*")
+            .where('email', '=', email);
     }
 
     static getInterestsFromDB(userId) {
+        const interests = [];
         return knex('users')
-            .select('interests') 
+            .select('interests')
             .where('id', '=', userId)
-            .first() 
+            .first()
             .then(result => {
-                return result ? result.interests : null; 
+                return result ? result.interests : null;
             });
     }
 

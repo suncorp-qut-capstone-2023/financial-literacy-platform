@@ -1,12 +1,6 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/knexfile');
-// const conn = require('../db/cloudConnect');
-''
+const knexOptions = require('../db/mydb-connection');
 const knex = require("knex")(knexOptions);
-const fs = require('fs');
-
-// Change this to db connection for cloud
-// const courses = require('../course-information.json');
 
 // Expand this class to include all the functions that you need.
 class Course {

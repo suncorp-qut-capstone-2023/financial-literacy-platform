@@ -76,6 +76,7 @@ async function uploadFileToAzure(blobFile, localFilePath) {
     console.log(response);
 }
 
+// TODO - this function is only uploading to azure storage, but the file is not being referenced to any modules/courses
 const uploadMedia = (req, res) => {
     const fileName = req.body.file_name;
     const courseId = req.body.course_id;

@@ -1,5 +1,5 @@
 const axios = require("axios");
-const course_information = require("../course-information.json");
+// const course_information = require("../course-information-sample/course-information.json");
 const courses = require('../models/course');
 const forum = require('../models/forum');
 

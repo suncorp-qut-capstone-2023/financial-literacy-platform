@@ -1,6 +1,6 @@
-const course_information = require("../course-information.json");
+// const course_information = require("../course-information-sample/course-information.json");
 const User = require('../models/user.js');
-const user_registrations = require("../user-course-information.json");
+// const user_registrations = require("../course-information-sample/user-course-information.json");
 const path = require("path");
 const fs = require("fs");
 

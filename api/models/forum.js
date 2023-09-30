@@ -1,5 +1,5 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/knexfile');
+const knexOptions = require('../db/mydb-connection');
 const knex = require("knex")(knexOptions);
 
 class Forum {

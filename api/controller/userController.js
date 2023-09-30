@@ -234,57 +234,10 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
-// TODO: For future implementation, not functional yet
-// Forgot password
-const forgotPassword = async (req, res, next) => {
-    const email = req.body.email
-
-    // Handle input
-    if (!email) {
-        res.status(400).json({
-            error: true,
-            message: "Request body incomplete, email is required"
-        });
-    }
-
-    // Query DB for request
-    try {
-        const users = await User.getByEmail(email);
-        if (users.length === 0) {
-            res.status(404).json({
-                error: true,
-                message: "User not found"
-            });
-        }
-        else {
-            // send email
-            // const user = users[0];
-            // const expires_in = 24 * 60 * 60;
-            // const exp = Date.now() + expires_in * 1000;
-            // const token = jwt.sign({email, exp}, process.env.JWT_SECRET);
-            // const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
-            // const message = `Hi ${user.first_name},\n\nPlease click on the following link ${link} to reset your password. \n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`;
-            // const mailOptions = {
-            //     from: process.env.EMAIL,
-            //     to: email,
-            //     subject: "Password reset",
-            //     text: message
-            // };
-            // await transporter.sendMail(mailOptions);
-            // res.status(200).json({
-            //     message: "Password reset email sent"
-            // });
-        }
-    } catch (error) {
-        next(error);
-    }
-}
-
 module.exports = {
     registerUser,
     loginUser,
     getUser,
     updateUser,
-    deleteUser,
-    forgotPassword
+    deleteUser
 }

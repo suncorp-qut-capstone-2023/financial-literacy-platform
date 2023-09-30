@@ -1,36 +1,36 @@
-// Description: This file is the main entry point for the application. It sets up the express app,
+// Desc: Main entry point for the application
+
+// For environment variables
+require("dotenv").config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const yaml = require('js-yaml'); // For swagger
-const fs = require ('fs'); // For swagger
-const pug = require('pug');
-
-// security setup
 const helmet = require('helmet');
 const cors = require("cors");
-require("dotenv").config();
+const yaml = require('js-yaml');
+const fs = require ('fs');
+const swaggerUI = require("swagger-ui-express");
 
 // swagger setup
-const swaggerUI = require("swagger-ui-express");
 try {
-    swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
-  } catch (e) {
-    console.error("Failed to load swagger document", e);
-  }
+  swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+} catch (e) {
+  console.error("Failed to load swagger document", e);
+}
 
-// create express app
-const app = express();
+const app = express(); // create express app
 
 // define routers
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
-const learningModulesRouter = require('./routes/learningModules.js');
-const enrolmentRouter = require('./routes/enrolment.js');
-const modulesRouter = require('./routes/courses.js');
+const learningModulesRouter = require('./routes/learningModules.js'); // TODO
+const modulesRouter = require('./routes/courses.js'); // TODO
 const forumRouter = require('./routes/forum.js');
+const enrolmentRouter = require('./routes/enrolment.js');
+const mediaRouter = require('./routes/media.js');
 
 // security implementation
 app.use(helmet());
@@ -45,11 +45,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// cookie parser implementation
-app.use(cookieParser());
-
-// logger implementation
-app.use(logger('common'));
+app.use(cookieParser()); // cookie parser implementation
+app.use(logger('common')); // logger implementation
 
 // logger token implementation
 logger.token('req', (req, res) => JSON.stringify(req.headers));
@@ -60,17 +57,18 @@ logger.token('res', (req, res) => {
 });
 
 // swagger implementation
-app.use('/api/docs', swaggerUI.serve);
+app.use('/api/docs', swaggerUI.serve);                  // TODO
 //@ts-ignore
-app.get('/api/docs', swaggerUI.setup(swaggerDocument));
+app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 
 // Setup routes
 app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
-app.use('/api/learningModules', learningModulesRouter);
-app.use('/api/enrolment', enrolmentRouter);
-app.use('/api/modules', modulesRouter);
+app.use('/api/learningModules', learningModulesRouter); // TODO
+app.use('/api/modules', modulesRouter);                 // TODO
 app.use('/api/forum', forumRouter);
+app.use('/api/enrolment', enrolmentRouter);
+app.use('/api/media', mediaRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
