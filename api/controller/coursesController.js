@@ -23,24 +23,193 @@ const getAllCourses = async (req, res) => {
 }
 
 const getCourse = async (req, res) => {
-    // get course id from url
+    // get course id from params
     const ID = req.params['ID'];
-    const dataType = req.query['dataType'];
-    const table = req.query['table'];
-
-    console.log(ID);
-
-    //const { table, where_data_type, value } = req.body;
 
     try {
         // get course from database
-        const course = await courses.getCourse(table, dataType, ID);
+        const course = await courses.getCourse(ID);
 
         // return course
         return res.status(200).json(course);
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getLecture = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const lecture = await courses.getLecture(ID);
+
+        // return course
+        return res.status(200).json(lecture);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getLectureContent = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const lectureContent = await courses.getLectureContent(ID);
+
+        // return course
+        return res.status(200).json(lectureContent);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getMaterial = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const material = await courses.getMaterial(ID);
+
+        // return course
+        return res.status(200).json(material);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getModule = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const module = await courses.getModule(ID);
+
+        // return course
+        return res.status(200).json(module);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getQuiz = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const quiz = await courses.getQuiz(ID);
+
+        // return course
+        return res.status(200).json(quiz);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails"
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const getQuizQuestions = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    try {
+        // get course from database
+        const quizQuestions = await courses.getQuizQuestion(ID);
+
+        // return course
+        return res.status(200).json(quizQuestions);
+    }
+    catch (err) {
+
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -111,6 +280,7 @@ const createCourse = async (req, res) => {
     ':' +
     String(currentDateTime.getSeconds()).padStart(2, '0');
 
+    //if category_type is provided
     if (category_type) {
         data["CATEGORY_TYPE"] = category_type;
     }
@@ -125,6 +295,7 @@ const createCourse = async (req, res) => {
     catch (err) {
         const data = err.sqlMessage.match(/'([^']+)'/);
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -189,6 +360,7 @@ const createLecture = async (req, res) => {
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -250,6 +422,7 @@ const createLectureContent = async (req, res) => {
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -313,6 +486,7 @@ const createMaterial = async (req, res) => {
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -370,6 +544,7 @@ const createModule = async (req, res) => {
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -441,6 +616,7 @@ const createQuiz = async (req, res) => {
     }
     catch (err) {
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -575,7 +751,8 @@ const createQuizQuestions = async (req, res) => {
         });
     }
     catch (err) {
-        // return error
+        
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -608,63 +785,34 @@ const createQuizQuestions = async (req, res) => {
     }
 }
 
-const deleteData = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { table } = req.body; //value is a list
-    let { value } = req.body; //value is a list
-    // let count = 1;
+const deleteCourse = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
 
-    if ( !table ) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the table"
-          });
-    }
-
-    value = isValidInt(value);
+    //receive ID in integer type
+    const newID = isValidInt(ID);
     
     try {
 
-        let result;
-
-        // update course in database
-        if (table === "course") {
-            result = await courses.deleteCourse(value);
-        } else if (table === "lecture") {
-            result = await courses.deleteLecture(value);
-        } else if (table === "lecture_content") {
-            result = await courses.deleteLectureContent(value);
-        } else if (table === "material") {
-            result = await courses.deleteMaterial(value);
-        } else if (table === "module") {
-            result = await courses.deleteModule(value);
-        } else if (table === "quiz") {
-            result = await courses.deleteQuiz(value);
-        } else if (table === "quiz_question") {
-            result = await courses.deleteQuizQuestion(value);
-        } else {
-            return res.status(400).json({
-                error: true,
-                message:  `table with the name '${table}' has not been found`
-            });
-        }
+        const result = await courses.deleteCourse(newID);
 
         // return course
         if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${value} on table '${table}' has been deleted`});
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'course' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on '${table}' table with condition ID = ${value} has not been found`
+                message:  `data on 'course' table with condition ID = ${newID} has not been found`
             });
         }
         
     }
     catch (err) {
         console.log(err);
+        //find data type, such as "COURSE_ID"
         const data = err.sqlMessage.match(/'([^']+)'/);
 
+        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -701,25 +849,384 @@ const deleteData = async (req, res) => {
     }
 }
 
-// const deleteCourse = async (req, res) => {
-//     // get course id from url
-//     const courseID = req.params['courseID'];
+const deleteLecture = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
 
-//     try {
-//         // delete course from database
-//         const deletedCourse = await courses.deleteCourse(courseID);
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
 
-//         // return course
-//         return res.status(200).json(deletedCourse);
-//     }
-//     catch (err) {
-//         // return error
-//         return res.status(500).json({
-//             error: true,
-//             message: "Internal server error"
-//         });
-//     }
-// }
+        const result = await courses.deleteLecture(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'lecture' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'lecture' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const deleteLectureContent = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
+
+        const result = await courses.deleteLectureContent(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'lecture_content' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'lecture_content' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const deleteMaterial = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
+
+        const result = await courses.deleteMaterial(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'material' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'material' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const deleteModule = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
+
+        const result = await courses.deleteModule(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'module' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'module' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const deleteQuiz = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
+
+        const result = await courses.deleteQuiz(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'quiz' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'quiz' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const deleteQuizQuestions = async (req, res) => {
+    // get course id from params
+    const ID = req.params['ID'];
+
+    //receive ID in integer type
+    const newID = isValidInt(ID);
+    
+    try {
+
+        const result = await courses.deleteQuizQuestion(newID);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'quiz_question' has been deleted`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'quiz_question' table with condition ID = ${newID} has not been found`
+            });
+        }
+        
+    }
+    catch (err) {
+        //find data type, such as "COURSE_ID"
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });            
+        }
+
+        if (err.errno === 1264) {
+            return res.status(500).json({
+                error: true,
+                message: `${data[0]} integer value is too large`
+            });            
+        }
+
+        if (err.errno === 1292) {
+            return res.status(500).json({
+                error: true,
+                message: `incorrect double value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
 
 function isValidInt(value) {
 
@@ -734,13 +1241,15 @@ function isValidInt(value) {
     return value;
 }
 
-const updateData = async (req, res) => { //update course table
+const updateCourse = async (req, res) => { //update course table
     // get course id from url
-    const { table, set_data_type } = req.body; //value is a list
-    let { setValue, whereIdValue } = req.body; //value is a list
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
 
     if (!set_data_type 
-        || !setValue || !whereIdValue ) {
+        || !setValue || !ID ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -749,57 +1258,34 @@ const updateData = async (req, res) => { //update course table
     }
 
     setValue = isValidInt(setValue);
-    whereIdValue = isValidInt(whereIdValue);
+    ID = isValidInt(ID);
 
-    const value = [ setValue, whereIdValue ];
+    const value = [ setValue, ID ];
 
     try {
 
-        let result;
-        let whereDataType;
-
-        // update course in database
-        if (table === "course") {
-            result = await courses.updateCourse(set_data_type, value);
-            whereDataType = "COURSE_ID";
-        } else if (table === "lecture") {
-            result = await courses.updateLecture(set_data_type, value);
-            whereDataType = "LECTURE_ID";
-        } else if (table === "lecture_content") {
-            result = await courses.updateLectureContent(set_data_type, value);
-            whereDataType = "LECTURE_CONTENT_ID";
-        } else if (table === "material") {
-            result = await courses.updateMaterial(set_data_type, value);
-            whereDataType = "MATERIAL_ID";
-        } else if (table === "module") {
-            result = await courses.updateModule(set_data_type, value);
-            whereDataType = "MODULE_ID";
-        } else if (table === "quiz") {
-            result = await courses.updateQuiz(set_data_type, value);
-            whereDataType = "QUIZ_ID";
-        } else if (table === "quiz_question") {
-            result = await courses.updateQuizQuestion(set_data_type, value);
-            whereDataType = "QUESTION_ID";
-        } else {
-            return res.status(400).json({
-                error: true,
-                message:  `table with the name '${table}' has not been found`
-            });
-        }
+        const result = await courses.updateCourse(set_data_type, value);
 
         // return course
         if (result > 0) {
-            return res.status(200).json({"message": `table '${table}' has been updated`});
+            return res.status(200).json({"message": `table 'course' has been updated`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on '${table}' table with condition ${whereDataType} = ${value[1]} has not been found`
+                message:  `data on 'course' table with condition COURSE_ID = ${value[1]} has not been found`
             });
         }
     }
     catch (err) {
 
         const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
 
         if (err.errno === 1366) {
             return res.status(500).json({
@@ -830,58 +1316,514 @@ const updateData = async (req, res) => { //update course table
     }
 }
 
-const getModule = async (req, res) => {
+const updateLecture = async (req, res) => { //update course table
     // get course id from url
-    const courseID = req.params['courseID'];
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
 
-    // get module id from url
-    const moduleID = req.params['moduleID'];
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
 
     try {
-        // get module from database
-        const module = await courses.getModule(courseID, moduleID);
 
-        // return module
-        return res.status(200).json(module);
+        const result = await courses.updateLecture(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'lecture' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'lecture' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
     }
     catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: err
         });
     }
 }
 
-const getQuiz = async (req, res) => {
+const updateLectureContent = async (req, res) => { //update course table
     // get course id from url
-    const courseID = req.params['courseID'];
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
 
-    // get module id from url
-    const moduleID = req.params['moduleID'];
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
 
-    // get quiz id from url
-    const quizID = req.params['quizID'];
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
 
     try {
-        // get quiz from database
-        const quiz = await courses.getQuiz(courseID, moduleID, quizID);
 
-        // return quiz
-        return res.status(200).json(quiz);
+        const result = await courses.updateLectureContent(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'lecture_content' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'lecture_content' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
     }
     catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: err
         });
     }
 }
+
+const updateMaterial = async (req, res) => { //update course table
+    // get course id from url
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
+
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
+
+    try {
+
+        const result = await courses.updateMaterial(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'material' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'material' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
+    }
+    catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const updateModule = async (req, res) => { //update course table
+    // get course id from url
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
+
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
+
+    try {
+
+        const result = await courses.updateModule(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'module' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'module' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
+    }
+    catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const updateQuiz = async (req, res) => { //update course table
+    // get course id from url
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
+
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
+
+    try {
+
+        const result = await courses.updateQuiz(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'quiz' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'quiz' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
+    }
+    catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+const updateQuizQuestions = async (req, res) => { //update course table
+    // get course id from url
+    // get course id from params
+    let ID = req.params['ID'];
+    const { set_data_type } = req.body; //value is a list
+    let { setValue } = req.body; //value is a list
+
+    if (!set_data_type 
+        || !setValue || !ID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+          });
+    }
+
+    setValue = isValidInt(setValue);
+    ID = isValidInt(ID);
+
+    const value = [ setValue, ID ];
+
+    try {
+
+        const result = await courses.updateQuizQuestion(set_data_type, value);
+
+        // return course
+        if (result > 0) {
+            return res.status(200).json({"message": `table 'quiz_question' has been updated`});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `data on 'quiz_question' table with condition COURSE_ID = ${value[1]} has not been found`
+            });
+        }
+    }
+    catch (err) {
+
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
+        if (err.errno === 1054) {
+            return res.status(500).json({
+                error: true,
+                message: `unknown column: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1366) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect integer value: ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 1406) {
+            return res.status(500).json({
+                error: true,
+                message: `data too long for ${data[0]}`
+            });            
+        }
+
+        if (err.errno === 3140) {
+            return res.status(500).json({
+                error: true,
+                message: `Incorrect JSON text value`
+            });            
+        }
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: err
+        });
+    }
+}
+
+// const getModule = async (req, res) => {
+//     // get course id from url
+//     const courseID = req.params['courseID'];
+
+//     // get module id from url
+//     const moduleID = req.params['moduleID'];
+
+//     try {
+//         // get module from database
+//         const module = await courses.getModule(courseID, moduleID);
+
+//         // return module
+//         return res.status(200).json(module);
+//     }
+//     catch (err) {
+//         // return error
+//         return res.status(500).json({
+//             error: true,
+//             message: "Internal server error"
+//         });
+//     }
+// }
+
+// const getQuiz = async (req, res) => {
+//     // get course id from url
+//     const courseID = req.params['courseID'];
+
+//     // get module id from url
+//     const moduleID = req.params['moduleID'];
+
+//     // get quiz id from url
+//     const quizID = req.params['quizID'];
+
+//     try {
+//         // get quiz from database
+//         const quiz = await courses.getQuiz(courseID, moduleID, quizID);
+
+//         // return quiz
+//         return res.status(200).json(quiz);
+//     }
+//     catch (err) {
+//         // return error
+//         return res.status(500).json({
+//             error: true,
+//             message: "Internal server error"
+//         });
+//     }
+// }
 
 module.exports = {
     getAllCourses,
     getCourse,
+    getLecture,
+    getLectureContent,
+    getMaterial,
+    getModule,
+    getQuiz,
+    getQuizQuestions,
     createCourse,
     createLecture,
     createLectureContent,
@@ -889,9 +1831,19 @@ module.exports = {
     createModule,
     createQuiz,
     createQuizQuestions,
-    deleteData,
-    updateData,
-    getModule,
-    getQuiz,
+    deleteCourse,
+    deleteLecture,
+    deleteLectureContent,
+    deleteMaterial,
+    deleteModule,
+    deleteQuiz,
+    deleteQuizQuestions,
+    updateCourse,
+    updateLecture,
+    updateLectureContent,
+    updateMaterial,
+    updateModule,
+    updateQuiz,
+    updateQuizQuestions,
     sortNewestModule
 }

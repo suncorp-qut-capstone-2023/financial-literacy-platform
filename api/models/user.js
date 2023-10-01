@@ -1,5 +1,5 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/userdb-connection');
+const knexOptions = require('../db/mydb-connection.js');
 const knex = require("knex")(knexOptions);
 
 // Expand this class to include all the functions that you need.

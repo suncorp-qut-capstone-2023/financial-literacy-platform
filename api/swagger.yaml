@@ -647,14 +647,6 @@ paths:
           description: Module not found
       tags:
       - Forum
-  /api/learningModules:
-    get:
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-      summary: View all available learning modules
   /api/learningModules/add/tags:
     post:
       requestBody:
@@ -683,657 +675,6 @@ paths:
       summary: Add new tag to an existing course
       tags:
       - Search function
-  /api/learningModules/course:
-    get:
-      parameters:
-      - description: ID of the course
-        in: query
-        name: id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get course by ID
-  /api/learningModules/course/add:
-    post:
-      description: Add new course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                category_type:
-                  example: basic
-                  type: string
-                course_last_updated:
-                  example: '2022-10-31T09:00:00.504Z'
-                  type: string
-                course_name:
-                  example: C# basic
-                  type: string
-              type: object
-        description: An object containing the course name and category type
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-      security:
-      - bearerAuth: []
-      tags:
-      - Learning Modules
-  /api/learningModules/course/add/lecture:
-    post:
-      description: Add new material information to a course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                lecture_type:
-                  example: unknown
-                  type: string
-              type: object
-        description: An object containing the course ID, material type and material
-          media
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      security:
-      - bearerAuth: []
-      tags:
-      - Learning Modules
-  /api/learningModules/course/add/material:
-    post:
-      description: Add new material information to a course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                material_media:
-                  example: http://127.0.0.1:443/api/learningModules/1/video
-                  type: string
-                material_type:
-                  example: video
-                  type: string
-              type: object
-        description: An object containing the course ID, material type and material
-          media
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      security:
-      - bearerAuth: []
-      tags:
-      - Learning Modules
-  /api/learningModules/course/add/quiz:
-    post:
-      description: Add new quiz information to a course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                description:
-                  example: A quiz will be more intended for technical understanding.
-                  type: string
-                max_tries:
-                  example: 5
-                  type: integer
-              type: object
-        description: An object containing the course ID, quiz description and maximum
-          tries of doing the quiz.
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      security:
-      - bearerAuth: []
-      tags:
-      - Learning Modules
-  /api/learningModules/course/add/quiz/question:
-    post:
-      description: Add new quiz question to a quiz
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                question_answer_options:
-                  properties:
-                    A:
-                      example: Apple
-                      type: string
-                    B:
-                      example: Carrot
-                      type: string
-                    C:
-                      example: Banana
-                      type: string
-                    D:
-                      example: Lettuce
-                      type: string
-                  type: object
-                question_answers:
-                  example:
-                  - A
-                  - C
-                  items:
-                    type: string
-                  type: array
-                question_text:
-                  example: Which of the following are fruits?
-                  type: string
-                quiz_id:
-                  example: 1
-                  type: integer
-              type: object
-        description: An object containing the course ID, quiz ID, question text, and
-          all answer options
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      security:
-      - bearerAuth: []
-      tags:
-      - Learning Modules
-  /api/learningModules/course/delete/{courseID}:
-    delete:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get the result of deleting a course through its ID
-      tags:
-      - Learning Modules
-  /api/learningModules/course/delete/{courseID}/lecture/{lectureID}:
-    delete:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: lecture ID of the course
-        in: path
-        name: lectureID
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get the result of deleting a lecture through its ID
-      tags:
-      - Learning Modules
-  /api/learningModules/course/delete/{courseID}/material/{materialID}:
-    delete:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: material ID of the course
-        in: path
-        name: materialID
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get the result of deleting a material through its ID
-      tags:
-      - Learning Modules
-  /api/learningModules/course/delete/{courseID}/quiz/{quizID}:
-    delete:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: quiz ID of the course
-        in: path
-        name: quizID
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get the result of deleting a quiz through its ID
-      tags:
-      - Learning Modules
-  /api/learningModules/course/delete/{courseID}/quiz/{quizID}/quiz-question/{questionNumber}:
-    delete:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: quiz ID of the course
-        in: path
-        name: quizID
-        required: true
-        schema:
-          type: string
-      - description: quiz question number
-        in: path
-        name: questionNumber
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get the result of deleting a quiz question through its question number
-      tags:
-      - Learning Modules
-  /api/learningModules/course/quiz/question:
-    post:
-      description: Add new quiz question to a quiz
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                question_answer_options:
-                  properties:
-                    A:
-                      example: Apple
-                      type: string
-                    B:
-                      example: Carrot
-                      type: string
-                    C:
-                      example: Banana
-                      type: string
-                    D:
-                      example: Lettuce
-                      type: string
-                  type: object
-                question_answers:
-                  example:
-                  - A
-                  - C
-                  items:
-                    type: string
-                  type: array
-                question_text:
-                  example: Which of the following are fruits?
-                  type: string
-                quiz_id:
-                  example: 1
-                  type: integer
-              type: object
-        description: An object containing the course ID, quiz ID, question text, and
-          all answer options
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
-  /api/learningModules/course/update:
-    post:
-      description: update course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                category_type:
-                  example: basic
-                  type: string
-                course_id:
-                  example: 1
-                  type: integer
-                course_last_updated:
-                  example: '2022-10-31T09:00:00.504Z'
-                  type: string
-                course_name:
-                  example: C# basic
-                  type: string
-              type: object
-        description: An object containing the course name and category type
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
-  /api/learningModules/course/update/lecture:
-    post:
-      description: update course-lecture
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 11
-                  type: integer
-                lecture_id:
-                  example: 1
-                  type: integer
-                lecture_type:
-                  example: COOL
-                  type: string
-              type: object
-        description: An object containing the course id, lecture id and lecture type
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
-  /api/learningModules/course/update/material:
-    post:
-      description: update course-material
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                material_id:
-                  example: 1
-                  type: integer
-                material_media:
-                  example: ASX
-                  type: string
-                material_type:
-                  example: COOL
-                  type: string
-              type: object
-        description: An object containing the course name and category type
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
-  /api/learningModules/course/update/quiz:
-    post:
-      description: Add new quiz information to a course
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                description:
-                  example: A quiz will be more intended for technical understanding.
-                  type: string
-                max_tries:
-                  example: 5
-                  type: integer
-                quiz_id:
-                  example: 1
-                  type: integer
-              type: object
-        description: An object containing the course ID, quiz description and maximum
-          tries of doing the quiz.
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
-  /api/learningModules/course/update/quiz/question:
-    post:
-      description: Update quiz question in a quiz
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                question_answer_options:
-                  properties:
-                    A:
-                      example: London
-                      type: string
-                    B:
-                      example: Paris
-                      type: string
-                    C:
-                      example: Berlin
-                      type: string
-                    D:
-                      example: Madrid
-                      type: string
-                  type: object
-                question_answers:
-                  example:
-                  - B
-                  - C
-                  items:
-                    type: string
-                  type: array
-                question_number:
-                  example: 1
-                  type: integer
-                question_text:
-                  example: What is the capital of France?
-                  type: string
-                quiz_id:
-                  example: 1
-                  type: integer
-              type: object
-        description: An object containing the course ID, quiz ID, question number,
-          question text, and all answer options
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      tags:
-      - Learning Modules
   /api/learningModules/delete/tags:
     delete:
       requestBody:
@@ -1463,169 +804,6 @@ paths:
         tags. Not include modules with unrelated tags.
       tags:
       - Search function
-  /api/learningModules/sort-newest-module:
-    get:
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Sort module from the latest to the oldest
-  /api/learningModules/{courseID}/media:
-    get:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: Image ID
-        in: query
-        name: image
-        required: false
-        schema:
-          type: string
-      - description: Video ID
-        in: query
-        name: video
-        required: false
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      security:
-      - bearerAuth: []
-      summary: Get media file by course ID
-  /api/learningModules/{courseID}/quiz:
-    get:
-      parameters:
-      - description: ID of the course
-        in: path
-        name: courseID
-        required: true
-        schema:
-          type: string
-      - description: ID of the quiz
-        in: query
-        name: id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Get quiz by course ID and quiz ID
-  /api/learningmodules:
-    get:
-      parameters:
-      - description: ID of the course
-        in: query
-        name: course
-        required: false
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: Not Found
-      summary: View all available learning modules
-      tags:
-      - Learning Modules
-  /api/learningmodules/media:
-    get:
-      parameters:
-      - description: ID of the image
-        in: query
-        name: image
-        required: false
-        schema:
-          type: string
-      - description: ID of the video
-        in: query
-        name: video
-        required: false
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequest'
-          description: Bad Request
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: Not Found
-      summary: Get media content
-      tags:
-      - Learning Modules
-  /api/learningmodules/{moduleID}/viewContent:
-    get:
-      parameters:
-      - description: ID of the learning module
-        in: path
-        name: moduleID
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: Not Found
-      summary: View content of a learning module
-      tags:
-      - Learning Modules
   /api/media/download:
     post:
       requestBody:
@@ -1706,7 +884,192 @@ paths:
       summary: View all available learning modules
       tags:
       - modules
-  /api/modules/course:
+  /api/modules/course/sort:
+    get:
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Sort course based on the latest updated date
+      tags:
+      - modules
+  /api/modules/delete/course/{ID}:
+    delete:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/lecture/{ID}:
+    delete:
+      parameters:
+      - description: ID of the lecture
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/lecture/content/{ID}:
+    delete:
+      parameters:
+      - description: ID of the lecture content
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/material/{ID}:
+    delete:
+      parameters:
+      - description: ID of the material
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/module/{ID}:
+    delete:
+      parameters:
+      - description: ID of the module
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/quiz/{ID}:
+    delete:
+      parameters:
+      - description: ID of the quiz
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/delete/quiz/question/{ID}:
+    delete:
+      parameters:
+      - description: ID of the quiz question
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/create/course:
     post:
       requestBody:
         content:
@@ -1739,49 +1102,7 @@ paths:
       summary: Add new course
       tags:
       - modules
-  /api/modules/course/sort:
-    get:
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-      summary: Sort course based on the latest updated date
-      tags:
-      - modules
-  /api/modules/delete:
-    delete:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                table:
-                  example: quiz_question
-                  type: string
-                value:
-                  example: '225'
-                  type: string
-              type: object
-        description: Delete some data with specific condition
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Add new quiz question
-      tags:
-      - modules
-  /api/modules/lecture:
+  /api/modules/create/lecture:
     post:
       requestBody:
         content:
@@ -1817,7 +1138,7 @@ paths:
       summary: Add new lecture
       tags:
       - modules
-  /api/modules/lecture/content:
+  /api/modules/create/lecture/content:
     post:
       requestBody:
         content:
@@ -1853,7 +1174,7 @@ paths:
       summary: Add new lecture content
       tags:
       - modules
-  /api/modules/material:
+  /api/modules/create/material:
     post:
       requestBody:
         content:
@@ -1886,7 +1207,7 @@ paths:
       summary: Add new material
       tags:
       - modules
-  /api/modules/module:
+  /api/modules/create/module:
     post:
       requestBody:
         content:
@@ -1922,7 +1243,7 @@ paths:
       summary: Add new material
       tags:
       - modules
-  /api/modules/quiz:
+  /api/modules/create/quiz:
     post:
       requestBody:
         content:
@@ -1961,7 +1282,7 @@ paths:
       summary: Add new quiz
       tags:
       - modules
-  /api/modules/quiz/questions:
+  /api/modules/create/quiz/question:
     post:
       requestBody:
         content:
@@ -2017,24 +1338,25 @@ paths:
       summary: Add new quiz question
       tags:
       - modules
-  /api/modules/update:
+  /api/modules/update/course/{ID}:
     put:
+      parameters:
+      - description: ID of the course
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
             schema:
               properties:
                 setValue:
-                  example: B
+                  example: security CIA triad
                   type: string
                 set_data_type:
-                  example: QUESTION_ANSWER
-                  type: string
-                table:
-                  example: quiz_question
-                  type: string
-                whereIdValue:
-                  example: '217'
+                  example: COURSE_NAME
                   type: string
               type: object
         description: Delete some data with specific condition
@@ -2055,58 +1377,359 @@ paths:
       summary: Add new quiz question
       tags:
       - modules
-  /api/modules/{ID}:
+  /api/modules/update/lecture/{ID}:
+    put:
+      parameters:
+      - description: ID of the lecture
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: Week 3
+                  type: string
+                set_data_type:
+                  example: LECTURE_NAME
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update/lecture/content/{ID}:
+    put:
+      parameters:
+      - description: ID of the lecture content
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: 2
+                  type: string
+                set_data_type:
+                  example: MATERIAL_ORDER
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update/material/{ID}:
+    put:
+      parameters:
+      - description: ID of the material
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: file 122
+                  type: string
+                set_data_type:
+                  example: MATERIAL_NAME
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update/module/{ID}:
+    put:
+      parameters:
+      - description: ID of the module
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: Brief overview of network administrator role
+                  type: string
+                set_data_type:
+                  example: MODULE_NAME
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update/quiz/{ID}:
+    put:
+      parameters:
+      - description: ID of the quiz
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: github - Advance
+                  type: string
+                set_data_type:
+                  example: QUIZ_NAME
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/update/quiz/question/{ID}:
+    put:
+      parameters:
+      - description: ID of the quiz question
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                setValue:
+                  example: 3 x 2 is?
+                  type: string
+                set_data_type:
+                  example: QUESTION_TEXT
+                  type: string
+              type: object
+        description: Delete some data with specific condition
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      summary: Add new quiz question
+      tags:
+      - modules
+  /api/modules/course/{ID}:
     get:
       parameters:
-      - description: ID of the intended table
+      - description: ID of the course
         in: path
         name: ID
         required: true
         schema:
           type: integer
-      - description: the name of the database
-        in: query
-        name: table
-        required: false
-        schema:
-          type: string
-      - description: the type of the data
-        in: query
-        name: dataType
-        required: false
-        schema:
-          type: string
       responses:
         '200':
           content:
             application/json: {}
           description: OK
-      summary: Sort course based on the latest updated date
+      summary: Get a specific course data
       tags:
       - modules
-  /api/modules/{courseID}:
+  /api/modules/lecture/{ID}:
     get:
       parameters:
-      - description: ID of the learning module
+      - description: ID of the lecture
         in: path
-        name: courseID
+        name: ID
         required: true
         schema:
-          type: string
+          type: integer
       responses:
         '200':
           content:
             application/json: {}
           description: OK
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: Not Found
-      summary: View content of a learning module
+      summary: Get a specific lecture data
       tags:
-      - Learning Modules
+      - modules
+  /api/modules/lecture/content/{ID}:
+    get:
+      parameters:
+      - description: ID of the lecture content
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Get a specific lecture content data
+      tags:
+      - modules
+  /api/modules/material/{ID}:
+    get:
+      parameters:
+      - description: ID of the material
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Get a specific material data
+      tags:
+      - modules
+  /api/modules/module/{ID}:
+    get:
+      parameters:
+      - description: ID of the module
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Get a specific module data
+      tags:
+      - modules
+  /api/modules/quiz/{ID}:
+    get:
+      parameters:
+      - description: ID of the quiz
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Get a specific quiz data
+      tags:
+      - modules
+  /api/modules/quiz/question/{ID}:
+    get:
+      parameters:
+      - description: ID of the quiz question
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+      summary: Get a specific quiz question data
+      tags:
+      - modules
   /api/user/:email/delete:
     post:
       description: Delete a user account. A request body containing the user email

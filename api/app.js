@@ -27,7 +27,7 @@ const app = express(); // create express app
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
 const learningModulesRouter = require('./routes/learningModules.js'); // TODO
-const modulesRouter = require('./routes/courses.js'); // TODO
+const modulesRouter = require('./routes/courses.js'); 
 const forumRouter = require('./routes/forum.js');
 const enrolmentRouter = require('./routes/enrolment.js');
 const mediaRouter = require('./routes/media.js');
@@ -65,7 +65,7 @@ app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
 app.use('/api/learningModules', learningModulesRouter); // TODO
-app.use('/api/modules', modulesRouter);                 // TODO
+app.use('/api/modules', modulesRouter);                 
 app.use('/api/forum', forumRouter);
 app.use('/api/enrolment', enrolmentRouter);
 app.use('/api/media', mediaRouter);

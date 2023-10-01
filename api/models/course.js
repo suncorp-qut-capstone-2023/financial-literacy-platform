@@ -1,17 +1,36 @@
 // Initialize knex with the config file.
-const knexOptions = require('../db/mydb-connection');
+const knexOptions = require('../db/mydb-connection.js');
 const knex = require("knex")(knexOptions);
 
 // Expand this class to include all the functions that you need.
 class Course {
 
-    static getCourse(table, where_data_type, value) {
-        try {
-            return knex(table).select('*').where(where_data_type, '=', value);
-        } catch (err) {
-            console.log(err);
-            throw err;
-        }
+    static getCourse(value) {
+        return knex("course").select('*').where("COURSE_ID", '=', value);
+    }
+
+    static getLecture(value) {
+        return knex("lecture").select('*').where("LECTURE_ID", '=', value);
+    }
+    
+    static getLectureContent(value) {
+        return knex("lecture_content").select('*').where("LECTURE_CONTENT_ID", '=', value);
+    }
+
+    static getMaterial(value) {
+        return knex("material").select('*').where("MATERIAL_ID", '=', value);
+    }
+
+    static getModule(value) {
+        return knex("module").select('*').where("MODULE_ID", '=', value);
+    }
+
+    static getQuiz(value) {
+        return knex("quiz").select('*').where("QUIZ_ID", '=', value);
+    }
+
+    static getQuizQuestion(value) {
+        return knex("quiz").select('*').where("QUESTION_ID", '=', value);
     }
 
     static async getAllCourses() {
