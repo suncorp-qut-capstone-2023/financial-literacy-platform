@@ -1,6 +1,5 @@
 "use client";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styles from "@/styles/page.module.css";
 import SearchBar from "@/components/searchBar";
 import CourseOverview from "@/components/courseOverview";
@@ -49,7 +48,6 @@ export default function SearchResults() {
   }, [q]);
 
   return (
-    <ThemeProvider theme={theme}>
       <main className={styles.main}>
         <div className={styles.contentWrapper}>
           <div className={styles.description}>
@@ -65,7 +63,7 @@ export default function SearchResults() {
               }}
             >
               <CircularProgress
-                color="suncorpgreen"
+                color="#00454a"
                 sx={{
                   position: "absolute",
                   top: "50%",
@@ -146,6 +144,5 @@ export default function SearchResults() {
           })
         )}
       </main>
-    </ThemeProvider>
   );
 }
