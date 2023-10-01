@@ -138,6 +138,7 @@ const getUser = async (req, res, next) => {
             const user = users[0];
             res.status(200).json({
                 userId: user.id,
+                userType: user.is_admin ? "admin" : "user",
                 email: user.email,
                 firstName: user.first_name,
                 lastName: user.last_name
