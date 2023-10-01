@@ -9,6 +9,7 @@ const registerUser = async (req, res, next) => {
     const password = req.body.password
     const firstName = req.body.firstName
     const lastName = req.body.lastName
+    const admin_token = req.body.createAdminToken
 
     // Handle input
     if (!email || !password || !firstName || !lastName) {
@@ -38,6 +39,9 @@ const registerUser = async (req, res, next) => {
             password_hash: hash,
             first_name: firstName,
             last_name: lastName
+        }
+        if (admin_token && admin_token === process.env.ADMIN_TOKEN){
+            userData.is_admin = true;
         }
         const userId = await User.create(userData);
         res.status(201).json({
@@ -86,9 +90,10 @@ const loginUser = async (req, res, next) => {
 
             // create token
             const userId = user.id;
+            const userType = user.is_admin ? "admin" : "user";
             const expires_in = 24 * 60 * 60;
             const exp = Date.now() + expires_in * 1000;
-            const token = jwt.sign({ userId, email, exp }, process.env.SECRET_KEY);
+            const token = jwt.sign({ userId, userType, email, exp }, process.env.SECRET_KEY);
 
             // attach token to response
             res.cookie("token", token, { httpOnly: true, expires: new Date(exp * 1000) });
@@ -133,6 +138,7 @@ const getUser = async (req, res, next) => {
             const user = users[0];
             res.status(200).json({
                 userId: user.id,
+                userType: user.is_admin ? "admin" : "user",
                 email: user.email,
                 firstName: user.first_name,
                 lastName: user.last_name

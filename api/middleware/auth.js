@@ -41,7 +41,7 @@ const authorize = function(req, res, next){
 
             // authorized
             req.isAuthorized = true
-            // console.log("Token Received in Request : {}", token)
+            req.role = jwtVerify.userType
             req.token = token
             next()
         }
