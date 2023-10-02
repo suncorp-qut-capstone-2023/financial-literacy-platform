@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { hashPassword, comparePassword } = require('../utils/auth');
-const User = require('../models/user');
+const User = require('../models/User');
 
 // Register new user
 const registerUser = async (req, res, next) => {

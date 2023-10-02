@@ -13,7 +13,7 @@ const {
 
 const {
     SearchForum
-  } = require('../controller/SearchController.js');
+  } = require('../old-controller/SearchController.js');
 
 router.get("/", auth, getForums);
 router.get("/:forumID", auth, getForumComments);

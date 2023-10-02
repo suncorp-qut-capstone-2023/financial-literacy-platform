@@ -7,7 +7,7 @@ const {
   addTag,
   deleteTag,
   searchTag
-} = require('../controller/SearchController.js');
+} = require('../old-controller/SearchController.js');
 
 //related to search and tagging search
 //TODO: Please update this to module and not learning modules later

@@ -1,16 +1,14 @@
-const courses = require('../models/course');
-const modules = require('../models/module');
-const quizzes = require('../models/quiz');
+const Course = require('../old-models/course');
 
 
 // TODO: Not each function is working yet, need to fix the database first
 
 const getAllCourses = async (req, res) => {
     try {
-        // get courses from database
-        const all_courses = await courses.getAllCourses();
+        // get Course from database
+        const all_courses = await Course.getAllCourses();
 
-        // return courses
+        // return Course
         return res.status(200).json(all_courses);
     }
     catch (err) {
@@ -28,7 +26,7 @@ const getCourse = async (req, res) => {
 
     try {
         // get course from database
-        const course = await courses.getCourse(ID);
+        const course = await Course.getCourse(ID);
 
         // return course
         return res.status(200).json(course);
@@ -57,7 +55,7 @@ const getLecture = async (req, res) => {
 
     try {
         // get course from database
-        const lecture = await courses.getLecture(ID);
+        const lecture = await Course.getLecture(ID);
 
         // return course
         return res.status(200).json(lecture);
@@ -86,7 +84,7 @@ const getLectureContent = async (req, res) => {
 
     try {
         // get course from database
-        const lectureContent = await courses.getLectureContent(ID);
+        const lectureContent = await Course.getLectureContent(ID);
 
         // return course
         return res.status(200).json(lectureContent);
@@ -115,7 +113,7 @@ const getMaterial = async (req, res) => {
 
     try {
         // get course from database
-        const material = await courses.getMaterial(ID);
+        const material = await Course.getMaterial(ID);
 
         // return course
         return res.status(200).json(material);
@@ -144,7 +142,7 @@ const getModule = async (req, res) => {
 
     try {
         // get course from database
-        const module = await courses.getModule(ID);
+        const module = await Course.getModule(ID);
 
         // return course
         return res.status(200).json(module);
@@ -173,7 +171,7 @@ const getQuiz = async (req, res) => {
 
     try {
         // get course from database
-        const quiz = await courses.getQuiz(ID);
+        const quiz = await Course.getQuiz(ID);
 
         // return course
         return res.status(200).json(quiz);
@@ -202,7 +200,7 @@ const getQuizQuestions = async (req, res) => {
 
     try {
         // get course from database
-        const quizQuestions = await courses.getQuizQuestion(ID);
+        const quizQuestions = await Course.getQuizQuestion(ID);
 
         // return course
         return res.status(200).json(quizQuestions);
@@ -287,7 +285,7 @@ const createCourse = async (req, res) => {
     
     try {
         // create course in database
-        await courses.insertData(data, "course");
+        await Course.insertData(data, "course");
 
         // return course
         return res.status(200).json({"message": "new course data has been successfully added!"});
@@ -351,7 +349,7 @@ const createLecture = async (req, res) => {
     
     try {
         // create course in database
-        await courses.insertData(data, "lecture");
+        await Course.insertData(data, "lecture");
 
         // return course
         return res.status(200).json({
@@ -415,7 +413,7 @@ const createLectureContent = async (req, res) => {
     
     try {
         // create course in database
-        await courses.insertData(data, "lecture_content");
+        await Course.insertData(data, "lecture_content");
 
         // return course
         return res.status(200).json({"message": "new lecture content data has been successfully added!"});
@@ -477,7 +475,7 @@ const createMaterial = async (req, res) => {
     
     try {
         // create course in database
-        await courses.insertData(data, "material");
+        await Course.insertData(data, "material");
 
         // return course
         return res.status(200).json({
@@ -535,7 +533,7 @@ const createModule = async (req, res) => {
 
     try {
         // create course in database
-        await courses.insertData(data, "module");
+        await Course.insertData(data, "module");
 
         // return course
         return res.status(200).json({
@@ -607,7 +605,7 @@ const createQuiz = async (req, res) => {
     
     try {
         // create course in database
-        await courses.insertData(data, "quiz");
+        await Course.insertData(data, "quiz");
 
         // return course
         return res.status(200).json({
@@ -743,7 +741,7 @@ const createQuizQuestions = async (req, res) => {
 
     try {
         // create course in database
-        await courses.insertData(data, "quiz_question");
+        await Course.insertData(data, "quiz_question");
 
         // return course
         return res.status(200).json({
@@ -794,7 +792,7 @@ const deleteCourse = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteCourse(newID);
+        const result = await Course.deleteCourse(newID);
 
         // return course
         if (result > 0) {
@@ -858,7 +856,7 @@ const deleteLecture = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteLecture(newID);
+        const result = await Course.deleteLecture(newID);
 
         // return course
         if (result > 0) {
@@ -921,7 +919,7 @@ const deleteLectureContent = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteLectureContent(newID);
+        const result = await Course.deleteLectureContent(newID);
 
         // return course
         if (result > 0) {
@@ -984,7 +982,7 @@ const deleteMaterial = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteMaterial(newID);
+        const result = await Course.deleteMaterial(newID);
 
         // return course
         if (result > 0) {
@@ -1047,7 +1045,7 @@ const deleteModule = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteModule(newID);
+        const result = await Course.deleteModule(newID);
 
         // return course
         if (result > 0) {
@@ -1110,7 +1108,7 @@ const deleteQuiz = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteQuiz(newID);
+        const result = await Course.deleteQuiz(newID);
 
         // return course
         if (result > 0) {
@@ -1173,7 +1171,7 @@ const deleteQuizQuestions = async (req, res) => {
     
     try {
 
-        const result = await courses.deleteQuizQuestion(newID);
+        const result = await Course.deleteQuizQuestion(newID);
 
         // return course
         if (result > 0) {
@@ -1241,7 +1239,8 @@ function isValidInt(value) {
     return value;
 }
 
-const updateCourse = async (req, res) => { //update course table
+const updateCourse = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1264,7 +1263,7 @@ const updateCourse = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateCourse(set_data_type, value);
+        const result = await Course.updateCourse(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1316,7 +1315,8 @@ const updateCourse = async (req, res) => { //update course table
     }
 }
 
-const updateLecture = async (req, res) => { //update course table
+const updateLecture = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1339,7 +1339,7 @@ const updateLecture = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateLecture(set_data_type, value);
+        const result = await Course.updateLecture(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1391,7 +1391,8 @@ const updateLecture = async (req, res) => { //update course table
     }
 }
 
-const updateLectureContent = async (req, res) => { //update course table
+const updateLectureContent = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1414,7 +1415,7 @@ const updateLectureContent = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateLectureContent(set_data_type, value);
+        const result = await Course.updateLectureContent(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1466,7 +1467,8 @@ const updateLectureContent = async (req, res) => { //update course table
     }
 }
 
-const updateMaterial = async (req, res) => { //update course table
+const updateMaterial = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1489,7 +1491,7 @@ const updateMaterial = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateMaterial(set_data_type, value);
+        const result = await Course.updateMaterial(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1541,7 +1543,8 @@ const updateMaterial = async (req, res) => { //update course table
     }
 }
 
-const updateModule = async (req, res) => { //update course table
+const updateModule = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1564,7 +1567,7 @@ const updateModule = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateModule(set_data_type, value);
+        const result = await Course.updateModule(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1616,7 +1619,8 @@ const updateModule = async (req, res) => { //update course table
     }
 }
 
-const updateQuiz = async (req, res) => { //update course table
+const updateQuiz = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1639,7 +1643,7 @@ const updateQuiz = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateQuiz(set_data_type, value);
+        const result = await Course.updateQuiz(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1691,7 +1695,8 @@ const updateQuiz = async (req, res) => { //update course table
     }
 }
 
-const updateQuizQuestions = async (req, res) => { //update course table
+const updateQuizQuestions = async (req, res) => {
+    //update course table
     // get course id from url
     // get course id from params
     let ID = req.params['ID'];
@@ -1714,7 +1719,7 @@ const updateQuizQuestions = async (req, res) => { //update course table
 
     try {
 
-        const result = await courses.updateQuizQuestion(set_data_type, value);
+        const result = await Course.updateQuizQuestion(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -1775,7 +1780,7 @@ const updateQuizQuestions = async (req, res) => { //update course table
 
 //     try {
 //         // get module from database
-//         const module = await courses.getModule(courseID, moduleID);
+//         const module = await Course.getModule(courseID, moduleID);
 
 //         // return module
 //         return res.status(200).json(module);
@@ -1801,7 +1806,7 @@ const updateQuizQuestions = async (req, res) => { //update course table
 
 //     try {
 //         // get quiz from database
-//         const quiz = await courses.getQuiz(courseID, moduleID, quizID);
+//         const quiz = await Course.getQuiz(courseID, moduleID, quizID);
 
 //         // return quiz
 //         return res.status(200).json(quiz);

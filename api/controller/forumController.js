@@ -1,4 +1,4 @@
-const forumModel = require("../models/forum.js");
+const forumModel = require("../models/Forum.js");
 
 const getForumComments = async (req, res) => {
   const { forumID, courseID } = req.params;

@@ -1,5 +1,5 @@
-const courses = require('../models/course');
-const forum = require('../models/forum');
+const courses = require('../old-models/course');
+const forum = require('../models/Forum');
 
 //TODO: create one FindController.js to be connected with every find functions
 function FindCourseIndex(course_ID) {

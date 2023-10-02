@@ -26,11 +26,24 @@ const app = express(); // create express app
 // define routers
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
-const learningModulesRouter = require('./routes/learningModules.js'); // TODO
-const modulesRouter = require('./routes/courses.js'); 
 const forumRouter = require('./routes/forum.js');
 const enrolmentRouter = require('./routes/enrolment.js');
-const mediaRouter = require('./routes/media.js');
+
+const coursesRouter = require('./routes/all-courses.js');
+const modulesRouter = require('./routes/all-modules.js');
+const quizzesRouter = require('./routes/all-quizzes.js');
+const quizQuestionsRouter = require('./routes/all-quiz-questions.js');
+const lecturesRouter = require('./routes/all-lectures.js');
+const lectureContentsRouter = require('./routes/all-lecture-contents.js');
+const mediasRouter = require('./routes/all-lecture-content-media.js');
+
+const courseRouter = require('./routes/course.js');
+const moduleRouter = require('./routes/module.js');
+const quizRouter = require('./routes/quiz.js');
+const quizQuestionRouter = require('./routes/quiz-question.js');
+const lectureRouter = require('./routes/lecture.js');
+const lectureContentRouter = require('./routes/lecture-content.js');
+const lectureContentMediaRouter = require('./routes/lecture-content-media.js');
 
 // security implementation
 app.use(helmet());
@@ -61,14 +74,32 @@ app.use('/api/docs', swaggerUI.serve);                  // TODO
 //@ts-ignore
 app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 
-// Setup routes
+// Setup old-routes
 app.use('/api', aboutUsRouter);
 app.use('/api/user', usersRouter);
-app.use('/api/learningModules', learningModulesRouter); // TODO
-app.use('/api/modules', modulesRouter);                 
 app.use('/api/forum', forumRouter);
 app.use('/api/enrolment', enrolmentRouter);
-app.use('/api/media', mediaRouter);
+// app.use('/api/learningModules', learningModulesRouter); // TODO
+// app.use('/api/modules', modulesRouter);
+// app.use('/api/media', mediaRouter);
+
+// NEW ROUTES FROM HERE
+app.use('/api/courses', coursesRouter);                                             // FETCH ALL COURSES
+app.use('/api/course/modules', modulesRouter);                                      // FETCH ALL MODULES
+app.use('/api/course/module/lectures', lecturesRouter);                             // FETCH ALL LECTURES
+app.use('/api/course/module/lecture/contents', lectureContentsRouter);              // FETCH ALL QUIZ QUESTIONS
+app.use('/api/course/module/quizzes', quizzesRouter);                               // FETCH ALL QUIZZES
+app.use('/api/course/module/quiz/questions', quizQuestionsRouter);                  // FETCH ALL QUIZ QUESTIONS
+app.use('/api/course/module/lecture/content/medias', mediasRouter);                 // FETCH ALL LECTURE CONTENT MEDIA
+
+app.use('/api/course', courseRouter);                                               // COURSE ROUTES
+app.use('/api/course/module', moduleRouter);                                        // MODULE ROUTES
+app.use('/api/course/module/quiz', quizRouter);                                     // QUIZ ROUTES
+app.use('/api/course/module/quiz/question', quizQuestionRouter);                    // QUIZ QUESTION ROUTES
+app.use('/api/course/module/lecture', lectureRouter);                               // LECTURE ROUTES
+app.use('/api/course/module/lecture/content', lectureContentRouter);                // LECTURE CONTENT ROUTES
+app.use('/api/course/module/lecture/content/media', lectureContentMediaRouter);     // LECTURE CONTENT MEDIA ROUTES
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
