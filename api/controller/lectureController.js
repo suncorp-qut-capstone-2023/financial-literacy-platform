@@ -3,33 +3,33 @@ const Course = require("../old-models/course");
 const { isValidInt } = require("../utils/validation");
 
 const getLecture = async (req, res) => {
-    // get course id from params
-    const ID = req.params['ID'];
+    const courseID = req.query.courseID;
+    const moduleID = req.query.moduleID;
+    const lectureID = req.query.lectureID;
 
     try {
-        // get course from database
-        const lecture = await Course.getLecture(ID);
-
-        // return course
-        return res.status(200).json(lecture);
+        const lecture = await Lecture.getLecture(courseID, moduleID, lectureID);
+        
+        if (lecture && lecture.length > 0) {
+            return res.status(200).json(lecture);
+        } else {
+            return res.status(404).json({ error: true, message: "Lecture not found." });
+        }
     }
     catch (err) {
-
-        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails"
             });
         }
-
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
+
 
 const createLecture = async (req, res) => {
     // get course information from request body
@@ -57,7 +57,7 @@ const createLecture = async (req, res) => {
 
     try {
         // create course in database
-        await Course.insertData(data, "lecture");
+        await Lecture.createLecture(data, "lecture");
 
         // return course
         return res.status(200).json({
@@ -93,7 +93,7 @@ const createLecture = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -122,7 +122,7 @@ const updateLecture = async (req, res) => {
 
     try {
 
-        const result = await Course.updateLecture(set_data_type, value);
+        const result = await Lecture.updateLecture(set_data_type, value);
 
         // return course
         if (result > 0) {
@@ -169,7 +169,7 @@ const updateLecture = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -183,7 +183,7 @@ const deleteLecture = async (req, res) => {
 
     try {
 
-        const result = await Course.deleteLecture(newID);
+        const result = await Lecture.deleteLecture(newID);
 
         // return course
         if (result > 0) {
@@ -232,7 +232,7 @@ const deleteLecture = async (req, res) => {
 
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }

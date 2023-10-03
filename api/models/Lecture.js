@@ -3,21 +3,30 @@ const knex = require("knex")(knexOptions);
 
 class Lecture{
     static getAllLectures(courseID, moduleID) {
-        return knex('lecture').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID);
+        return knex('lecture').select("*").where('module_id', '=', moduleID);
     }
 
-    static getLecture(value) {
-        return knex("lecture").select('*').where("LECTURE_ID", '=', value);
+    static getLecture(courseID, moduleID, lectureID) {
+        return knex("lecture")
+               .select('lecture.*')
+               .innerJoin('module', 'lecture.MODULE_ID', '=', 'module.MODULE_ID')
+               .innerJoin('course', 'module.COURSE_ID', '=', 'course.COURSE_ID')
+               .where({
+                   "lecture.LECTURE_ID": lectureID,
+                   "module.MODULE_ID": moduleID,
+                   "course.COURSE_ID": courseID
+               });
     }
-
-    static createLecture(value) {
-            return knex('lecture').insert({
-            LECTURE_NAME: value[0],
-            LECTURE_DESCRIPTION: value[1],
-            LECTURE_CONTENT_ID: value[2],
-            MODULE_ID: value[3]
+    
+    
+    static createLecture(data) {
+        return knex('lecture').insert({
+            LECTURE_NAME: data["LECTURE_NAME"],
+            MODULE_ID: data["MODULE_ID"],
+            LECTURE_ORDER: data["LECTURE_ORDER"]
         });
     }
+    
 
     static updateLecture(set_data_type, value) {
         return knex('lecture').update({ [set_data_type]: value[0] }).where("LECTURE_ID", "=", value[1]);

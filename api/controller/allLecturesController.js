@@ -1,24 +1,31 @@
 const Lecture = require('../models/Lecture');
 
 const getAllLectures = async (req, res) => {
-    const courseID = req.query['courseID'];
-    const moduleID = req.query['moduleID'];
+    const courseID = req.query.courseID;
+    const moduleID = req.query.moduleID;
+
+    // Validate courseID and moduleID before making the database call.
+    if (!Number.isInteger(Number(courseID)) || !Number.isInteger(Number(moduleID))) {
+        return res.status(400).json({
+            error: true,
+            message: "Invalid courseID or moduleID."
+        });
+    }
 
     try {
-        // get courses from database
-        const all_courses = await Lecture.getAllLectures(courseID, moduleID);
+        // get lectures from database
+        const allLectures = await Lecture.getAllLectures(courseID, moduleID);
 
-        // return courses
-        return res.status(200).json(all_courses);
-    }
-    catch (err) {
+        // return lectures
+        return res.status(200).json(allLectures);
+    } catch (err) {
         // return error
         return res.status(500).json({
             error: true,
             message: err
         });
     }
-}
+};
 
 module.exports = {
     getAllLectures

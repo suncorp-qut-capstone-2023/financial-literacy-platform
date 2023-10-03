@@ -2477,3 +2477,181 @@ paths:
                     type: boolean
                   message:
                     type: string
+
+# Lectures
+
+  /api/course/module/lectures:
+    get:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Retrieve all lectures based on course and module.
+      description: Retrieves a list of all lectures for a given course and module.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course.
+          required: true
+          schema:
+            type: integer
+        - name: moduleID
+          in: query
+          description: ID of the module.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A list of lectures.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    LECTURE_ID:
+                      type: integer
+                    LECTURE_NAME:
+                      type: string
+                    MATERIAL_ORDER:
+                      type: string # this may need to be adjusted based on your data type
+                    MODULE_ID:
+                      type: integer
+                    LECTURE_ORDER:
+                      type: integer
+        400:
+          description: Bad request, possibly due to invalid courseID or moduleID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture:
+    get:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Get lecture details
+      description: Retrieve lecture details based on courseID, moduleID, and lectureID.
+      parameters:
+        - name: courseID
+          in: query
+          required: true
+          type: integer
+          description: ID of the course.
+        - name: moduleID
+          in: query
+          required: true
+          type: integer
+          description: ID of the module.
+        - name: lectureID
+          in: query
+          required: true
+          type: integer
+          description: ID of the lecture.
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              LECTURE_ID:
+                type: integer
+              LECTURE_NAME:
+                type: string
+              MATERIAL_ORDER:
+                type: string
+              MODULE_ID:
+                type: integer
+              LECTURE_ORDER:
+                type: integer
+        '404':
+          description: Lecture not found
+        '500':
+          description: Internal server error
+
+
+  /api/course/module/lecture/create:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Create a new lecture
+      description: Endpoint to create a new lecture.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_name:
+                  type: string
+                  description: Name of the lecture.
+                  example: "Introduction to Programming"
+                module_id:
+                  type: integer
+                  description: ID of the module that the lecture belongs to.
+                  example: 101
+                lecture_order:
+                  type: integer
+                  description: Order of the lecture in the module.
+                  example: 1
+      responses:
+        200:
+          description: Successfully created a new lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "new lecture data has been successfully added!"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the course name and category type."
+        500:
+          description: Internal Server Error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails"
