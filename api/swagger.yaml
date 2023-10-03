@@ -2611,6 +2611,10 @@ paths:
                   type: integer
                   description: ID of the module that the lecture belongs to.
                   example: 101
+                material_order:
+                  type: integer
+                  description: order from the module that the lecture belongs to.
+                  example: 1
                 lecture_order:
                   type: integer
                   description: Order of the lecture in the module.
@@ -2787,3 +2791,317 @@ paths:
 
 # Lecture Content
 
+  /api/course/module/lecture/contents:
+    get:
+      tags:
+      - Learning Content - Lecture Content/s
+      summary: Retrieve all lecture contents for a specific lecture.
+      description: Returns a list of lecture contents based on courseID, moduleID, and lectureID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: courseID
+        in: query
+        description: ID of the course.
+        required: true
+        schema:
+          type: integer
+      - name: lectureID
+        in: query
+        description: ID of the lecture.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved lecture contents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    lecture_id:
+                      type: integer
+        500:
+          description: Server error or invalid data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture/content:
+    get:
+      tags:
+      - Learning Content - Lecture Content/s
+      summary: Retrieve specific lecture content.
+      description: Returns lecture content based on courseID, moduleID, lectureID, and lectureContentID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: courseID
+        in: query
+        description: ID of the course.
+        required: true
+        schema:
+          type: integer
+      - name: moduleID
+        in: query
+        description: ID of the module.
+        required: true
+        schema:
+          type: integer
+      - name: lectureID
+        in: query
+        description: ID of the lecture.
+        required: true
+        schema:
+          type: integer
+      - name: lectureContentID
+        in: query
+        description: ID of the lecture content.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  LECTURE_CONTENT_ID:
+                    type: integer
+                  LECTURE_ID:
+                    type: integer
+                  MATERIAL_ID:
+                    type: integer
+                  MATERIAL_ORDER:
+                    type: integer
+        404:
+          description: Lecture content not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error or constraint violation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture/content/create:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Create a new lecture content entry
+      description: Adds a new lecture content to the database.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_id:
+                  type: integer
+                  description: ID of the lecture for which the content is to be added.
+                  example: 1
+                material_id:
+                  type: integer
+                  description: ID of the material being added to the lecture.
+                  example: 1
+                material_order:
+                  type: integer
+                  description: Order of the material in the lecture.
+                  example: 1
+      responses:
+        '200':
+          description: Lecture content successfully added.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "New lecture content data has been successfully added!"
+        '400':
+          description: Bad request (missing required fields).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the lecture ID and material ID."
+        '500':
+          description: Internal server error, data length issue, or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
+
+  /api/course/module/lecture/content/update:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Update an existing lecture content
+      description: Endpoint to update an existing lecture content using its ID and specific fields.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: contentID
+          required: true
+          description: ID of the lecture content to be updated.
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_id:
+                  type: integer
+                  description: Updated ID of the lecture for which the content belongs.
+                  example: 1
+                material_id:
+                  type: integer
+                  description: Updated ID of the material associated with the lecture content.
+                  example: 2
+                material_order:
+                  type: integer
+                  description: Updated order of the material in the lecture.
+                  example: 3
+      responses:
+        200:
+          description: Successfully updated the lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lecture content has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "unknown column: MATERIAL_ID"
+
+  /api/course/module/lecture/content/delete:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Delete a lecture content
+      description: Endpoint to delete an existing lecture content using its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: contentID
+          required: true
+          description: ID of the lecture content to be deleted.
+          schema:
+            type: integer
+            example: 123
+      responses:
+        200:
+          description: Successfully deleted the lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 123 on table 'lecture_content' has been deleted"
+        400:
+          description: The lecture content with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "data on 'lecture_content' table with condition ID = 123 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails. Delete all foreign keys associated with the related primary key."

@@ -16,7 +16,7 @@ const getAllLectureContents = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }

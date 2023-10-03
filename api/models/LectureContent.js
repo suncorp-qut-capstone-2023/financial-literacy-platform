@@ -4,19 +4,29 @@ const knex = require("knex")(knexOptions);
 class LectureContent{
 
     static getAllLectureContents(lectureID) {
-        return knex('lecture_content').select("*").where('lecture_id', '=', lectureID);
+        return knex('lecture_content').select("*").where('LECTURE_ID', '=', lectureID);
     }
 
-    static getLectureContent(value) {
-        return knex("lecture_content").select('*').where("LECTURE_CONTENT_ID", '=', value);
+    static getLectureContent(courseID, moduleID, lectureID, lectureContentID) {
+        return knex("lecture_content")
+            .select('lecture_content.*')
+            .innerJoin('lecture', 'lecture_content.LECTURE_ID', '=', 'lecture.LECTURE_ID')
+            .innerJoin('module', 'lecture.MODULE_ID', '=', 'module.MODULE_ID')
+            .innerJoin('course', 'module.COURSE_ID', '=', 'course.COURSE_ID')
+            .where({
+                "lecture_content.LECTURE_CONTENT_ID": lectureContentID,
+                "lecture.LECTURE_ID": lectureID,
+                "module.MODULE_ID": moduleID,
+                "course.COURSE_ID": courseID
+            });
     }
 
-    static createLectureContent(lectureID, lectureContentData) {
-        return knex('lecture_content').where('lecture_id', '=', lectureID).insert(lectureContentData);
+    static createLectureContent(lectureContentData) {
+        return knex('lecture_content').insert(lectureContentData);
     }
 
-    static updateLectureContent(set_data_type, value) {
-        return knex('lecture_content').update({ [set_data_type]: value[0] }).where("LECTURE_CONTENT_ID", "=", value[1]);
+    static updateLectureContent(lectureContentID, updateData) {
+        return knex('lecture_content').update(updateData).where("LECTURE_CONTENT_ID", "=", lectureContentID);
     }
 
     static deleteLectureContent(value) {
