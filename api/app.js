@@ -75,15 +75,11 @@ app.use('/api/docs', swaggerUI.serve);                  // TODO
 app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 
 // Setup old-routes
-app.use('/api', aboutUsRouter);
-app.use('/api/user', usersRouter);
-app.use('/api/forum', forumRouter);
-app.use('/api/enrolment', enrolmentRouter);
-// app.use('/api/learningModules', learningModulesRouter); // TODO
-// app.use('/api/modules', modulesRouter);
-// app.use('/api/media', mediaRouter);
+app.use('/api', aboutUsRouter);                                                     // ABOUT US ROUTES
+app.use('/api/user', usersRouter);                                                  // USER ROUTES
+app.use('/api/forum', forumRouter);                                                 // FORUM ROUTES
+app.use('/api/enrolment', enrolmentRouter);                                         // ENROLMENT ROUTES
 
-// NEW ROUTES FROM HERE
 app.use('/api/courses', coursesRouter);                                             // FETCH ALL COURSES
 app.use('/api/course/modules', modulesRouter);                                      // FETCH ALL MODULES
 app.use('/api/course/module/lectures', lecturesRouter);                             // FETCH ALL LECTURES
