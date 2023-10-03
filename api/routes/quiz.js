@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../middleware/auth.js');
+const { requireAdmin } = require('../middleware/requireRole.js');
 const router = express.Router();
 
 const {
@@ -13,12 +14,12 @@ const {
 router.get('/', auth, getQuiz);
 
 // CREATE
-router.post('/create', auth, createQuiz);
+router.post('/create', auth, requireAdmin, createQuiz);
 
 // UPDATE
-router.post('/update', auth, updateQuiz);
+router.post('/update', auth, requireAdmin, updateQuiz);
 
 // DELETE
-router.post('/delete', auth, deleteQuiz);
+router.post('/delete', auth, requireAdmin, deleteQuiz);
 
 module.exports = router;
