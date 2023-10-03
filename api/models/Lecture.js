@@ -28,9 +28,13 @@ class Lecture{
     }
     
 
-    static updateLecture(set_data_type, value) {
-        return knex('lecture').update({ [set_data_type]: value[0] }).where("LECTURE_ID", "=", value[1]);
+    static updateLecture(moduleID, lectureID, data) {
+        return knex('lecture')
+               .update(data)
+               .where("LECTURE_ID", "=", lectureID)
+               .andWhere("MODULE_ID", "=", moduleID);
     }
+    
 
     static deleteLecture(value) {
         return knex('lecture').where("LECTURE_ID", "=", value).del();

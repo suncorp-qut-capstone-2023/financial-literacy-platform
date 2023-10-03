@@ -16,10 +16,10 @@ router.get('/', auth, getCourse);
 router.post('/create', auth, createCourse);
 
 // UPDATE
-router.put('/update', auth, updateCourse);
+router.post('/update', auth, updateCourse);
 
 // DELETE
-router.delete('/delete', auth, deleteCourse);
+router.post('/delete', auth, deleteCourse);
 
 // SORT
 // router.get('/sort', auth, sortNewestCourse);

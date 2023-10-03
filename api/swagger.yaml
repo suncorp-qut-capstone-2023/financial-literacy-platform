@@ -872,7 +872,7 @@ paths:
       summary: ''
       tags:
       - Media
-  /api/modules/:
+  /api/modules:
     get:
       responses:
         '200':
@@ -1952,7 +1952,7 @@ paths:
 
 
 # Courses
-  /api/courses/:
+  /api/courses:
     get:
       tags:
         - Learning Content - Course/s
@@ -2083,7 +2083,7 @@ paths:
                     type: string
 
   /api/course/update:
-    put:
+    post:
       tags:
         - Learning Content - Course/s
       summary: Update an existing course
@@ -2151,7 +2151,7 @@ paths:
 
 
   /api/course/delete:
-    delete:
+    post:
       tags:
         - Learning Content - Course/s
       summary: Delete a course
@@ -2354,7 +2354,7 @@ paths:
 
 
   /api/course/module/update:
-    put:
+    post:
       tags:
         - Learning Content - Module/s
       summary: Update an existing module for a course
@@ -2425,7 +2425,7 @@ paths:
 
 
   /api/course/module/delete:
-    delete:
+    post:
       tags:
         - Learning Content - Module/s
       summary: Delete a module
@@ -2655,3 +2655,135 @@ paths:
                   message:
                     type: string
                     example: "foreign key constraint fails"
+  /api/course/module/lecture/update:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Update an existing lecture
+      description: Endpoint to update an existing lecture using its ID and specific field.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture to be updated.
+          schema:
+            type: integer
+            example: 113
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                module_id:
+                  type: integer
+                  description: ID of the module containing the lecture.
+                  example: 23
+                lecture_name:
+                  type: string
+                  description: Updated name of the lecture.
+                  example: "Advanced Programming Concepts"
+                lecture_order:
+                  type: integer
+                  description: Updated order of the lecture within the module.
+                  example: 3
+      responses:
+        200:
+          description: Successfully updated the lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lecture has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "unknown column: LECTURE_NAME"
+
+  /api/course/module/lecture/delete:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Delete a lecture
+      description: Endpoint to delete an existing lecture using its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture to be deleted.
+          schema:
+            type: integer
+            example: 113
+      responses:
+        200:
+          description: Successfully deleted the lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 113 on table 'lecture' has been deleted"
+        400:
+          description: The lecture with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "data on 'lecture' table with condition ID = 113 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, incorrect double value, data too long, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+
+# Lecture Content
+
