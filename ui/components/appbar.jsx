@@ -31,6 +31,7 @@ const pages = [
   { label: "Home", path: "/" },
   { label: "Courses", path: "/courses" },
   { label: "Login", path: "/login" },
+  { label: "Manage Site Content", path: "/cms" }, // TO DO - LINK TO ADMIN AUTHENTICATION
 ];
 
 // good potential candidate for varies items based on admin privlidges here.
