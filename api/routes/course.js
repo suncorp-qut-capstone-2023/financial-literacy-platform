@@ -10,16 +10,16 @@ const {
 } = require('../controller/courseController');
 
 // GET
-router.get('/:ID', auth, getCourse);
+router.get('/', auth, getCourse);
 
 // CREATE
 router.post('/create', auth, createCourse);
 
 // UPDATE
-router.post('/update/:ID', auth, updateCourse);
+router.post('/update', auth, updateCourse);
 
 // DELETE
-router.post('/delete/:ID', auth, deleteCourse);
+router.post('/delete', auth, deleteCourse);
 
 // SORT
 // router.get('/sort', auth, sortNewestCourse);

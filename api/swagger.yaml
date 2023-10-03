@@ -1988,7 +1988,7 @@ paths:
                   message:
                     type: string
 
-  /api/course/{ID}:
+  /api/course:
     get:
       tags:
         - Learning Content - Course/s
@@ -1997,8 +1997,8 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
-          in: path
+        - name: courseID
+          in: query
           description: ID of the course to retrieve.
           required: true
           schema:
@@ -2082,7 +2082,7 @@ paths:
                   message:
                     type: string
 
-  /api/course/update/{ID}:
+  /api/course/update:
     post:
       tags:
         - Learning Content - Course/s
@@ -2091,13 +2091,12 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
-          in: path
-          description: ID of the course to update.
+        - name: courseID
+          in: query
+          description: ID of the course to retrieve.
           required: true
           schema:
             type: integer
-            example: 123  # Example ID
       requestBody:
         content:
           application/json:
@@ -2151,7 +2150,7 @@ paths:
                     example: "Internal server error."
 
 
-  /api/course/delete/{ID}:
+  /api/course/delete:
     post:
       tags:
         - Learning Content - Course/s
@@ -2160,8 +2159,8 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
-          in: path
+        - name: courseID
+          in: query
           description: ID of the course to delete.
           required: true
           schema:
@@ -2198,3 +2197,224 @@ paths:
                     type: boolean
                   message:
                     type: string
+
+  # Modules
+  /api/modules/:
+    get:
+      tags:
+        - Learning Content - Module/s
+      summary: Retrieve all modules associated with a course
+      description: Fetches and returns all modules for a given course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course for which to retrieve the modules.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: An array of all modules for the specified course.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Assuming a similar structure for modules as with courses, adjust accordingly
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/module/:
+    get:
+      tags:
+        - Learning Content - Module/s
+      summary: Retrieve a module
+      description: Fetches and returns a specific module by its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ID
+          in: query
+          description: ID of the module to retrieve.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns the requested module.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+        500:
+          description: Server error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/module/create:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Create a new module
+      description: Adds a new module to the database.
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                module_name:
+                  type: string
+                module_order:
+                  type: integer
+      responses:
+        200:
+          description: Returns a success message for the module creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request or validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error, foreign key constraint fails, or other errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/module/update:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Update an existing module
+      description: Updates a specific module in the database.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ID
+          in: query
+          description: ID of the module to update.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                set_data_type:
+                  type: string
+                setValue:
+                  type: string
+      responses:
+        200:
+          description: Returns a success message for the module update.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request or validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error, unknown column, or other errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/module/delete:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Delete a module
+      description: Deletes a specific module from the database.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ID
+          in: query
+          description: ID of the module to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns a success message for the module deletion.
+          content:
+            application/json:
+              schema

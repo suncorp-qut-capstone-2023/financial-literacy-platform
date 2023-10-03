@@ -3,7 +3,7 @@ const { isValidInt } = require("../utils/validation");
 
 const getCourse = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const ID = req.query.courseID;
 
     try {
         // get course from database
@@ -25,7 +25,7 @@ const getCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -116,7 +116,7 @@ const updateCourse = async (req, res) => {
     //update course table
     // get course id from url
     // get course id from params
-    let ID = req.params['ID'];
+    let ID = req.query.courseID;
     const { set_data_type } = req.body; //value is a list
     let { setValue } = req.body; //value is a list
 
@@ -190,7 +190,7 @@ const updateCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    let ID = req.query.courseID;
 
     //receive ID in integer type
     const newID = isValidInt(ID);
