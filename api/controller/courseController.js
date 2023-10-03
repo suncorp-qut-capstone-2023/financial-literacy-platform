@@ -70,13 +70,17 @@ const createCourse = async (req, res) => {
 
     try {
         // create course in database
-        await Course.insertData(data, "course");
+        await Course.createCourse(data, "course");
 
         // return course
         return res.status(200).json({"message": "new course data has been successfully added!"});
     }
     catch (err) {
-        const data = err.sqlMessage.match(/'([^']+)'/);
+        let data;
+    
+        if (err.sqlMessage) {
+            data = err.sqlMessage.match(/'([^']+)'/);
+        }
 
         //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
@@ -103,7 +107,7 @@ const createCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -179,7 +183,7 @@ const updateCourse = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
