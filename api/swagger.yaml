@@ -872,7 +872,7 @@ paths:
       summary: ''
       tags:
       - Media
-  /api/modules:
+  /api/modules/:
     get:
       responses:
         '200':
@@ -2083,7 +2083,7 @@ paths:
                     type: string
 
   /api/course/update:
-    post:
+    put:
       tags:
         - Learning Content - Course/s
       summary: Update an existing course
@@ -2151,7 +2151,7 @@ paths:
 
 
   /api/course/delete:
-    post:
+    delete:
       tags:
         - Learning Content - Course/s
       summary: Delete a course
@@ -2199,7 +2199,7 @@ paths:
                     type: string
 
   # Modules
-  /api/modules/:
+  /api/course/modules:
     get:
       tags:
         - Learning Content - Module/s
@@ -2210,7 +2210,7 @@ paths:
       parameters:
         - name: courseID
           in: query
-          description: ID of the course for which to retrieve the modules.
+          description: ID of the course to retrieve modules.
           required: true
           schema:
             type: integer
@@ -2224,7 +2224,6 @@ paths:
                 items:
                   type: object
                   properties:
-                    # Assuming a similar structure for modules as with courses, adjust accordingly
                     id:
                       type: integer
                     name:
@@ -2243,16 +2242,22 @@ paths:
                   message:
                     type: string
 
-  /api/module/:
+  /api/course/module:
     get:
       tags:
         - Learning Content - Module/s
       summary: Retrieve a module
-      description: Fetches and returns a specific module by its ID.
+      description: Fetches and returns a specific module by its course ID and module ID.
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
+        - name: courseID
+          in: query
+          description: ID of the course.
+          required: true
+          schema:
+            type: integer
+        - name: moduleID
           in: query
           description: ID of the module to retrieve.
           required: true
@@ -2284,29 +2289,37 @@ paths:
                   message:
                     type: string
 
-  /api/module/create:
+  /api/course/module/create:
     post:
       tags:
         - Learning Content - Module/s
-      summary: Create a new module
-      description: Adds a new module to the database.
+      summary: Create a new module for a course
+      description: Adds a new module for a given course. Optional module_order
       security:
         - bearerAuth: []
       requestBody:
+        description: Module data to create
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - course_id
+                - module_name
               properties:
                 course_id:
                   type: integer
+                  description: ID of the associated course.
                 module_name:
                   type: string
+                  description: Name of the module.
                 module_order:
                   type: integer
+                  description: Order of the module in the course (optional).
       responses:
         200:
-          description: Returns a success message for the module creation.
+          description: Module successfully created.
           content:
             application/json:
               schema:
@@ -2315,7 +2328,7 @@ paths:
                   message:
                     type: string
         400:
-          description: Bad request or validation error.
+          description: Bad request (e.g., missing required parameters).
           content:
             application/json:
               schema:
@@ -2328,7 +2341,7 @@ paths:
                   message:
                     type: string
         500:
-          description: Server error, foreign key constraint fails, or other errors.
+          description: Server error (e.g., foreign key constraint fails, integer value too large, data too long).
           content:
             application/json:
               schema:
@@ -2339,34 +2352,45 @@ paths:
                   message:
                     type: string
 
-  /api/module/update:
-    post:
+
+  /api/course/module/update:
+    put:
       tags:
         - Learning Content - Module/s
-      summary: Update an existing module
-      description: Updates a specific module in the database.
+      summary: Update an existing module for a course
+      description: Updates a module for a given course using the module ID.
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
+        - name: moduleID
           in: query
-          description: ID of the module to update.
+          description: ID of the module to update
           required: true
           schema:
             type: integer
       requestBody:
+        description: Module data to update
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - course_id
+                - module_name
               properties:
-                set_data_type:
+                course_id:
+                  type: integer
+                  description: ID of the associated course.
+                module_name:
                   type: string
-                setValue:
-                  type: string
+                  description: Name of the module.
+                module_order:
+                  type: integer
+                  description: Order of the module in the course (optional).
       responses:
         200:
-          description: Returns a success message for the module update.
+          description: Module successfully updated.
           content:
             application/json:
               schema:
@@ -2375,18 +2399,20 @@ paths:
                   message:
                     type: string
         400:
-          description: Bad request or validation error.
+          description: Bad request (e.g., missing required parameters).
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  success_addition:
+                    type: boolean
                   error:
                     type: boolean
                   message:
                     type: string
         500:
-          description: Server error, unknown column, or other errors.
+          description: Server error (e.g., unknown column, incorrect integer value, data too long, incorrect JSON text value).
           content:
             application/json:
               schema:
@@ -2397,8 +2423,9 @@ paths:
                   message:
                     type: string
 
-  /api/module/delete:
-    post:
+
+  /api/course/module/delete:
+    delete:
       tags:
         - Learning Content - Module/s
       summary: Delete a module
@@ -2406,7 +2433,13 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: ID
+        - name: courseID
+          in: query
+          description: ID of the course containing the module to delete.
+          required: true
+          schema:
+            type: integer
+        - name: moduleID
           in: query
           description: ID of the module to delete.
           required: true
@@ -2417,4 +2450,30 @@ paths:
           description: Returns a success message for the module deletion.
           content:
             application/json:
-              schema
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request (e.g., missing required parameters).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string

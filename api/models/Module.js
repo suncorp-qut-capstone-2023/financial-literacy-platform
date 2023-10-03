@@ -10,13 +10,17 @@ class Module {
         return knex('module').select("*").where('course_id', '=', courseID);
     }
 
-    static createModule(courseID, moduleData) {
-        return knex('module').where('course_id', '=', courseID).insert(moduleData);
+    static createModule(moduleData) {
+        return knex('module').insert(moduleData);
     }
 
     static updateModule(courseID, moduleID, moduleData) {
-        return knex('module').where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).update(moduleData);
+        return knex('module')
+            .where('COURSE_ID', '=', courseID)
+            .andWhere('MODULE_ID', '=', moduleID)
+            .update(moduleData);
     }
+    
 
     static deleteModule(courseID, moduleID) {
         return knex('module').where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).del();

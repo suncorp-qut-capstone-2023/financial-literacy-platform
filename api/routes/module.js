@@ -16,10 +16,10 @@ router.get('/', auth, getModule);
 router.post('/create', auth, createModule);
 
 // UPDATE
-router.post('/update', auth, updateModule);
+router.put('/update', auth, updateModule);
 
 // DELETE
-router.post('/delete', auth, deleteModule);
+router.delete('/delete', auth, deleteModule);
 
 // SORT
 // router.get('/sort', auth, sortNewestModule);

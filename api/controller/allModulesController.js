@@ -1,7 +1,7 @@
-const Module = require('../old-models/module.js');
+const Module = require('../models/module.js');
 
 const getAllModules = async (req, res) => {
-    const courseID = req.query['courseID'];
+    const courseID = req.query.courseID;
 
     try {
         // get courses from database
@@ -14,7 +14,7 @@ const getAllModules = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
