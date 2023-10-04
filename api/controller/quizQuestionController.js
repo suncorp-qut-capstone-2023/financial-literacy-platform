@@ -2,10 +2,10 @@ const QuizQuestion = require('../models/QuizQuestion');
 const { isValidInt } = require("../utils/validation");
 
 const getQuizQuestion = async (req, res) => {
-    const quizID = req.query.quizID;
+    const { quizID, courseID, moduleID, questionID } = req.query;
 
     try {
-        const quizQuestions = await QuizQuestion.getQuizQuestion(quizID);
+        const quizQuestions = await QuizQuestion.getQuizQuestion(courseID, moduleID, quizID, questionID);
 
         if (quizQuestions && quizQuestions.length > 0) {
             return res.status(200).json(quizQuestions);
@@ -20,6 +20,7 @@ const getQuizQuestion = async (req, res) => {
         });
     }
 }
+
 
 const createQuizQuestion = async (req, res) => {
     const { question_text, question_option, question_answer, quiz_id, question_order } = req.body;
