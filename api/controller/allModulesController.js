@@ -1,4 +1,4 @@
-const Module = require('../models/module.js');
+const Module = require('../models/Module.js');
 
 const getAllModules = async (req, res) => {
     const courseID = req.query.courseID;

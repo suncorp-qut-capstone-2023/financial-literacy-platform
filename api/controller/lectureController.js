@@ -1,5 +1,5 @@
 const Lecture = require("../models/Lecture");
-const Course = require("../old-models/course");
+// const Course = require("../old-models/course");
 const { isValidInt } = require("../utils/validation");
 
 const getLecture = async (req, res) => {

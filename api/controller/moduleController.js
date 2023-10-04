@@ -1,4 +1,4 @@
-const Module = require("../models/module");
+const Module = require("../models/Module");
 // const Course = require("../models/course");
 const { isValidInt } = require("../utils/validation");
 
