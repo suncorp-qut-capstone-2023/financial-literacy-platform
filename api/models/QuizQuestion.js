@@ -1,4 +1,7 @@
 const knexOptions = require('../db/mydb-connection.js');
+const Module = require("./Module");
+const Course = require("./Course");
+const Quiz = require("./Quiz");
 const knex = require("knex")(knexOptions);
 
 class QuizQuestion {
@@ -50,9 +53,20 @@ class QuizQuestion {
             const result = knex('quiz_question').where("QUESTION_ID", "=", questionID).del();
             if (!result) throw new Error('Failed to delete quiz question'); //fail deletion lead to an error
 
-            this.deleteQuiz(quizID);
-            this.deleteModule(moduleID);
-            this.deleteCourse(courseID);
+            //find quiz data
+            if (Quiz.getQuiz(courseID, moduleID, quizID) !== 0) {
+                this.deleteQuiz(quizID);
+            }
+
+            //find module data
+            if (Module.getModule(courseID, moduleID) !== 0) {
+                this.deleteModule(moduleID);
+            }
+            
+            //find course data
+            if (Course.getCourse(courseID) !== null) {
+                this.deleteCourse(courseID);
+            }
    
             return true;
         } catch (err) {

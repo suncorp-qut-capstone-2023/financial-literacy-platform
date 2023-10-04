@@ -167,18 +167,22 @@ const updateMaterial = async (req, res) => {
 const deleteMaterial = async (req, res) => {
     // get course id from params
     const materialID = isValidInt(req.query.materialID);
+    const courseID = isValidInt(req.query.courseID);
+    const moduleID = isValidInt(req.query.moduleID);
+    const lectureID = isValidInt(req.query.lectureID);
+    const contentID = isValidInt(req.query.contentID);
 
-    if (!materialID ) {
+    if (!materialID || !courseID || !moduleID || !lectureID || !contentID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the materialID."
+            message: "Bad request. Please specify the materialID, courseID, moduleID, lectureID, and contentID."
         });
     }
 
     try {
 
-        const result = await Material.deleteMaterial(materialID);
+        const result = await Material.deleteMaterial(courseID, moduleID, lectureID, contentID, materialID);
 
         // return course
         if (result === true) {
