@@ -48,6 +48,7 @@ jobs:
         cache-dependency-path: './api/package-lock.json'
         
     # Install dependencies
+    - run: npm install
     - run: npm ci
     
     # Build the app
