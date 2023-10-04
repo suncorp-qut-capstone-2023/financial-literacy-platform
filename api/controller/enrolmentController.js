@@ -1,6 +1,6 @@
 // const course_information = require("../course-information-sample/course-information.json");
 const User = require('../models/User.js');
-// const user_registrations = require("../course-information-sample/user-course-information.json");
+const Enrolment = require('../models/Enrolment.js');
 const path = require("path");
 const fs = require("fs");
 
@@ -70,7 +70,6 @@ const removeInterest = async (req, res) => {
   }
 };
 
-
 function checkCourseCompletion(userId, courseId) {
   // Find the user's registration for the specified course
   const registration = user_registrations.registrations.find(
@@ -129,8 +128,10 @@ function updateUserCourseInformationFile(res, successMessage) {
 }
 
 const registerCourse = async (req, res) => {
-  const userId = req.body.user_id;
+  // const userId = req.body.user_id;
   const courseId = req.body.course_id;
+  const userId = req.userId;
+
   // Note: Timezone is always zero UTC offset, as denoted by the suffix " Z " for now
   const currentDate = new Date().toISOString();
 
@@ -142,9 +143,7 @@ const registerCourse = async (req, res) => {
   }
 
   // Check for existing registration
-  const existingRegistration = user_registrations.registrations.find(
-    (reg) => reg.user_id === userId && reg.course_id === courseId
-  );
+  const existingRegistration = await Enrolment.checkEnrolment(userId, courseId);
 
   if (existingRegistration) {
     return res.status(400).json({
@@ -153,27 +152,26 @@ const registerCourse = async (req, res) => {
     });
   }
 
+  // Data for new registration
   const newRegistration = {
     user_id: userId,
     course_id: courseId,
-    materials_viewed: [],
-    lectures_attended: [],
-    quizzes_attempted: [],
-    completed: false,
+    // materials_viewed: [],
+    // lectures_attended: [],
+    // quizzes_attempted: [],
+    // completed: false,
     completion_date: null,
     expiration_date: null,
     // expiration_date: new Date(currentDate.getTime() + (365 * 24 * 60 * 60 * 1000)).toISOString() // Here I'm adding 1 year, but can adjust to null.
   };
 
-  // After adding the new registration to the in-memory representation
-  user_registrations.registrations.push(newRegistration);
+  // Register the user to the course
+  const registrationID = await Enrolment.registerCourse(newRegistration);
 
-  // Write the updated registrations back to the JSON file
-  //TODO(): Change directory to the correct one
-  updateUserCourseInformationFile(
-    res,
-    `User with ID ${userId} has been registered to course ID ${courseId}`
-  );
+  res.status(200).json({
+    message: `User with ID ${userId} has been registered to course ID ${courseId}`,
+    registrationID: registrationID
+  });
 };
 
 const attendedLecture = async (req, res) => {
@@ -269,7 +267,7 @@ const viewedMaterial = async (req, res) => {
 };
 
 const attemptedQuiz = async (req, res) => {
-  const userId = req.body.user_id;
+  const userId = req.userId;
   const courseId = req.body.course_id;
   const quizId = req.body.quiz_id;
 
@@ -280,9 +278,7 @@ const attemptedQuiz = async (req, res) => {
     });
   }
 
-  const registration = user_registrations.registrations.find(
-    (reg) => reg.user_id === userId && reg.course_id === courseId
-  );
+  const registration = await Enrolment.checkEnrolment(userId, courseId);
 
   if (!registration) {
     return res.status(404).json({
