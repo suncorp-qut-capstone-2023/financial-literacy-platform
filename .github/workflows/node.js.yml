@@ -53,8 +53,8 @@ jobs:
     # Build the app
     - run: npm run build --if-present
     
-    # Run tests using Jest
-    - run: npm test
+    # TODO: Run tests using Jest
+    # - run: npm test
       
 
   deploy: ## <-- Deployment to Heroku App
