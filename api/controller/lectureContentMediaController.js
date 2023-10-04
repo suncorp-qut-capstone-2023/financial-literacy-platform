@@ -166,22 +166,27 @@ const updateMaterial = async (req, res) => {
 
 const deleteMaterial = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const materialID = isValidInt(req.query.materialID);
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if (!materialID ) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify the materialID."
+        });
+    }
 
     try {
 
-        const result = await Course.deleteMaterial(newID);
+        const result = await Material.deleteMaterial(materialID);
 
         // return course
-        if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'material' has been deleted`});
+        if (result === true) {
+            return res.status(200).json({"message": `data with the condition ID = ${materialID} on table 'material' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'material' table with condition ID = ${newID} has not been found`
+                message:  `data on 'material' table with condition ID = ${materialID} has not been found`
             });
         }
 
@@ -195,6 +200,13 @@ const deleteMaterial = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
         }
 

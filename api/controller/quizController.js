@@ -131,19 +131,21 @@ const updateQuiz = async (req, res) => {
 }
 
 const deleteQuiz = async (req, res) => {
-    const quizID = req.query.quizID;
+    const courseID = isValidInt(req.query.courseID);
+    const moduleID = isValidInt(req.query.moduleID);
+    const quizID = isValidInt(req.query.quizID);
 
-    if (!quizID) {
+    if (!quizID || !courseID || ! moduleID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the quizID."
+            message: "Bad request. Please specify the quizID, courseID, and moduleID."
         });
     }
 
     try {
-        const result = await Quiz.deleteQuiz(quizID);
-        if (result > 0) {
+        const result = await Quiz.deleteQuiz(courseID, moduleID, quizID);
+        if (result === true) {
             return res.status(200).json({ "message": `Quiz with QUIZ_ID = ${quizID} has been deleted` });
         } else {
             return res.status(400).json({
@@ -152,6 +154,22 @@ const deleteQuiz = async (req, res) => {
             });
         }
     } catch (err) {
+
+        //error related to foreign key is not properly applied to
+        if (err.errno === 1452) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
+            });
+        }
+        
         return res.status(500).json({
             error: true,
             message: err.message

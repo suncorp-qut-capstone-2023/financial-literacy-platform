@@ -167,22 +167,30 @@ const updateLectureContent = async (req, res) => {
 
 const deleteLectureContent = async (req, res) => {
     // get course id from params
-    const ID = req.query.contentID;
+    const courseID = isValidInt(req.query.courseID);
+    const moduleID = isValidInt(req.query.moduleID);
+    const lectureID = isValidInt(req.query.lectureID);
+    const contentID = isValidInt(req.query.contentID);
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if (!lectureID || !courseID || ! moduleID || !contentID) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify the lectureID, courseID, moduleID, and contentID."
+        });
+    }
 
     try {
 
-        const result = await LectureContent.deleteLectureContent(newID);
+        const result = await LectureContent.deleteLectureContent(courseID, moduleID, lectureID, contentID);
 
         // return course
-        if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'lecture_content' has been deleted`});
+        if (result === true) {
+            return res.status(200).json({"message": `data with the condition ID = ${contentID} on table 'lecture_content' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'lecture_content' table with condition ID = ${newID} has not been found`
+                message:  `data on 'lecture_content' table with condition ID = ${contentID} has not been found`
             });
         }
 
@@ -201,6 +209,13 @@ const deleteLectureContent = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
         }
 

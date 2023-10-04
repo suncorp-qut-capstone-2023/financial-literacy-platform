@@ -68,8 +68,78 @@ class Course {
         return knex('course').update({ [set_data_type]: value[0] }).where("COURSE_ID", "=", value[1]);
     }
 
-    static deleteCourse(value) {
-        return knex('course').where("COURSE_ID", "=", value).del();
+    static async deleteQuizQuestion(courseID) {
+        //delete all related data in quiz_question table prior to deleting the course data
+        return await knex('quiz_question')
+            .whereIn('QUIZ_ID', function() {
+                this.select('QUIZ_ID')
+                .from('quiz')
+                .whereIn('MODULE_ID', function() {
+                    this.select('MODULE_ID').from('module').where('COURSE_ID', "=", courseID);
+                })
+            })
+            .del();        
+    }
+
+    static async deleteQuiz(courseID) {
+        //delete all related data in quiz table prior to deleting the course data
+        return await knex('quiz')
+            .whereIn('MODULE_ID', function() {
+                this.select('MODULE_ID').from('module').where('COURSE_ID', "=", courseID);
+            })
+            .del();     
+    }
+
+    static async deleteLectureContent(courseID) {
+        //delete all related data in lecture_content table prior to deleting the course data
+        return await knex('lecture_content')
+            .whereIn('LECTURE_ID', function() {
+                this.select('LECTURE_ID')
+                .from('lecture')
+                .whereIn('MODULE_ID', function() {
+                    this.select('MODULE_ID').from('module').where('COURSE_ID', "=", courseID);
+                })
+            })
+            .del(); 
+    }
+
+    static async deleteLecture(courseID) {
+        //delete all related data in lecture table prior to deleting the course data
+        return await knex('lecture')
+            .whereIn('MODULE_ID', function() {
+                this.select('MODULE_ID')
+                .from('module')
+                .where('COURSE_ID', "=", courseID)
+            })
+            .del();
+    }
+
+    static async deleteModule(courseID) {
+        //delete all related data in module table prior to deleting the course data
+        return await knex('module')
+            .where('COURSE_ID', "=", courseID)
+            .del()
+    }
+
+    static async deleteCourse(courseID) {
+        try {
+            this.deleteQuizQuestion(courseID);
+            this.deleteQuiz(courseID);
+            this.deleteLectureContent(courseID);
+            this.deleteLecture(courseID);
+            this.deleteModule(courseID);
+
+            //delete the actual course data
+            const result = await knex('course').where("COURSE_ID", "=", courseID).del();
+            if (!result) throw new Error('Failed to delete course'); //fail deletion lead to an error
+
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+
+
     }
 }
 

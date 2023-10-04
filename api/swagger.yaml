@@ -2864,6 +2864,20 @@ paths:
           schema:
             type: integer
             example: 113
+        - in: query
+          name: courseID
+          required: true
+          description: ID of the course to be deleted.
+          schema:
+            type: integer
+            example: 113
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module to be deleted.
+          schema:
+            type: integer
+            example: 113
       responses:
         200:
           description: Successfully deleted the lecture.
@@ -3178,6 +3192,27 @@ paths:
           name: contentID
           required: true
           description: ID of the lecture content to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: courseID
+          required: true
+          description: ID of the course to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture to be deleted.
           schema:
             type: integer
             example: 123
@@ -3502,6 +3537,20 @@ paths:
             type: integer
             example: 114
           description: ID of the quiz to be deleted.
+        - in: query
+          name: courseID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the course to be deleted.
+        - in: query
+          name: moduleID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the module to be deleted.
       responses:
         200:
           description: Successfully deleted the quiz.
@@ -3822,6 +3871,27 @@ paths:
           name: questionID
           required: true
           description: ID of the quiz question to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: courseID
+          required: true
+          description: ID of the course to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module to be deleted.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: quizID
+          required: true
+          description: ID of the quiz to be deleted.
           schema:
             type: integer
             example: 123

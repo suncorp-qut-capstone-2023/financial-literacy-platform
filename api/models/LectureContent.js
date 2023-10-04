@@ -29,8 +29,36 @@ class LectureContent{
         return knex('lecture_content').update(updateData).where("LECTURE_CONTENT_ID", "=", lectureContentID);
     }
 
-    static deleteLectureContent(value) {
-        return knex('lecture_content').where("LECTURE_CONTENT_ID", "=", value).del();
+    static async deleteCourse(courseID) {
+        //delete all related data in course table prior to deleting the lecture content data
+        return await knex('course').where('COURSE_ID', '=', courseID).del();    
+    }
+
+    static async deleteModule(moduleID) {
+        //delete all related data in module table prior to deleting the lecture content data
+        return await knex('module').where('MODULE_ID', '=', moduleID).del();    
+    }
+
+    static async deleteLecture(lectureID) {
+        //delete all related data in lecture table prior to deleting the lecture content data
+        return await knex('lecture').where('LECTURE_ID', '=', lectureID).del();    
+    }
+
+    static deleteLectureContent(courseID, moduleID, lectureID, contentID) {
+        try {
+             //delete the actual lecture content data
+            const result = knex('lecture_content').where("LECTURE_CONTENT_ID", "=", contentID).del();
+            if (!result) throw new Error('Failed to delete lecture content'); //fail deletion lead to an error
+
+            this.deleteLecture(lectureID);
+            this.deleteModule(moduleID);
+            this.deleteCourse(courseID);
+            
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 }
 
