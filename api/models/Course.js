@@ -9,29 +9,56 @@ class Course {
             try {
                 let allData = {
                     course : [],
-                    lecture: [],
-                    material: [],
-                    module: [],
-                    quiz: [],
-                    quiz_question: []
                 }
 
                 allData.course = await knex('course').select('*');
-                allData.lecture = await knex('lecture').select('*');
-                allData.material = await knex('material').select('*');
-                allData.module = await knex('module').select('*');
-                allData.quiz = await knex('quiz').select('*');
-                allData.quiz_question = await knex('quiz_question').select('*');
-
                 return allData;
             } catch (err) {
                 throw err;
             }
     }
 
-    static getCourse(value) {
-        return knex("course").select('*').where("COURSE_ID", '=', value);
+    static async getCourse(value) {
+        try {
+            let courseData = await knex('course').select('*').where('COURSE_ID', '=', value);
+    
+            if (courseData && courseData.length > 0) {
+                let course = courseData[0];
+    
+                // Fetch related modules for the course
+                course.modules = await knex('module').select('*').where('COURSE_ID', course.COURSE_ID);
+    
+                for(let module of course.modules) {
+                    // Fetch related quizzes for each module
+                    module.quizzes = await knex('quiz').select('*').where('MODULE_ID', module.MODULE_ID);
+    
+                    for(let quiz of module.quizzes) {
+                        // Fetch related quiz questions for each quiz
+                        quiz.questions = await knex('quiz_question').select('*').where('QUIZ_ID', quiz.QUIZ_ID);
+                    }
+    
+                    // Fetch related lectures for each module
+                    module.lectures = await knex('lecture').select('*').where('MODULE_ID', module.MODULE_ID);
+    
+                    for(let lecture of module.lectures) {
+                        // Fetch related lecture content for each lecture
+                        lecture.contents = await knex('lecture_content').select('*').where('LECTURE_ID', lecture.LECTURE_ID);
+    
+                        for(let content of lecture.contents) {
+                            // Fetch related materials for each lecture content
+                            content.materials = await knex('material').select('*').where('MATERIAL_ID', content.MATERIAL_ID);
+                        }
+                    }
+                }
+                return course;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            throw err;
+        }
     }
+    
 
     static createCourse(value) {
         return knex('course').insert(value);

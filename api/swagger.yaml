@@ -149,6 +149,8 @@ paths:
   /api/enrolment/quizzes/attempted:
       post:
         summary: Attempt a quiz for a course (Migrating)
+        security:
+        - bearerAuth: []
         tags:
         - User Interactions
         description: Record a user's quiz attempt for a course. If all quizzes attempted, course marked completed
@@ -360,6 +362,8 @@ paths:
   /api/forum/{forumID}:
     get:
       summary: Get forum comments
+      security:
+      - bearerAuth: []
       tags:
       - Forum
       parameters:
@@ -393,6 +397,8 @@ paths:
   /api/forum/{forumID}/comment:
     post:
       summary: Create a forum comment
+      security:
+      - bearerAuth: []
       tags:
       - Forum
       requestBody:
@@ -458,6 +464,8 @@ paths:
   /api/forum/create:
     post:
       summary: Create a forum 
+      security:
+      - bearerAuth: []
       tags:
       - Forum
       requestBody:
@@ -515,9 +523,11 @@ paths:
                   message:
                     type: string
 
-  /api/forum:
+  /api/forums:
     get:
       summary: Get all forums
+      security:
+      - bearerAuth: []
       tags:
       - Forum
       responses:
@@ -544,6 +554,8 @@ paths:
   /api/forum/{forumID}/{commentID}:
     get:
       summary: Get a specific forum comment
+      security:
+      - bearerAuth: []
       tags:
       - Forum
       parameters:
@@ -681,6 +693,8 @@ paths:
       summary: Add new tag to an existing course
       tags:
       - Search function (Migrating to learning Content)
+      security:
+      - bearerAuth: []
   /api/learningModules/delete/tags:
     delete:
       requestBody:
@@ -713,6 +727,8 @@ paths:
       summary: Delete a course tag on a course
       tags:
       - Search function (Migrating to learning Content)
+      security:
+      - bearerAuth: []
   /api/learningModules/search:
     post:
       description: Search for modules
@@ -2088,7 +2104,7 @@ paths:
       tags:
         - Learning Content - Course/s
       summary: Retrieve a course
-      description: Fetches and returns a specific course by its ID.
+      description: Fetches and returns all data for a specific course by its ID.
       security:
         - bearerAuth: []
       parameters:
@@ -2644,6 +2660,8 @@ paths:
       tags:
         - Learning Content - Lecture/s
       summary: Get lecture details
+      security:
+        - bearerAuth: []
       description: Retrieve lecture details based on courseID, moduleID, and lectureID.
       parameters:
         - name: courseID
