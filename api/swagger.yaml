@@ -2595,7 +2595,7 @@ paths:
       summary: Create a new lecture
       description: Endpoint to create a new lecture.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -2666,7 +2666,7 @@ paths:
       summary: Update an existing lecture
       description: Endpoint to update an existing lecture using its ID and specific field.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       parameters:
         - in: query
           name: lectureID
@@ -2742,7 +2742,7 @@ paths:
       summary: Delete a lecture
       description: Endpoint to delete an existing lecture using its ID.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       parameters:
         - in: query
           name: lectureID
@@ -2915,7 +2915,7 @@ paths:
       summary: Create a new lecture content entry
       description: Adds a new lecture content to the database.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -2983,7 +2983,7 @@ paths:
       summary: Update an existing lecture content
       description: Endpoint to update an existing lecture content using its ID and specific fields.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       parameters:
         - in: query
           name: contentID
@@ -3059,7 +3059,7 @@ paths:
       summary: Delete a lecture content
       description: Endpoint to delete an existing lecture content using its ID.
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       parameters:
         - in: query
           name: contentID
@@ -3105,3 +3105,324 @@ paths:
                   message:
                     type: string
                     example: "foreign key constraint fails. Delete all foreign keys associated with the related primary key."
+
+# Quiz
+
+  /api/course/module/quizzes:
+    get:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Retrieve all quizzes based on course and module.
+      description: Retrieves a list of all quizzes for a given course and module.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: moduleID
+          in: query
+          description: ID of the module.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A list of quizzes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    QUIZ_ID:
+                      type: integer
+                    QUIZ_NAME:
+                      type: string
+                    QUESTION_ORDER:
+                      type: string
+                    MODULE_ID:
+                      type: integer
+                    QUIZ_MAXTRIES:
+                      type: integer
+        400:
+          description: Bad request, possibly due to invalid courseID or moduleID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/quiz:
+    get:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Get quiz details
+      description: Retrieve quiz details based on courseID, moduleID, and quizID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the course.
+        - name: moduleID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the module.
+        - name: quizID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the quiz.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  QUIZ_ID:
+                    type: integer
+                  QUIZ_NAME:
+                    type: string
+                  QUESTION_ORDER:
+                    type: string
+                  MODULE_ID:
+                    type: integer
+                  QUIZ_MAXTRIES:
+                    type: integer
+        '404':
+          description: Quiz not found
+        '500':
+          description: Internal server error
+
+  /api/course/module/quiz/create:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Create a new quiz
+      description: Endpoint to create a new quiz.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quiz_name:
+                  type: string
+                  in: query
+                  description: Name of the quiz.
+                  example: "Basics of Programming"
+                module_id:
+                  type: integer
+                  in: query
+                  description: ID of the module that the quiz belongs to.
+                  example: 101
+                question_order:
+                  type: string
+                  in: query
+                  description: Order of questions in the quiz.
+                  example: ["Q1", "Q2", "Q3"]
+                quiz_maxtries:
+                  type: integer
+                  description: Maximum tries allowed for the quiz.
+                  example: 3
+      responses:
+        200:
+          description: Successfully created a new quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "New quiz data has been successfully added!"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails."
+
+  /api/course/module/quiz/update:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Update an existing quiz
+      description: Endpoint to update an existing quiz using its ID and specific field.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: quizID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the quiz to be updated.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                module_id:
+                  type: integer
+                  description: ID of the module containing the quiz.
+                  example: 23
+                quiz_name:
+                  type: string
+                  description: Updated name of the quiz.
+                  example: "Advanced Programming Quiz"
+                question_order:
+                  type: array
+                  items:
+                    type: string
+                  description: Updated order of questions within the quiz.
+                  example: ["Q1", "Q2", "Q3"]
+                quiz_maxtries:
+                  type: integer
+                  description: Updated maximum tries allowed for the quiz.
+                  example: 4
+      responses:
+        200:
+          description: Successfully updated the quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Quiz has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Unknown column: QUIZ_NAME"
+
+  /api/course/module/quiz/delete:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Delete a quiz
+      description: Endpoint to delete an existing quiz using its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: quizID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the quiz to be deleted.
+      responses:
+        200:
+          description: Successfully deleted the quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Data with the condition ID = 114 on table 'quiz' has been deleted"
+        400:
+          description: The quiz with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Data on 'quiz' table with condition ID = 114 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails. Delete all foreign keys used with the related primary key."
