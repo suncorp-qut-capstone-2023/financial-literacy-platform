@@ -13,10 +13,6 @@ const getForumComments = async (req, res) => {
 };
 
 const createForumComment = async (req, res) => {
-  if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
-  }
-
   const { body, forumID, courseID } = req.body;
 
   // Validate input fields
@@ -29,7 +25,7 @@ const createForumComment = async (req, res) => {
   const forumCommentData = {
     Body: body,
     DateCommented: new Date().toISOString().slice(0, 19).replace("T", " "), // Format to 'YYYY-MM-DD HH:MM:SS'
-    UserID: req.userID,
+    UserID: req.userId,
   };
 
   if (forumID) {
@@ -51,10 +47,6 @@ const createForumComment = async (req, res) => {
 };
 
 const createForum = async (req, res) => {
-  if (!req.isAuthorized) {
-    return res.status(401).json({ error: true, message: "Not authorized!" });
-  }
-
   const { ForumTitle, CourseID } = req.body;
 
   if (!ForumTitle) {
@@ -64,7 +56,7 @@ const createForum = async (req, res) => {
   const forumData = {
     ForumTitle,
     DateCreated: new Date(),
-    CreatorID: req.userID,
+    CreatorID: req.userId,
   };
 
   if (CourseID) {
@@ -75,15 +67,6 @@ const createForum = async (req, res) => {
     const _result = await forumModel.createForum(forumData);
     console.log("Result from createForum:", _result);
     res.status(201).json({ message: "Forum created!", forumID: _result[0] });
-  } catch (error) {
-    res.status(500).json({ message: "Database error!" });
-  }
-};
-
-const getForums = async (req, res) => {
-  try {
-    const forums = await forumModel.getForums();
-    res.status(200).json(forums);
   } catch (error) {
     res.status(500).json({ message: "Database error!" });
   }
@@ -125,7 +108,6 @@ module.exports = {
   getForumComments,
   createForumComment,
   createForum,
-  getForums,
   getForumComment,
   updateForumComment,
 };

@@ -4,7 +4,7 @@ const knex = require("knex")(knexOptions);
 
 class Forum {
     static createForum(forumData) {
-        return knex('Forum').insert(forumData).then(ids => {
+        return knex('forum').insert(forumData).then(ids => {
             return ids[0]
         }).catch(error => {
             console.error("Error inserting into Forum:", error);
@@ -13,7 +13,7 @@ class Forum {
     }
 
     static getForums() {
-        return knex('Forum').select();
+        return knex('forum').select();
     }
     
 

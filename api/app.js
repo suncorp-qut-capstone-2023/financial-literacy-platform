@@ -29,6 +29,7 @@ const usersRouter = require('./routes/users.js');
 const forumRouter = require('./routes/forum.js');
 const enrolmentRouter = require('./routes/enrolment.js');
 
+const forumsRouter = require('./routes/all-forums.js');
 const coursesRouter = require('./routes/all-courses.js');
 const modulesRouter = require('./routes/all-modules.js');
 const quizzesRouter = require('./routes/all-quizzes.js');
@@ -77,9 +78,9 @@ app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 // Setup old-routes
 app.use('/api', aboutUsRouter);                                                     // ABOUT US ROUTES
 app.use('/api/user', usersRouter);                                                  // USER ROUTES
-app.use('/api/forum', forumRouter);                                                 // FORUM ROUTES
 app.use('/api/enrolment', enrolmentRouter);                                         // ENROLMENT ROUTES
 
+app.use('/api/forums', forumsRouter);                                             // FETCH ALL FORUMS
 app.use('/api/courses', coursesRouter);                                             // FETCH ALL COURSES
 app.use('/api/course/modules', modulesRouter);                                      // FETCH ALL MODULES
 app.use('/api/course/module/lectures', lecturesRouter);                             // FETCH ALL LECTURES
@@ -88,6 +89,7 @@ app.use('/api/course/module/quizzes', quizzesRouter);                           
 app.use('/api/course/module/quiz/questions', quizQuestionsRouter);                  // FETCH ALL QUIZ QUESTIONS
 app.use('/api/course/module/lecture/content/medias', mediasRouter);                 // FETCH ALL LECTURE CONTENT MEDIA
 
+app.use('/api/forum', forumRouter);                                                 // FORUM ROUTES
 app.use('/api/course', courseRouter);                                               // COURSE ROUTES
 app.use('/api/course/module', moduleRouter);                                        // MODULE ROUTES
 app.use('/api/course/module/quiz', quizRouter);                                     // QUIZ ROUTES

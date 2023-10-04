@@ -7,16 +7,14 @@ const {
     getForumComments,
     createForumComment,
     createForum,
-    getForums,
     getForumComment,
     updateForumComment
 } = require("../controller/forumController.js");
 
 const {
     SearchForum
-  } = require('../old-controller/SearchController.js');
+} = require('../old-controller/SearchController.js'); //TODO
 
-router.get("/", auth, getForums);
 router.get("/:forumID", auth, getForumComments);
 router.get("/:forumID/:commentID", auth, getForumComment);
 

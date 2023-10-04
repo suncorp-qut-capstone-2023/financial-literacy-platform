@@ -31,7 +31,7 @@ const authorize = function(req, res, next){
 
         // Set userID from the decoded JWT to the req object
         if (decoded && decoded.userId) {
-            req.userID = decoded.userId;
+            req.userId = decoded.userId;
         } else {
             throw new Error('User ID is missing in the token');
         }
