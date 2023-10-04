@@ -1,51 +1,45 @@
 const Quiz = require("../models/Quiz");
-const Course = require("../old-models/Course");
 const { isValidInt } = require("../utils/validation");
 
 const getQuiz = async (req, res) => {
-    // get course id from params
-    const ID = req.params['ID'];
+    const courseID = req.query.courseID;
+    const moduleID = req.query.moduleID;
+    const quizID = req.query.quizID;
 
     try {
-        // get course from database
-        const quiz = await Course.getQuiz(ID);
+        const quiz = await Quiz.getQuiz(courseID, moduleID, quizID);
 
-        // return course
-        return res.status(200).json(quiz);
-    }
-    catch (err) {
-
-        //error related to foreign key is not properly applied to
+        if (quiz && quiz.length > 0) {
+            return res.status(200).json(quiz);
+        } else {
+            return res.status(404).json({ error: true, message: "Quiz not found." });
+        }
+    } catch (err) {
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails"
             });
         }
-
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
 const createQuiz = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { quiz_name, quiz_blob_url, module_id, question_order, quiz_maxtries } = req.body;
+    const { quiz_name, module_id, question_order, quiz_maxtries } = req.body;
     let data = {};
 
-    if (!quiz_name || !quiz_blob_url) {
+    if (!quiz_name) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify the quiz name and quiz blob URL."
+            message: "Bad request. Please specify the quiz name."
         });
     } else {
         data["QUIZ_NAME"] = quiz_name;
-        data["QUIZ_BLOB_URL"] = quiz_blob_url;
     }
 
     if (module_id) {
@@ -61,17 +55,11 @@ const createQuiz = async (req, res) => {
     }
 
     try {
-        // create course in database
-        await Course.insertData(data, "quiz");
-
-        // return course
+        await Quiz.createQuiz(data);
         return res.status(200).json({
-            message: "new quiz data has been successfully added!"
+            "message": "New quiz data has been successfully added!"
         });
-    }
-    catch (err) {
-
-        //error related to foreign key is not properly applied to
+    } catch (err) {
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
@@ -80,165 +68,93 @@ const createQuiz = async (req, res) => {
         }
 
         const data = err.sqlMessage.match(/'([^']+)'/);
-
         if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
         }
-
         if (err.errno === 1406) {
-
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
         }
-
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
 const updateQuiz = async (req, res) => {
-    //update course table
-    // get course id from url
-    // get course id from params
-    let ID = req.params['ID'];
-    const { set_data_type } = req.body; //value is a list
-    let { setValue } = req.body; //value is a list
+    const quizID = req.query.quizID;
+    const { quiz_name, module_id, question_order, quiz_maxtries } = req.body;
 
-    if (!set_data_type
-        || !setValue || !ID ) {
+    if (!quizID || !module_id) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+            message: "Bad request. Please specify the required parameters."
         });
     }
 
-    setValue = isValidInt(setValue);
-    ID = isValidInt(ID);
-
-    const value = [ setValue, ID ];
+    const updateData = {};
+    if (quiz_name) updateData["QUIZ_NAME"] = quiz_name;
+    if (question_order) updateData["QUESTION_ORDER"] = JSON.stringify(question_order);
+    if (quiz_maxtries) updateData["QUIZ_MAXTRIES"] = quiz_maxtries;
 
     try {
-
-        const result = await Course.updateQuiz(set_data_type, value);
-
-        // return course
+        const result = await Quiz.updateQuiz(module_id, quizID, updateData);
         if (result > 0) {
-            return res.status(200).json({"message": `table 'quiz' has been updated`});
+            return res.status(200).json({ "message": `Quiz has been updated` });
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'quiz' table with condition COURSE_ID = ${value[1]} has not been found`
+                message: `Quiz with QUIZ_ID = ${quizID} not found`
             });
         }
-    }
-    catch (err) {
-
+    } catch (err) {
         const data = err.sqlMessage.match(/'([^']+)'/);
 
         if (err.errno === 1054) {
             return res.status(500).json({
                 error: true,
-                message: `unknown column: ${data[0]}`
+                message: `unknown column ${data[0]}`
             });
         }
-
-        if (err.errno === 1366) {
-            return res.status(500).json({
-                error: true,
-                message: `Incorrect integer value: ${data[0]}`
-            });
-        }
-
-        if (err.errno === 1406) {
-            return res.status(500).json({
-                error: true,
-                message: `data too long for ${data[0]}`
-            });
-        }
-
-        if (err.errno === 3140) {
-            return res.status(500).json({
-                error: true,
-                message: `Incorrect JSON text value`
-            });
-        }
-
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
 const deleteQuiz = async (req, res) => {
-    // get course id from params
-    const ID = req.params['ID'];
+    const quizID = req.query.quizID;
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if (!quizID) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify the quizID."
+        });
+    }
 
     try {
-
-        const result = await Course.deleteQuiz(newID);
-
-        // return course
+        const result = await Quiz.deleteQuiz(quizID);
         if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'quiz' has been deleted`});
+            return res.status(200).json({ "message": `Quiz with QUIZ_ID = ${quizID} has been deleted` });
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'quiz' table with condition ID = ${newID} has not been found`
+                message: `Quiz with QUIZ_ID = ${quizID} not found`
             });
         }
-
-    }
-    catch (err) {
-        //find data type, such as "COURSE_ID"
-        const data = err.sqlMessage.match(/'([^']+)'/);
-
-        //error related to foreign key is not properly applied to
-        if (err.errno === 1452) {
-            return res.status(500).json({
-                error: true,
-                message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
-            });
-        }
-
-        if (err.errno === 1264) {
-            return res.status(500).json({
-                error: true,
-                message: `${data[0]} integer value is too large`
-            });
-        }
-
-        if (err.errno === 1292) {
-            return res.status(500).json({
-                error: true,
-                message: `incorrect double value: ${data[0]}`
-            });
-        }
-
-        if (err.errno === 1406) {
-
-            return res.status(500).json({
-                error: true,
-                message: `data too long for ${data[0]}`
-            });
-        }
-
+    } catch (err) {
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }

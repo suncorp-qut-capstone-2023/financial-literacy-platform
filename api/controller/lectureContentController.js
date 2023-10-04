@@ -1,42 +1,49 @@
 const LectureContent = require('../models/LectureContent');
-const Course = require("../old-models/course");
 const { isValidInt } = require("../utils/validation");
 
 const getLectureContent = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const courseID = req.query.courseID;
+    const moduleID = req.query.moduleID;
+    const lectureID = req.query.lectureID;
+    const lectureContentID = req.query.lectureContentID;
 
     try {
         // get course from database
-        const lectureContent = await Course.getLectureContent(ID);
+        const lectureContent = await LectureContent.getLectureContent(courseID, moduleID, lectureID, lectureContentID);
 
-        // return course
-        return res.status(200).json(lectureContent);
+        if (lectureContent && lectureContent.length > 0) {
+            return res.status(200).json(lectureContent);
+        } else {
+            return res.status(404).json({ error: true, message: "Lecture Content not found." });
+        }
     }
     catch (err) {
-
-        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails"
             });
         }
-
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
 const createLectureContent = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { lecture_id, material_id, material_order } = req.body;
-    data = {};
+    // Get lecture content information from request body
+    // const { lecture_id, material_id, material_order } = req.body;
 
+    const lecture_id = req.body.lecture_id;
+    const material_id = req.body.material_id;
+    const material_order = req.body.material_order;
+
+    console.log(lecture_id, material_id, material_order);
+
+    let data = {};
+    
     if (!lecture_id || !material_id) {
         return res.status(400).json({
             success_addition: false,
@@ -53,19 +60,15 @@ const createLectureContent = async (req, res) => {
     }
 
     try {
-        // create course in database
-        await Course.insertData(data, "lecture_content");
-
-        // return course
-        return res.status(200).json({"message": "new lecture content data has been successfully added!"});
+        // Create row in db
+        await LectureContent.createLectureContent(data);
+        return res.status(200).json({"message": "New lecture content data has been successfully added!"});
     }
     catch (err) {
-
-        //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
-                message: "foreign key constraint fails"
+                message: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
             });
         }
 
@@ -74,59 +77,51 @@ const createLectureContent = async (req, res) => {
         if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
-                message: `${data[0]} integer value is too large`
+                message: `${data[0]} integer value is too large.`
             });
         }
 
         if (err.errno === 1406) {
-
             return res.status(500).json({
                 error: true,
-                message: `data too long for ${data[0]}`
+                message: `Data too long for ${data[0]}.`
             });
         }
 
-        // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
-const updateLectureContent = async (req, res) => {
-    //update course table
-    // get course id from url
-    // get course id from params
-    let ID = req.params['ID'];
-    const { set_data_type } = req.body; //value is a list
-    let { setValue } = req.body; //value is a list
 
-    if (!set_data_type
-        || !setValue || !ID ) {
+const updateLectureContent = async (req, res) => {
+    //update lecture content table
+    const lectureContentID = req.query.contentID;
+    const { lecture_id, material_id, material_order } = req.body;
+
+    if (!lectureContentID || !lecture_id) {
         return res.status(400).json({
             success_addition: false,
             error: true,
-            message: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+            message: "Bad request. Please specify the required parameters."
         });
     }
 
-    setValue = isValidInt(setValue);
-    ID = isValidInt(ID);
-
-    const value = [ setValue, ID ];
+    const updateData = {};
+    if (lecture_id) updateData["LECTURE_ID"] = lecture_id;
+    if (material_id) updateData["MATERIAL_ID"] = material_id;
+    if (material_order) updateData["MATERIAL_ORDER"] = material_order;
 
     try {
-
-        const result = await Course.updateLectureContent(set_data_type, value);
-
-        // return course
+        const result = await LectureContent.updateLectureContent(lectureContentID, updateData);
         if (result > 0) {
-            return res.status(200).json({"message": `table 'lecture_content' has been updated`});
+            return res.status(200).json({ "message": `Lecture Content has been updated` });
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'lecture_content' table with condition COURSE_ID = ${value[1]} has not been found`
+                message: `Lecture Content = ${lectureContentID} not found`
             });
         }
     }
@@ -172,14 +167,14 @@ const updateLectureContent = async (req, res) => {
 
 const deleteLectureContent = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const ID = req.query.contentID;
 
     //receive ID in integer type
     const newID = isValidInt(ID);
 
     try {
 
-        const result = await Course.deleteLectureContent(newID);
+        const result = await LectureContent.deleteLectureContent(newID);
 
         // return course
         if (result > 0) {
@@ -194,7 +189,12 @@ const deleteLectureContent = async (req, res) => {
     }
     catch (err) {
         //find data type, such as "COURSE_ID"
-        const data = err.sqlMessage.match(/'([^']+)'/);
+        let data = []
+        if (err.sqlMessage)
+        {
+            data = err.sqlMessage.match(/'([^']+)'/);
+        }
+        
 
         //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
@@ -228,7 +228,7 @@ const deleteLectureContent = async (req, res) => {
 
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }

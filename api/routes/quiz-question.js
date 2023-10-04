@@ -14,12 +14,12 @@ const {
 router.get('/', auth, getQuizQuestion);
 
 // CREATE
-router.post('/create', auth, requireAdmin, createQuizQuestion);
+router.post('/create', auth, createQuizQuestion);
 
 // UPDATE
-router.post('/update', auth, requireAdmin, updateQuizQuestion);
+router.post('/update', auth, updateQuizQuestion);
 
 // DELETE
-router.post('/delete', auth, requireAdmin, deleteQuizQuestion);
+router.post('/delete', auth, deleteQuizQuestion);
 
 module.exports = router;

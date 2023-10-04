@@ -34,7 +34,7 @@ const getLecture = async (req, res) => {
 const createLecture = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
-    const { lecture_name, module_id, lecture_order } = req.body;
+    const { lecture_name, module_id, material_order, lecture_order } = req.body;
     let data = {};
 
     if (!lecture_name) {
@@ -49,6 +49,10 @@ const createLecture = async (req, res) => {
 
     if (module_id) {
         data["MODULE_ID"] = module_id;
+    }
+
+    if (material_order) {
+        data["MATERIAL_ORDER"] = material_order;
     }
 
     if (lecture_order) {
