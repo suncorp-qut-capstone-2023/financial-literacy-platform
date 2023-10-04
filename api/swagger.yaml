@@ -89,7 +89,7 @@ paths:
 
   /api/enrolment/course/register:
       post:
-        summary: Register for a course
+        summary: Register for a course (Migrating)
         tags:
         - User Interactions
         security:
@@ -148,7 +148,7 @@ paths:
   
   /api/enrolment/quizzes/attempted:
       post:
-        summary: Attempt a quiz for a course
+        summary: Attempt a quiz for a course (Migrating)
         tags:
         - User Interactions
         description: Record a user's quiz attempt for a course. If all quizzes attempted, course marked completed
@@ -3524,7 +3524,7 @@ paths:
 
 # Quiz Questions
 
-  /api/course/module/quiz/questions/:
+  /api/course/module/quiz/questions:
     get:
       tags:
       - Learning Content - Quiz Question/s
@@ -3571,7 +3571,7 @@ paths:
                   message:
                     type: string
 
-  /api/course/module/quiz/question/:
+  /api/course/module/quiz/question:
     get:
       tags:
       - Learning Content - Quiz Question/s
