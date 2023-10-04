@@ -1,0 +1,19 @@
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    min-height: 80vh; /* ensure the footer does not squish up */
+}
+
+.label {
+    display: block;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 1rem;
+    font-family: var(--font-mono); /* Add this line */
+    margin-bottom: 1rem;
+}

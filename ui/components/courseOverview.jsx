@@ -31,7 +31,7 @@ let theme = createTheme({
   palette: {
     suncorpgreen: {
       main: "#009877",
-      contrastText: "#000000",
+      contrastText: "#ffffff",
     },
   }
 });
@@ -124,7 +124,7 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
           </Button>
         </DialogActions>
       </Dialog>
-      <div style={{ maxWidth: '80%', minWidth:'80%'}}> {/* This div will wrap your CourseOverview */}
+      <div style={{ maxWidth: '80%', minWidth:'80%'}}>
         <Item>
           <Grid xs={12}>
             <Grid container spacing={1}>

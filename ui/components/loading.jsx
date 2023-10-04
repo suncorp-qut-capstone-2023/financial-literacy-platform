@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/page.module.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CircularProgress } from "@mui/material";
 

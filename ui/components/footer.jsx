@@ -53,10 +53,10 @@ export default function Footer() {
         </Grid>
         <Grid xs={12} md={4} className={styles.footerGridItem}>
           <Item elevation={0}>
-          <Link href="mailto:somecontactemail@suncorpemail.com">
+          <Link href="/contact">
             <p>Contact Us</p>
           </Link>
-          <Link href="mailto:somecontactemail@suncorpemail.com">
+          <Link href="/report">
             <p>Report an Issue</p>
           </Link>
           </Item>
