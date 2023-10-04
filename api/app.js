@@ -1,36 +1,50 @@
-// Description: This file is the main entry point for the application. It sets up the express app,
+// Desc: Main entry point for the application
+
+// For environment variables
+require("dotenv").config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const yaml = require('js-yaml'); // For swagger
-const fs = require ('fs'); // For swagger
-const pug = require('pug');
-
-// security setup
 const helmet = require('helmet');
 const cors = require("cors");
-require("dotenv").config();
+const yaml = require('js-yaml');
+const fs = require ('fs');
+const swaggerUI = require("swagger-ui-express");
 
 // swagger setup
-const swaggerUI = require("swagger-ui-express");
 try {
-    swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
-  } catch (e) {
-    console.error("Failed to load swagger document", e);
-  }
+  swaggerDocument = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+} catch (e) {
+  console.error("Failed to load swagger document", e);
+}
 
-// create express app
-const app = express();
+const app = express(); // create express app
 
 // define routers
 const aboutUsRouter = require('./routes/aboutUs.js');
 const usersRouter = require('./routes/users.js');
-const learningModulesRouter = require('./routes/learningModules.js');
-const enrolmentRouter = require('./routes/enrolment.js');
-const modulesRouter = require('./routes/courses.js');
 const forumRouter = require('./routes/forum.js');
+const enrolmentRouter = require('./routes/enrolment.js');
+
+const forumsRouter = require('./routes/all-forums.js');
+const coursesRouter = require('./routes/all-courses.js');
+const modulesRouter = require('./routes/all-modules.js');
+const quizzesRouter = require('./routes/all-quizzes.js');
+const quizQuestionsRouter = require('./routes/all-quiz-questions.js');
+const lecturesRouter = require('./routes/all-lectures.js');
+const lectureContentsRouter = require('./routes/all-lecture-contents.js');
+const mediasRouter = require('./routes/all-lecture-content-media.js');
+
+const courseRouter = require('./routes/course.js');
+const moduleRouter = require('./routes/module.js');
+const quizRouter = require('./routes/quiz.js');
+const quizQuestionRouter = require('./routes/quiz-question.js');
+const lectureRouter = require('./routes/lecture.js');
+const lectureContentRouter = require('./routes/lecture-content.js');
+const lectureContentMediaRouter = require('./routes/lecture-content-media.js');
 
 // security implementation
 app.use(helmet());
@@ -45,11 +59,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// cookie parser implementation
-app.use(cookieParser());
-
-// logger implementation
-app.use(logger('common'));
+app.use(cookieParser()); // cookie parser implementation
+app.use(logger('common')); // logger implementation
 
 // logger token implementation
 logger.token('req', (req, res) => JSON.stringify(req.headers));
@@ -60,17 +71,33 @@ logger.token('res', (req, res) => {
 });
 
 // swagger implementation
-app.use('/api/docs', swaggerUI.serve);
+app.use('/api/docs', swaggerUI.serve);                  // TODO
 //@ts-ignore
-app.get('/api/docs', swaggerUI.setup(swaggerDocument));
+app.get('/api/docs', swaggerUI.setup(swaggerDocument)); // TODO
 
-// Setup routes
-app.use('/api', aboutUsRouter);
-app.use('/api/user', usersRouter);
-app.use('/api/learningModules', learningModulesRouter);
-app.use('/api/enrolment', enrolmentRouter);
-app.use('/api/modules', modulesRouter);
-app.use('/api/forum', forumRouter);
+// Setup old-routes
+app.use('/api', aboutUsRouter);                                                     // ABOUT US ROUTES
+app.use('/api/user', usersRouter);                                                  // USER ROUTES
+app.use('/api/enrolment', enrolmentRouter);                                         // ENROLMENT ROUTES
+
+app.use('/api/forums', forumsRouter);                                             // FETCH ALL FORUMS
+app.use('/api/courses', coursesRouter);                                             // FETCH ALL COURSES
+app.use('/api/course/modules', modulesRouter);                                      // FETCH ALL MODULES
+app.use('/api/course/module/lectures', lecturesRouter);                             // FETCH ALL LECTURES
+app.use('/api/course/module/lecture/contents', lectureContentsRouter);              // FETCH ALL QUIZ QUESTIONS
+app.use('/api/course/module/quizzes', quizzesRouter);                               // FETCH ALL QUIZZES
+app.use('/api/course/module/quiz/questions', quizQuestionsRouter);                  // FETCH ALL QUIZ QUESTIONS
+app.use('/api/course/module/lecture/content/medias', mediasRouter);                 // FETCH ALL LECTURE CONTENT MEDIA
+
+app.use('/api/forum', forumRouter);                                                 // FORUM ROUTES
+app.use('/api/course', courseRouter);                                               // COURSE ROUTES
+app.use('/api/course/module', moduleRouter);                                        // MODULE ROUTES
+app.use('/api/course/module/quiz', quizRouter);                                     // QUIZ ROUTES
+app.use('/api/course/module/quiz/question', quizQuestionRouter);                    // QUIZ QUESTION ROUTES
+app.use('/api/course/module/lecture', lectureRouter);                               // LECTURE ROUTES
+app.use('/api/course/module/lecture/content', lectureContentRouter);                // LECTURE CONTENT ROUTES
+app.use('/api/course/module/lecture/content/media', lectureContentMediaRouter);     // LECTURE CONTENT MEDIA ROUTES
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

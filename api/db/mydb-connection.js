@@ -1,11 +1,12 @@
 /**
- * This file is for setting up connection to database
+ * This file is for setting up connection to Course database
  *
  * It uses Knex which is a secure SQL query builder. It has built in functions to
  * avoid sql injections.
  */
 
-// TODO(): Update with your config settings.
+const fs = require('fs');
+const cert = fs.readFileSync("./certs/DigiCertGlobalRootCA.crt.pem");
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -15,9 +16,12 @@ module.exports = {
     connection : {
         host: process.env.SQL_HOST,
         port: process.env.SQL_PORT,
-        database: process.env.SQL_DATABASE,
+        database: process.env.SQL_DATABASE_COURSE,
         user: process.env.SQL_USER,
         password: process.env.SQL_PASSWORD,
-        dateStrings: true
+        dateStrings: true,
+        ssl: {
+            ca: cert
+        }
     }
 };

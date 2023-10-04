@@ -5,8 +5,9 @@ const router = express.Router();
 const {
     getMedia,
     uploadMedia
-} = require('../controller/mediaController.js');
+} = require('../old-controller/mediaController.js');
 
+// TODO - This two are not fully implemented yet
 router.post('/download', auth, getMedia);
 router.post('/upload', auth, uploadMedia);
 
