@@ -3857,53 +3857,71 @@ paths:
                   message:
                     type: string
                     example: "Unknown column: QUESTION_TEXT"
-
   /api/course/module/quiz/question/delete:
     post:
+      summary: Delete a Quiz Question
       tags:
         - Learning Content - Quiz Question/s
-      summary: Delete a quiz question.
-      description: Endpoint to delete an existing quiz question using its ID.
-      security:
+      security: 
         - bearerAuth: []
+      description: Delete a Quiz Question by specifying courseID, moduleID, quizID, and quizQuestionID.
       parameters:
-        - in: query
-          name: questionID
+        - name: courseID
+          in: query
+          description: The ID of the course.
           required: true
-          description: ID of the quiz question to be deleted.
           schema:
             type: integer
-            example: 123
-        - in: query
-          name: courseID
+        - name: moduleID
+          in: query
+          description: The ID of the module.
           required: true
-          description: ID of the course to be deleted.
           schema:
             type: integer
-            example: 123
-        - in: query
-          name: moduleID
+        - name: quizID
+          in: query
+          description: The ID of the quiz.
           required: true
-          description: ID of the module to be deleted.
           schema:
             type: integer
-            example: 123
-        - in: query
-          name: quizID
+        - name: quizQuestionID
+          in: query
+          description: The ID of the quiz question to delete.
           required: true
-          description: ID of the quiz to be deleted.
           schema:
             type: integer
-            example: 123
       responses:
         200:
-          description: Successfully deleted the quiz question.
+          description: Quiz Question deleted successfully.
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "data with the condition ID = 123 on table 'quiz_question' has been deleted."
-        
+              example:
+                message: Quiz Question with ID = 123 has been deleted
+        400:
+          description: Bad request. Please specify the necessary parameters.
+          content:
+            application/json:
+              example:
+                success_addition: false
+                error: true
+                message: Bad request. Please specify the quizID, courseID, moduleID, and quizQuestionID.
+        500:
+          description: |
+            - Error: foreign key constraint fails. Delete all foreign keys used with the related primary key.
+            - Error: foreign key constraint fails. The foreign key used with the related primary key has not been found.
+            - Other internal server error.
+          content:
+            application/json:
+              examples:
+                foreign_key_constraint_1:
+                  value:
+                    error: true
+                    message: foreign key constraint fails. Delete all foreign keys used with the related primary key.
+                foreign_key_consntraint_2:
+                  value:
+                    error: true
+                    message: foreign key constraint fails. The foreign key used with the related primary key has not been found.
+                other_error:
+                  value:
+                    error: true
+                    message: An error occurred.

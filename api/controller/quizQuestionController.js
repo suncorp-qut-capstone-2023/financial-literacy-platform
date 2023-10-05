@@ -96,7 +96,7 @@ const deleteQuizQuestion = async (req, res) => {
     const moduleID = isValidInt(req.query.moduleID);
     const quizID = isValidInt(req.query.quizID);
     const quizQuestionID = isValidInt(req.query.quizQuestionID);
-
+ 
     if (!quizID || !courseID || ! moduleID || !quizQuestionID) {
         return res.status(400).json({
             success_addition: false,
