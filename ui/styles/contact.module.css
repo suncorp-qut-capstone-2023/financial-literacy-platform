@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh; /* ensure the footer does not squish up */
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.listItem {
+    margin-bottom: 10px;
+}
