@@ -71,9 +71,9 @@ class Module {
             if (!result) throw new Error('Failed to delete module'); //fail deletion lead to an error
 
             //find course data
-            if (Course.getCourse(courseID) !== null) {
-                this.deleteCourse(courseID);
-            }
+            //if (Course.getCourse(courseID) !== null) {
+            //    this.deleteCourse(courseID);
+            //}
             
             return true;
         } catch (err) {
