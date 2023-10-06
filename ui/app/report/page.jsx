@@ -44,7 +44,7 @@ const Report = () => {
                 <h1 className={styles.title}>Report an Issue</h1>
             </div>
             <form onSubmit={handleSubmit}>
-                <div className={styles.label} style={{ fontSize: '1.2rem' }}>
+                <div className={styles.label} style={{ fontSize: '1rem' }}>
                     Issue Title:
                     <input className={styles.input} type="text" value={title} onChange={(e) => setTitle(e.target.value)} required 
                            style={{ fontSize: '1rem', padding: '0.5rem' }}/>

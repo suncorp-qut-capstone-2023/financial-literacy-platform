@@ -51,14 +51,18 @@ export default function Footer() {
           </Link>
           </Item>
         </Grid>
-        <Grid xs={12} md={4} className={styles.footerGridItem}>
+        <Grid xs={12} md={3} className={styles.footerGridItem}>
           <Item elevation={0}>
-          <Link href="/contact">
-            <p>Contact Us</p>
-          </Link>
           <Link href="/report">
             <p>Report an Issue</p>
           </Link>
+          </Item>
+        </Grid>
+        <Grid xs={12} className={styles.footerGridItem}>
+          <Item elevation={0} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+            <p><b>Email:</b> <a href="mailto:info@suncorp.com">info@suncorp.com</a></p> {/* Update with actual email */}
+            <p><b>Phone:</b> <a href="tel:123-456-7890">123-456-7890</a></p> {/* Update with actual phone number */}
+            <p><b>Address:</b> 123 Street, Brisbane</p> {/* Update with actual address */}
           </Item>
         </Grid>
       </Grid>
