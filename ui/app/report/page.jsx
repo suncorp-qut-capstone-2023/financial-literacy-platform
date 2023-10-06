@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
-import styles from '@/styles/report.module.css';
+import styles from "@/styles/page.module.css";
 
 import NextLink from 'next/link';
 import Link from "@mui/material/Link";
@@ -39,36 +39,38 @@ const Report = () => {
 
     return (
     <ThemeProvider theme={theme}>
-        <div className={styles.container} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+    <main className={styles.main}>
+        <div className={styles.contentWrapper}>
             <div className={styles.description}>
                 <h1 className={styles.title}>Report an Issue</h1>
             </div>
             <form onSubmit={handleSubmit}>
-                <div className={styles.label} style={{ fontSize: '1rem' }}>
+                <div className={styles.report_label}>
                     Issue Title:
-                    <input className={styles.input} type="text" value={title} onChange={(e) => setTitle(e.target.value)} required 
-                           style={{ fontSize: '1rem', padding: '0.5rem' }}/>
+                    <input className={styles.report_input} type="text" value={title} onChange={(e) => setTitle(e.target.value)} required 
+                        style={{ fontSize: '0.8rem', padding: '0.5rem' }}/>
                 </div>
-                <div className={styles.label} style={{ fontSize: '1.2rem' }}>
+                <div className={styles.report_label}>
                     Description:
                     <textarea 
-                        className={styles.textarea} 
+                        className={styles.report_textarea} 
                         value={body} 
                         onChange={(e) => setBody(e.target.value)} 
                         required 
                         rows="10"
-                        style={{ fontSize: '1rem', padding: '0.5rem' }}
+                        style={{ fontSize: '0.8rem', padding: '0.5rem' }}
                     />
                 </div>
                 <NextLink href={`/courses/`} passHref>
                         <Link>
-                          <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
+                        <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
                             submit
-                          </Button>
+                        </Button>
                         </Link>
                 </NextLink>
             </form>
-        </div>
+            </div>
+    </main>
     </ThemeProvider>
     );
 }

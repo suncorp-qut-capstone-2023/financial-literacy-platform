@@ -13,10 +13,10 @@ export default function Courses() {
     async function fetchData() {
       try {
         const response = await fetch(
-          "https://jcmg-api.herokuapp.com/api/learningModules"
+          "https://jcmg-api.herokuapp.com/api/courses" // Adjust this URL if it has changed
         );
         const data = await response.json();
-        setCourses(data.available_courses);
+        setCourses(data.course);  // Adjusted to the new data structure
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching courses data:", error);
@@ -34,29 +34,13 @@ export default function Courses() {
         {isLoading ? (
           <Loading />
         ) : (
-          courses.map((course) => {
-            // Look for a thumbnail in the materials array
-            const thumbnailItem = course.material.find(
-              (m) => m.material_type === "thumbnail"
-            );
-
-            // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
-            const thumbnailURL = thumbnailItem
-              ? thumbnailItem.material_media
-              : "no_thumbnail"; // replace with your default or fallback URL if needed
-
-            return (
-              <CourseOverview
-              key={course.course_id}
-              courseId={course.course_id}
-              courseName={course.course_name}
-              lastUpdated={course.course_last_updated.value}
-              materialsCount={course.material.length}
-              lecturesCount={course.lectures.length}
-              thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
-              />
-            );
-          })
+          courses.map((course) => (
+            <CourseOverview
+              key={course.COURSE_ID}
+              courseId={course.COURSE_ID}
+              courseName={course.COURSE_NAME}
+            />
+          ))
         )}
       </div>
     </main>
