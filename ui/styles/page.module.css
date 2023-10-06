@@ -279,3 +279,20 @@ font-size: 0.75rem;
     grid-template-columns: repeat(2, 50%);
   }
 }
+
+
+/* Report page */
+.report_label {
+  display: block;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.report_input, .report_textarea {
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--font-mono); /* Add this line */
+  margin-bottom: 1rem;
+}
+
