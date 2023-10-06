@@ -6,6 +6,6 @@ const {
 
 const router = express.Router();
 
-router.get('/', auth, getForums);
+router.get('/', getForums);
 
 module.exports = router;

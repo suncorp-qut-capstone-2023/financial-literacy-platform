@@ -6,6 +6,6 @@ const {
 
 const router = express.Router();
 
-router.get('/', auth, getAllLectures);
+router.get('/', getAllLectures);
 
 module.exports = router;

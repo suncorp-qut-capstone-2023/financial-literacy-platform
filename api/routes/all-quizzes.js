@@ -6,6 +6,6 @@ const {
 
 const router = express.Router();
 
-router.get('/', auth, getAllQuizzes);
+router.get('/', getAllQuizzes);
 
 module.exports = router;

@@ -11,7 +11,7 @@ const {
 } = require('../controller/moduleController.js');
 
 // GET
-router.get('/', auth, getModule);
+router.get('/', getModule);
 
 // CREATE
 router.post('/create', auth, requireAdmin, createModule);

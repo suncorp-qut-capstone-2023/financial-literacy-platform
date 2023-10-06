@@ -11,7 +11,7 @@ const {
 } = require('../controller/quizQuestionController.js');
 
 // GET
-router.get('/', auth, getQuizQuestion);
+router.get('/', getQuizQuestion);
 
 // CREATE
 router.post('/create', auth, createQuizQuestion);
