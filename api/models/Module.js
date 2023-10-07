@@ -69,11 +69,6 @@ class Module {
             //delete the actual module data
             const result = await knex('module').where('COURSE_ID', '=', courseID).andWhere('MODULE_ID', '=', moduleID).del();
             if (!result) throw new Error('Failed to delete module'); //fail deletion lead to an error
-
-            //find course data
-            //if (Course.getCourse(courseID) !== null) {
-            //    this.deleteCourse(courseID);
-            //}
             
             return true;
         } catch (err) {
