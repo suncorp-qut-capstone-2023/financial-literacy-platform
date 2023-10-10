@@ -3,20 +3,28 @@ const LectureContent = require("./LectureContent");
 const knex = require("knex")(knexOptions);
 
 class Material{
-    static getALLMaterial(courseID, moduleID, lectureID) {
-        return knex('lecture_content_media').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).andWhere('lecture_id', '=', lectureID);
+    static getALLMaterial() {
+        return knex('material').select();
     }
 
-    static getMaterial(courseID, moduleID, lectureID, materialID) {
-        return knex('lecture_content_media').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).andWhere('lecture_id', '=', lectureID).andWhere('material_id', '=', materialID);
+    static getMaterial(materialID) {
+        return knex('material').select("*").where('MATERIAL_ID', '=', materialID);
     }
 
-    static createMaterial(courseID, moduleID, lectureID, materialData) {
-        return knex('lecture_content_media').where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).andWhere('lecture_id', '=', lectureID).insert(materialData);
+    static createMaterial(materialData) {
+        return knex('material').insert(materialData);
     }
 
-    static updateMaterial(courseID, moduleID, lectureID, materialID, materialData) {
-        return knex('lecture_content_media').where('course_id', '=', courseID).andWhere('module_id', '=', moduleID).andWhere('lecture_id', '=', lectureID).andWhere('material_id', '=', materialID).update(materialData);
+    static async updateMaterial(materialID, materialData) {
+        try {
+            //delete the actual material data
+            const result = await knex('material').where('MATERIAL_ID', '=', materialID).update(materialData);
+            if (!result) throw new Error('Failed to update material'); //fail deletion lead to an error
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 
     static async deleteLectureContent(materialID) {
