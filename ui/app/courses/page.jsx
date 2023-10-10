@@ -1,29 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styles from "@/styles/page.module.css";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
+import { AuthContext } from '../auth.jsx';
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { authToken } = useContext(AuthContext);
+  const { userType } = useContext(AuthContext);
+  
+  // A function to handle when a course is removed.
+  const handleCourseRemoved = (removedCourseId) => {
+    const updatedCourses = courses.filter(course => course.course_id !== removedCourseId);
+    setCourses(updatedCourses);
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch(
-          "https://jcmg-api.herokuapp.com/api/courses" // Adjust this URL if it has changed
+          "https://jcmg-api.herokuapp.com/api/courses",
+          {
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            }
+          }
         );
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
         const data = await response.json();
-        setCourses(data.course);  // Adjusted to the new data structure
+        setCourses(data.course); 
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching courses data:", error);
       }
     }
     fetchData();
-  }, []);
+  }, [authToken, userType]);  
 
   return (
     <main className={styles.main}>
@@ -34,13 +51,19 @@ export default function Courses() {
         {isLoading ? (
           <Loading />
         ) : (
-          courses.map((course) => (
+          Array.isArray(courses) && courses.length > 0 ? courses.map((course) => (
+            
+            // CMS functionality conditionally rendered here
             <CourseOverview
-              key={course.COURSE_ID}
-              courseId={course.COURSE_ID}
-              courseName={course.COURSE_NAME}
+              key={course.COURSE_ID || course.course_id}
+              courseId={course.COURSE_ID || course.course_id}
+              courseName={course.COURSE_NAME || course.course_name}
+              cms={userType === 'admin' /* replace with the actual condition based on the user role or permissions */}
+              onCourseRemoved={handleCourseRemoved}
             />
-          ))
+          )) : (
+            <p>No courses available</p>
+          )
         )}
       </div>
     </main>
