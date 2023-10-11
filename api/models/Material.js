@@ -11,8 +11,15 @@ class Material{
         return knex('material').select("*").where('MATERIAL_ID', '=', materialID);
     }
 
-    static createMaterial(materialData) {
-        return knex('material').insert(materialData);
+    static async createMaterial(materialData) {
+        try {
+            const result = await knex('material').insert(materialData);
+            if (!result) throw new Error('Failed to create material'); //fail deletion lead to an error
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 
     static async updateMaterial(materialID, materialData) {

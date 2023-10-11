@@ -115,15 +115,15 @@ const createMaterial = async (req, res) => {
     //if media exist
     if (media_file_name) {
         //upload the file to the Azure container
-        uploadFileToAzure(azureInformation, media_file_name)
-        .catch((error) => {
+        try {
+            await uploadFileToAzure(azureInformation, media_file_name);
+        } catch (error) {
             console.error("Error uploading file:", error);
-            return res.status(400).json({
+            return res.status(500).json({
                 error: true,
-                "success": false,
-                "result": `nope`
-              })
-        });
+                message: `media with the local path '${error.path}' has not been found`
+            });
+        }
 
         //get the blob URL then used it as the input
         data["MATERIAL_URL"] = getBlobUrl(azureInformation, media_file_name);
@@ -131,12 +131,17 @@ const createMaterial = async (req, res) => {
 
     try {
         // create material in database
-        await Material.createMaterial(data);
+        const result = await Material.createMaterial(data);
 
-        // return material
-        return res.status(200).json({
-            message: "new material data has been successfully added!"
-        });
+        // return material has been updated
+        if (result === true) {
+            return res.status(200).json({message: "new material data has been successfully added!"});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `the creation of a new material data has failed`
+            });
+        }
     }
     catch (err) {
 
@@ -161,7 +166,7 @@ const createMaterial = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -190,13 +195,15 @@ const updateMaterial = async (req, res) => {
     //if the new media file is provided
     if (new_media_file_name) {
         //upload the file to the Azure container
-        uploadFileToAzure(azureInformation, new_media_file_name)
-        .catch((error) => {
-            return res.status(400).json({
+        try {
+            await uploadFileToAzure(azureInformation, media_file_name);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            return res.status(500).json({
                 error: true,
-                message:  `media with the local path '${error.path}' has not been found`
-              })
-        });
+                message: `media with the local path '${error.path}' has not been found`
+            });
+        }
 
         //get the blob URL then used it as the input
         value["MATERIAL_URL"] = getBlobUrl(azureInformation, new_media_file_name);
@@ -251,7 +258,7 @@ const updateMaterial = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
@@ -330,7 +337,7 @@ const deleteMaterial = async (req, res) => {
 
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
