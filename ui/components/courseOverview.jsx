@@ -62,7 +62,7 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
   
     const handleDelete = async () => {
       try {
-          const response = await fetch(`https://jcmg-api.herokuapp.com/api/learningModules/course/delete/${courseId}`, {
+          const response = await fetch(`https://jcmg-api.herokuapp.com/api/course/delete?courseID=${courseId}`, {
               method: 'DELETE',
               headers: {
                   'Accept': 'application/json',
@@ -88,23 +88,18 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">{"Delete Course"}</DialogTitle>
-        <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete this course? This action cannot be undone.
-            </DialogContentText>
-        </DialogContent>
+          <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete this course? This action cannot be undone.
+              </DialogContentText>
+          </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose} color="primary">
-                Cancel
-            </Button>
-            <Button 
-                onClick={() => {
-                    handleDelete();
-                    handleClose();
-                }} 
-                color="primary" autoFocus>
-                Delete
-            </Button>
+          <Button onClick={handleClose} color="primary">
+              Cancel
+          </Button>
+          <Button onClick={() => {handleDelete(); handleClose();}} color="primary" autoFocus>
+              Delete
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog
@@ -159,7 +154,7 @@ function CourseOverview({ courseId, courseName, lastUpdated, materialsCount, lec
                       <NextLink href={`/courses/${courseId}`} passHref>
                         <Link>
                           <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
-                            {cms ? 'Edit Course' : 'View Course'}
+                            {cms ? 'Edit/View Course' : 'View Course'}
                           </Button>
                         </Link>
                       </NextLink>

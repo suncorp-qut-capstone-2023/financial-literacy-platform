@@ -1,20 +1,28 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Loading from "@/components/loading";
 import styles from "@/styles/page.module.css";
+import ModuleOverview from "@/components/ModuleOverview"; // Import the new ModuleOverview component
+import { AuthContext } from '../../auth.jsx';
 
 export default function CoursePage({ params }) { 
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { authToken } = useContext(AuthContext);
+  const { userType } = useContext(AuthContext);
   
   useEffect(() => {
     async function fetchData() {
       try {
         // Use the specific endpoint to fetch the course with the provided ID
-        const response = await fetch(`https://jcmg-api.herokuapp.com/api/learningModules/course?id=${params.courseId}`);
+        const response = await fetch(`https://jcmg-api.herokuapp.com/api/course?courseID=${params.courseId}`,{
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
         const data = await response.json();
-        
-        setCourse(data.id); // The course details are nested inside an `id` key
+        console.log("Data: ", data)
+        setCourse(data);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching course data:", error);
@@ -22,20 +30,33 @@ export default function CoursePage({ params }) {
     }
 
     fetchData();
-  }, [params.courseId]);
+  }, [params.courseId, authToken]);
 
   // Return early if the course hasn't been fetched yet
   if (isLoading) return <Loading />;
-
-  console.log("Course Page is being accessed!");
 
   return (
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
         <div className={styles.description}>
-          <h1 className={styles.title}>{course.course_name}</h1>
-          {/* Add other course details here, e.g., course_last_updated, course_tag, etc. */}
-          <p>Last Updated: {new Date(course.course_last_updated.value).toLocaleDateString()}</p>
+          <h1 className={styles.title}>{course && course.COURSE_NAME}</h1>
+
+          {/* Updated Section for Modules */}
+          {course && course.modules && course.modules.length > 0 && (
+            <div className={styles.modulesSection}>
+              <h2>Modules</h2>
+              {course.modules.map((module) => (
+                <ModuleOverview 
+                  key={module.MODULE_ID} 
+                  courseId={params.courseId}
+                  moduleId={module.MODULE_ID} 
+                  moduleName={module.MODULE_NAME} 
+                  onModuleRemoved={null}
+                  cms = {userType === 'admin'}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>

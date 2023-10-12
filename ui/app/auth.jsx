@@ -6,9 +6,9 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   // Hardcoded token for now
   // user token
-  // const storedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMSwidXNlclR5cGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiZXhwIjoxNjk2OTI5MDkzNzYwLCJpYXQiOjE2OTY4NDI2OTN9.S-2pEnG4C6ATmW5ySb6uJ5VIxeEIw2Hct3PJAv_xWsU";
+  const storedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMSwidXNlclR5cGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiZXhwIjoxNjk2OTI5MDkzNzYwLCJpYXQiOjE2OTY4NDI2OTN9.S-2pEnG4C6ATmW5ySb6uJ5VIxeEIw2Hct3PJAv_xWsU";
   // admin token
-  const storedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlclR5cGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcmFAZXhhbXBsZS5jb20iLCJleHAiOjE2OTcwMTU3ODUxNjMsImlhdCI6MTY5NjkyOTM4NX0.JcirHCs8Qky2hda6ou9aMGOGVkj9GtF4YUcIAUUmu_g";
+  //const storedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlclR5cGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcmFAZXhhbXBsZS5jb20iLCJleHAiOjE2OTcwMTU3ODUxNjMsImlhdCI6MTY5NjkyOTM4NX0.JcirHCs8Qky2hda6ou9aMGOGVkj9GtF4YUcIAUUmu_g";
   
   localStorage.setItem('token', storedToken);
   
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     console.log(userType); // This will log the updated userType
-}, [userType]); // This effect runs every time userType changes
+  }, [userType]); // This effect runs every time userType changes
 
   return (
     <AuthContext.Provider value={{ authToken, setAuthToken, userType }}>
