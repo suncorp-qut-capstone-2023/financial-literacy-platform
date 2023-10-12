@@ -58,7 +58,7 @@ export default function Courses() {
               key={course.COURSE_ID || course.course_id}
               courseId={course.COURSE_ID || course.course_id}
               courseName={course.COURSE_NAME || course.course_name}
-              cms={userType === 'admin' /* replace with the actual condition based on the user role or permissions */}
+              cms={userType === 'admin'}
               onCourseRemoved={handleCourseRemoved}
             />
           )) : (
