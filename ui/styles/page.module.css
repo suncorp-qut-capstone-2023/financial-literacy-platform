@@ -76,6 +76,11 @@ font-size: 0.75rem;
   text-align: center;
 }
 
+.subtitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .buttons {
   font-weight: bold;
 }
@@ -102,6 +107,10 @@ font-size: 0.75rem;
 
 .f_socials {
   margin-left: 0.5rem;
+}
+
+.courseCardBox {
+  flex-direction: row;
 }
 
 .code {
@@ -207,6 +216,10 @@ font-size: 0.75rem;
     margin-bottom: 120px;
     max-width: 320px;
     text-align: center;
+  }
+
+  .courseCardBox {
+    flex-direction: column;
   }
 
   .card {

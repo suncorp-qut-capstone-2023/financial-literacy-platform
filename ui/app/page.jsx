@@ -5,8 +5,8 @@ import styles from "@/styles/page.module.css";
 import Loading from "@/components/loading";
 import Header from "@/components/header";
 import CourseOverview from "@/components/courseOverview";
-import { AuthContext } from './auth.jsx';
-
+import { AuthContext } from "./auth.jsx";
+import { Box } from "@mui/material";
 
 export default function Home() {
   const [courses, setCourses] = useState([]); // initialise state to store the courses data
@@ -20,12 +20,12 @@ export default function Home() {
           "https://jcmg-api.herokuapp.com/api/courses",
           {
             headers: {
-              'Authorization': `Bearer ${authToken}`
-            }
+              Authorization: `Bearer ${authToken}`,
+            },
           }
         );
         if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+          throw new Error("Network response was not ok " + response.statusText);
         }
         const data = await response.json();
         setCourses(data.course.slice(0, 3));
@@ -35,7 +35,7 @@ export default function Home() {
       }
     }
     fetchData();
-  }, [authToken]);  
+  }, [authToken]);
 
   return (
     <main className={styles.main}>
@@ -44,14 +44,22 @@ export default function Home() {
         <div className={styles.description}>
           <h1 className={styles.title}>Featured Courses</h1>
         </div>
-        {isLoading ? (<Loading />) : (
-          Array.isArray(courses) && courses.length > 0 ? courses.map((course) => (
-          <CourseOverview
-            key={course.COURSE_ID}
-            courseId={course.COURSE_ID}
-            courseName={course.COURSE_NAME}/>
-            )) : (<p>No courses available</p>))
-          }
+
+        <Box display="flex" className={styles.courseCardBox}>
+          {isLoading ? (
+            <Loading />
+          ) : Array.isArray(courses) && courses.length > 0 ? (
+            courses.map((course) => (
+              <CourseOverview
+                key={course.COURSE_ID}
+                courseId={course.COURSE_ID}
+                courseName={course.COURSE_NAME}
+              />
+            ))
+          ) : (
+            <p>No courses available</p>
+          )}
+        </Box>
       </div>
     </main>
   );
