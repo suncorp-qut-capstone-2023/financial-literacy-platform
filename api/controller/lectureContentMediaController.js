@@ -1,21 +1,8 @@
 const Material = require("../models/Material");
-// const azureCredentials = require("../db/container-connection");
+const azureCredentials = require("../db/container-connection");
 const { isValidInt } = require("../utils/validation");
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const path = require('path');
-const fs = require('fs');
-
-//azure credentials
-//TODO: move to 'container-connection.js'
-function azureCredentials() {
-    const credentials = {
-        accountName: "jcmg",
-        accountKey: process.env.ACCOUNT_KEY,
-        containerName: "media"       
-    }
-
-    return credentials;
-}
 
 /**
  * retrieve the URL blob media file from Azure
@@ -43,7 +30,15 @@ function getBlobUrl(azureInformation, blobName) {
 
 const getMaterial = async (req, res) => {
     // get course id from params
-    const materialID = isValidInt(req.query.materialID);
+    let materialID;
+    try {
+        materialID = isValidInt(req.query.materialID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of materialID"
+        });
+    }
 
     try {
         // get course from database
@@ -99,7 +94,6 @@ async function uploadFileToAzure(azureInformation, blobFile) {
 const createMaterial = async (req, res) => {
     // received request body information
     const { material_name, media_file_name } = req.body;
-    const azureInformation = azureCredentials(); //get the azure credentials
     data = {};
 
     if ( !material_name ) {
@@ -116,7 +110,7 @@ const createMaterial = async (req, res) => {
     if (media_file_name) {
         //upload the file to the Azure container
         try {
-            await uploadFileToAzure(azureInformation, media_file_name);
+            await uploadFileToAzure(azureCredentials, media_file_name);
         } catch (error) {
             console.error("Error uploading file:", error);
             return res.status(500).json({
@@ -126,7 +120,7 @@ const createMaterial = async (req, res) => {
         }
 
         //get the blob URL then used it as the input
-        data["MATERIAL_URL"] = getBlobUrl(azureInformation, media_file_name);
+        data["MATERIAL_URL"] = getBlobUrl(azureCredentials, media_file_name);
     }
 
     try {
@@ -151,9 +145,7 @@ const createMaterial = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails"
             });
-        }
-
-        if (err.errno === 1406) {
+        }else if (err.errno === 1406) {
 
             const data = err.sqlMessage.match(/'([^']+)'/);
 
@@ -161,22 +153,29 @@ const createMaterial = async (req, res) => {
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 const updateMaterial = async (req, res) => {
     // received request body information
-    const materialID = isValidInt(req.query.materialID);
+    let materialID;
+    try {
+        materialID = isValidInt(req.query.materialID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of materialID"
+        });
+    }
     const material_name = req.body.material_name;
     const new_media_file_name = req.body.new_media_file_name;
-    const azureInformation = azureCredentials(); //received the Azure credentials
 
     if ( !material_name || !materialID ) {
         return res.status(400).json({
@@ -196,7 +195,7 @@ const updateMaterial = async (req, res) => {
     if (new_media_file_name) {
         //upload the file to the Azure container
         try {
-            await uploadFileToAzure(azureInformation, media_file_name);
+            await uploadFileToAzure(azureCredentials, new_media_file_name);
         } catch (error) {
             console.error("Error uploading file:", error);
             return res.status(500).json({
@@ -206,7 +205,7 @@ const updateMaterial = async (req, res) => {
         }
 
         //get the blob URL then used it as the input
-        value["MATERIAL_URL"] = getBlobUrl(azureInformation, new_media_file_name);
+        value["MATERIAL_URL"] = getBlobUrl(azureCredentials, new_media_file_name);
     }
 
     try {
@@ -232,44 +231,81 @@ const updateMaterial = async (req, res) => {
                 error: true,
                 message: `unknown column: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1366) {
+        } else if (err.errno === 1366) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect integer value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        }else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        if (err.errno === 3140) {
+        }else if (err.errno === 3140) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect JSON text value`
             });
+        }else {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 const deleteMaterial = async (req, res) => {
     // get course id from params
-    const materialID = isValidInt(req.query.materialID);
-    const courseID = isValidInt(req.query.courseID);
-    const moduleID = isValidInt(req.query.moduleID);
-    const lectureID = isValidInt(req.query.lectureID);
-    const contentID = isValidInt(req.query.contentID);
+    let materialID;
+    try {
+        materialID = isValidInt(req.query.materialID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of materialID"
+        });
+    }
+
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    let lectureID;
+    try {
+        lectureID = isValidInt(req.query.lectureID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of lectureID"
+        });
+    }
+
+    let contentID;
+    try {
+        contentID = isValidInt(req.query.contentID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of contentID"
+        });
+    }
 
     if (!materialID || !courseID || !moduleID || !lectureID || !contentID) {
         return res.status(400).json({
@@ -304,41 +340,32 @@ const deleteMaterial = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1451) {
+        } else if (err.errno === 1451) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
-        }
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `incorrect double value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
-
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        return res.status(500).json({
+        } else {
+            return res.status(500).json({
             error: true,
             message: err.message
-        });
+            });
+        }
     }
 }
 

@@ -3,7 +3,15 @@ const { isValidInt } = require("../utils/validation");
 
 const getCourse = async (req, res) => {
     // get course id from params
-    const ID = req.query.courseID;
+    let ID;
+    try {
+        ID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
 
     try {
         // get course from database
@@ -20,13 +28,13 @@ const getCourse = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails"
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
@@ -88,27 +96,23 @@ const createCourse = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails"
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect datetime value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
@@ -116,7 +120,16 @@ const updateCourse = async (req, res) => {
     //update course table
     // get course id from url
     // get course id from params
-    let ID = req.query.courseID;
+    let ID;
+    try {
+        ID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+    
     const { set_data_type } = req.body; //value is a list
     let { setValue } = req.body; //value is a list
 
@@ -157,44 +170,46 @@ const updateCourse = async (req, res) => {
                 error: true,
                 message: `unknown column: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1366) {
+        } else if (err.errno === 1366) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect integer value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        if (err.errno === 3140) {
+        } else if (err.errno === 3140) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect JSON text value`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 const deleteCourse = async (req, res) => {
     // get course id from params
-    const courseID = isValidInt(req.query.courseID);
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+    
 
     if ( !courseID ) {
         return res.status(400).json({
-            success_addition: false,
             error: true,
             message: "Bad request. Please specify the courseID"
         });
@@ -226,41 +241,33 @@ const deleteCourse = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1451) {
+        } else if (err.errno === 1451) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
-        }
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `incorrect double value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
 
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err
-        });
     }
 }
 

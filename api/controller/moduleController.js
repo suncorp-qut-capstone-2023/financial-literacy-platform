@@ -4,12 +4,29 @@ const { isValidInt } = require("../utils/validation");
 
 const getModule = async (req, res) => {
     // get course id from params
-    const ID = req.query.moduleID;
-    const course = req.query.courseID
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
 
     try {
         // get course from database
-        const module = await Module.getModule(course, ID);
+        const module = await Module.getModule(courseID, moduleID);
 
         // return course
         return res.status(200).json(module);
@@ -89,10 +106,30 @@ const createModule = async (req, res) => {
 
 
 const updateModule = async (req, res) => {
-    const moduleID = req.query.moduleID;
-    const { course_id, module_name, module_order } = req.body;
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
 
-    if (!moduleID || !course_id) {
+    //TODO: Fix the swagger doc for this! no more course_id in body and now in query!
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    const { module_name, module_order } = req.body;
+
+    if ( !moduleID || !courseID ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -105,7 +142,7 @@ const updateModule = async (req, res) => {
     if (module_order) updateData["MODULE_ORDER"] = module_order;
 
     try {
-        const result = await Module.updateModule(course_id, moduleID, updateData);
+        const result = await Module.updateModule(courseID, moduleID, updateData);
         if (result > 0) {
             return res.status(200).json({ "message": `Module has been updated` });
         } else {
@@ -123,40 +160,51 @@ const updateModule = async (req, res) => {
                 error: true,
                 message: `unknown column: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1366) {
+        } else if (err.errno === 1366) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect integer value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        if (err.errno === 3140) {
+        } else if (err.errno === 3140) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect JSON text value`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 const deleteModule = async (req, res) => {
-    const courseID = isValidInt(req.query.courseID);
-    const moduleID = isValidInt(req.query.moduleID);
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
 
     if (!courseID || !moduleID) {
         return res.status(400).json({
@@ -185,41 +233,33 @@ const deleteModule = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1451) {
+        } else if (err.errno === 1451) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
-        }
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `incorrect double value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
 
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err
-        });
     }
 }
 

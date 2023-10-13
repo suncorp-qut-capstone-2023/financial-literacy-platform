@@ -3,10 +3,45 @@ const { isValidInt } = require("../utils/validation");
 
 const getLectureContent = async (req, res) => {
     // get course id from params
-    const courseID = req.query.courseID;
-    const moduleID = req.query.moduleID;
-    const lectureID = req.query.lectureID;
-    const lectureContentID = req.query.lectureContentID;
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+    
+    let lectureID;
+    try {
+        lectureID = isValidInt(req.query.lectureID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of lectureID"
+        });
+    }
+
+    let lectureContentID;
+    try {
+        lectureContentID = isValidInt(req.query.lectureContentID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of lectureContentID"
+        });
+    }
 
     try {
         // get course from database
@@ -24,11 +59,13 @@ const getLectureContent = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails"
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
+
     }
 }
 
@@ -39,8 +76,6 @@ const createLectureContent = async (req, res) => {
     const lecture_id = req.body.lecture_id;
     const material_id = req.body.material_id;
     const material_order = req.body.material_order;
-
-    console.log(lecture_id, material_id, material_order);
 
     let data = {};
     
@@ -65,40 +100,46 @@ const createLectureContent = async (req, res) => {
         return res.status(200).json({"message": "New lecture content data has been successfully added!"});
     }
     catch (err) {
+        const data = err.sqlMessage.match(/'([^']+)'/);
+
         if (err.errno === 1452) {
             return res.status(500).json({
                 error: true,
                 message: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
             });
-        }
-
-        const data = err.sqlMessage.match(/'([^']+)'/);
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large.`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `Data too long for ${data[0]}.`
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 
 const updateLectureContent = async (req, res) => {
     //update lecture content table
-    const lectureContentID = req.query.contentID;
+
+    let lectureContentID;
+    try {
+        lectureContentID = isValidInt(req.query.contentID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of contentID"
+        });
+    }
+
     const { lecture_id, material_id, material_order } = req.body;
 
     if (!lectureContentID || !lecture_id) {
@@ -134,43 +175,72 @@ const updateLectureContent = async (req, res) => {
                 error: true,
                 message: `unknown column: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1366) {
+        } else if (err.errno === 1366) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect integer value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        if (err.errno === 3140) {
+        } else if (err.errno === 3140) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect JSON text value`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err
-        });
     }
 }
 
 const deleteLectureContent = async (req, res) => {
     // get course id from params
-    const courseID = isValidInt(req.query.courseID);
-    const moduleID = isValidInt(req.query.moduleID);
-    const lectureID = isValidInt(req.query.lectureID);
-    const contentID = isValidInt(req.query.contentID);
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    let lectureID;
+    try {
+        lectureID = isValidInt(req.query.lectureID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of lectureID"
+        });
+    }
+    
+    let contentID;
+    try {
+        contentID = isValidInt(req.query.contentID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of contentID"
+        });
+    }
 
     if (!lectureID || !courseID || ! moduleID || !contentID) {
         return res.status(400).json({
@@ -210,41 +280,33 @@ const deleteLectureContent = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1451) {
+        } else if (err.errno === 1451) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
-        }
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `incorrect double value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
 
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 

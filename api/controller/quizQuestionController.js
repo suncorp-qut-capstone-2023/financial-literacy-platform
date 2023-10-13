@@ -2,7 +2,45 @@ const QuizQuestion = require('../models/QuizQuestion');
 const { isValidInt } = require("../utils/validation");
 
 const getQuizQuestion = async (req, res) => {
-    const { quizID, courseID, moduleID, questionID } = req.query;
+    let quizID;
+    try {
+        quizID = isValidInt(req.query.quizID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of quizID"
+        });
+    }
+
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    let questionID;
+    try {
+        questionID = isValidInt(req.query.questionID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of questionID"
+        });
+    }
 
     try {
         const quizQuestions = await QuizQuestion.getQuizQuestion(courseID, moduleID, quizID, questionID);
@@ -92,10 +130,45 @@ const updateQuizQuestion = async (req, res) => {
 }
 
 const deleteQuizQuestion = async (req, res) => {
-    const courseID = isValidInt(req.query.courseID);
-    const moduleID = isValidInt(req.query.moduleID);
-    const quizID = isValidInt(req.query.quizID);
-    const quizQuestionID = isValidInt(req.query.quizQuestionID);
+    let quizID;
+    try {
+        quizID = isValidInt(req.query.quizID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of quizID"
+        });
+    }
+
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    let quizQuestionID;
+    try {
+        quizQuestionID = isValidInt(req.query.quizQuestionID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of quizQuestionID"
+        });
+    }
  
     if (!quizID || !courseID || ! moduleID || !quizQuestionID) {
         return res.status(400).json({
@@ -124,19 +197,17 @@ const deleteQuizQuestion = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1451) {
+        } else if (err.errno === 1451) {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
