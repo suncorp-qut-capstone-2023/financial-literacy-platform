@@ -1,4 +1,6 @@
 const knexOptions = require('../db/mydb-connection.js');
+const Module = require("./Module");
+const Course = require("./Course");
 const knex = require("knex")(knexOptions);
 
 class Quiz {
@@ -36,8 +38,44 @@ class Quiz {
                .andWhere("MODULE_ID", "=", moduleID);
     }
 
-    static deleteQuiz(quizID) {
-        return knex('quiz').where("QUIZ_ID", "=", quizID).del();
+    static async deleteCourse(courseID) {
+        //delete all related data in course table prior to deleting the quiz data
+        return await knex('course').where('COURSE_ID', '=', courseID).del();    
+    }
+
+    static async deleteModule(moduleID) {
+        //delete all related data in module table prior to deleting the quiz data
+        return await knex('module').where('MODULE_ID', '=', moduleID).del();    
+    }
+
+    static async deleteQuizQuestion(quizID) {
+        //delete all related data in quiz_question table prior to deleting the quiz data
+        return await knex('quiz_question').where('QUIZ_ID', '=', quizID).del();    
+    }
+
+    static deleteQuiz(courseID, moduleID, quizID) {
+        try {
+            this.deleteQuizQuestion(quizID);
+
+            //delete the actual quiz data
+            const result = knex('quiz').where("QUIZ_ID", "=", quizID).del();
+            if (!result) throw new Error('Failed to delete quiz'); //fail deletion lead to an error
+
+            //find module data
+            if (Module.getModule(courseID, moduleID) !== 0) {
+                this.deleteModule(moduleID);
+            }
+            
+            //find course data
+            if (Course.getCourse(courseID) !== null) {
+                this.deleteCourse(courseID);
+            }
+   
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 }
 

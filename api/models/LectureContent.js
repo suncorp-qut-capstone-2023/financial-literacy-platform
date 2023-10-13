@@ -1,4 +1,7 @@
 const knexOptions = require('../db/mydb-connection.js');
+const Lecture = require("./Lecture");
+const Module = require("./Module");
+const Course = require("./Course");
 const knex = require("knex")(knexOptions);
 
 class LectureContent{
@@ -29,8 +32,17 @@ class LectureContent{
         return knex('lecture_content').update(updateData).where("LECTURE_CONTENT_ID", "=", lectureContentID);
     }
 
-    static deleteLectureContent(value) {
-        return knex('lecture_content').where("LECTURE_CONTENT_ID", "=", value).del();
+    static deleteLectureContent(contentID) {
+        try {
+            //delete the actual lecture content data
+            const result = knex('lecture_content').where("LECTURE_CONTENT_ID", "=", contentID).del();
+            if (!result) throw new Error('Failed to delete lecture content'); //fail deletion lead to an error
+            
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 }
 

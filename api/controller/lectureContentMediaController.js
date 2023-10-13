@@ -1,14 +1,53 @@
 const Material = require("../models/Material");
-const Course = require("../old-models/course");
+// const azureCredentials = require("../db/container-connection");
 const { isValidInt } = require("../utils/validation");
+const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
+const path = require('path');
+const fs = require('fs');
+
+//azure credentials
+//TODO: move to 'container-connection.js'
+function azureCredentials() {
+    const credentials = {
+        accountName: "jcmg",
+        accountKey: process.env.ACCOUNT_KEY,
+        containerName: "media"       
+    }
+
+    return credentials;
+}
+
+/**
+ * retrieve the URL blob media file from Azure
+ * 
+ * @param {*} azureInformation : azure credentials that has the blob URL
+ * @param {*} blobName : the name of the blob media file
+ * @returns 
+ */
+function getBlobUrl(azureInformation, blobName) {
+    // Create the BlobServiceClient object which will be used to create a container client
+    const blobServiceClient = new BlobServiceClient(
+      `https://${azureInformation.accountName}.blob.core.windows.net`,
+      new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey)
+    );
+  
+    // Get a reference to a container
+    const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
+  
+    // Get a reference to a blob
+    const blobClient = containerClient.getBlobClient(blobName);
+  
+    // Return the blob URL
+    return blobClient.url;
+  }
 
 const getMaterial = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const materialID = isValidInt(req.query.materialID);
 
     try {
         // get course from database
-        const material = await Course.getMaterial(ID);
+        const material = await Material.getMaterial(materialID);
 
         // return course
         return res.status(200).json(material);
@@ -31,13 +70,39 @@ const getMaterial = async (req, res) => {
     }
 }
 
+/**
+ * upload the URL media file to Azure
+ * 
+ * @param {*} azureInformation : azure credentials to upload the media file
+ * @param {*} blobFile : the name of the media file
+ */
+async function uploadFileToAzure(azureInformation, blobFile) {
+    //create a local path to where the media file has been saved
+    const folderName = 'assets';
+    const folderPath = path.resolve(folderName);
+    const localPath = `${folderPath}\\${blobFile}`;
+
+    // Create the BlobServiceClient object which will be used to create a container client
+    const sharedKeyCredential = new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey);
+    const blobServiceClient = new BlobServiceClient(`https://${azureInformation.accountName}.blob.core.windows.net`, sharedKeyCredential);
+
+    // Get a reference to a container
+    const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
+
+    // Get a reference to a blob
+    const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
+
+    //upload the media file to the blob container
+    await blockBlobClient.uploadFile(localPath);
+}
+
 const createMaterial = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { material_name, material_url } = req.body;
+    // received request body information
+    const { material_name, media_file_name } = req.body;
+    const azureInformation = azureCredentials(); //get the azure credentials
     data = {};
 
-    if (!material_name) {
+    if ( !material_name ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -47,18 +112,36 @@ const createMaterial = async (req, res) => {
         data["MATERIAL_NAME"] = material_name;
     }
 
-    if (material_url) {
-        data["MATERIAL_URL"] = material_url;
+    //if media exist
+    if (media_file_name) {
+        //upload the file to the Azure container
+        try {
+            await uploadFileToAzure(azureInformation, media_file_name);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            return res.status(500).json({
+                error: true,
+                message: `media with the local path '${error.path}' has not been found`
+            });
+        }
+
+        //get the blob URL then used it as the input
+        data["MATERIAL_URL"] = getBlobUrl(azureInformation, media_file_name);
     }
 
     try {
-        // create course in database
-        await Course.insertData(data, "material");
+        // create material in database
+        const result = await Material.createMaterial(data);
 
-        // return course
-        return res.status(200).json({
-            message: "new material data has been successfully added!"
-        });
+        // return material has been updated
+        if (result === true) {
+            return res.status(200).json({message: "new material data has been successfully added!"});
+        } else {
+            return res.status(400).json({
+                error: true,
+                message:  `the creation of a new material data has failed`
+            });
+        }
     }
     catch (err) {
 
@@ -83,21 +166,19 @@ const createMaterial = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: "Internal server error"
+            message: err.message
         });
     }
 }
 
 const updateMaterial = async (req, res) => {
-    //update course table
-    // get course id from url
-    // get course id from params
-    let ID = req.params['ID'];
-    const { set_data_type } = req.body; //value is a list
-    let { setValue } = req.body; //value is a list
+    // received request body information
+    const materialID = isValidInt(req.query.materialID);
+    const material_name = req.body.material_name;
+    const new_media_file_name = req.body.new_media_file_name;
+    const azureInformation = azureCredentials(); //received the Azure credentials
 
-    if (!set_data_type
-        || !setValue || !ID ) {
+    if ( !material_name || !materialID ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -105,17 +186,35 @@ const updateMaterial = async (req, res) => {
         });
     }
 
-    setValue = isValidInt(setValue);
-    ID = isValidInt(ID);
+    //existing value to be updated
+    const value = {
+        "MATERIAL_ID": materialID,
+        "MATERIAL_NAME": material_name
+    };
 
-    const value = [ setValue, ID ];
+    //if the new media file is provided
+    if (new_media_file_name) {
+        //upload the file to the Azure container
+        try {
+            await uploadFileToAzure(azureInformation, media_file_name);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            return res.status(500).json({
+                error: true,
+                message: `media with the local path '${error.path}' has not been found`
+            });
+        }
+
+        //get the blob URL then used it as the input
+        value["MATERIAL_URL"] = getBlobUrl(azureInformation, new_media_file_name);
+    }
 
     try {
-
-        const result = await Course.updateMaterial(set_data_type, value);
+        // update material in database
+        const result = await Material.updateMaterial(materialID, value);
 
         // return course
-        if (result > 0) {
+        if (result === true) {
             return res.status(200).json({"message": `table 'material' has been updated`});
         } else {
             return res.status(400).json({
@@ -159,29 +258,38 @@ const updateMaterial = async (req, res) => {
         // return error
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }
 
 const deleteMaterial = async (req, res) => {
     // get course id from params
-    const ID = req.params['ID'];
+    const materialID = isValidInt(req.query.materialID);
+    const courseID = isValidInt(req.query.courseID);
+    const moduleID = isValidInt(req.query.moduleID);
+    const lectureID = isValidInt(req.query.lectureID);
+    const contentID = isValidInt(req.query.contentID);
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if (!materialID || !courseID || !moduleID || !lectureID || !contentID) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify the materialID, courseID, moduleID, lectureID, and contentID."
+        });
+    }
 
     try {
 
-        const result = await Course.deleteMaterial(newID);
+        const result = await Material.deleteMaterial(courseID, moduleID, lectureID, contentID, materialID);
 
         // return course
-        if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'material' has been deleted`});
+        if (result === true) {
+            return res.status(200).json({"message": `data with the condition ID = ${materialID} on table 'material' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'material' table with condition ID = ${newID} has not been found`
+                message:  `data on 'material' table with condition ID = ${materialID} has not been found`
             });
         }
 
@@ -195,6 +303,13 @@ const deleteMaterial = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
         }
 
@@ -222,7 +337,7 @@ const deleteMaterial = async (req, res) => {
 
         return res.status(500).json({
             error: true,
-            message: err
+            message: err.message
         });
     }
 }

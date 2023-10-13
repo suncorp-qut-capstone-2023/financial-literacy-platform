@@ -167,7 +167,7 @@ const deleteModule = async (req, res) => {
 
     try {
         const result = await Module.deleteModule(courseID, moduleID);
-        if (result > 0) {
+        if (result === true) {
             return res.status(200).json({ "message": `Module with ID = ${moduleID} in course with ID = ${courseID} has been deleted` });
         } else {
             return res.status(400).json({
@@ -184,6 +184,13 @@ const deleteModule = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
         }
 

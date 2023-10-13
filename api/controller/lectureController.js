@@ -172,22 +172,29 @@ const updateLecture = async (req, res) => {
 
 const deleteLecture = async (req, res) => {
     // get course id from params
-    const ID = req.query.lectureID;
+    const courseID = isValidInt(req.query.courseID);
+    const moduleID = isValidInt(req.query.moduleID);
+    const lectureID = isValidInt(req.query.lectureID);
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if (!lectureID || !courseID || ! moduleID) {
+        return res.status(400).json({
+            success_addition: false,
+            error: true,
+            message: "Bad request. Please specify the lectureID, courseID, and moduleID."
+        });
+    }
 
     try {
 
-        const result = await Lecture.deleteLecture(newID);
+        const result = await Lecture.deleteLecture(courseID, moduleID, lectureID);
 
         // return course
-        if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'lecture' has been deleted`});
+        if (result === true) {
+            return res.status(200).json({"message": `data with the condition ID = ${lectureID} on table 'lecture' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'lecture' table with condition ID = ${newID} has not been found`
+                message:  `data on 'lecture' table with condition ID = ${lectureID} has not been found`
             });
         }
 
@@ -206,6 +213,13 @@ const deleteLecture = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+            });
+        }
+
+        if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
             });
         }
 
