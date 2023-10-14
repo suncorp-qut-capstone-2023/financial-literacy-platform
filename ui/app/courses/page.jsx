@@ -5,8 +5,8 @@ import styles from "@/styles/page.module.css";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
 import { Box } from "@mui/material";
+import { AuthContext } from '@/app/auth.jsx';
 
-import { AuthContext } from "../auth.jsx";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);

@@ -11,12 +11,17 @@ import CardContent from "@mui/material/CardContent";
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { AuthContext } from "../app/auth.jsx";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { AuthContext } from '../app/auth.jsx';
+import styles from "../styles/page.module.css";
+
+import NextLink from 'next/link';
+import Link from "@mui/material/Link";
 
 import styles from "@/styles/page.module.css";
 import NextLink from "next/link";
@@ -50,16 +55,20 @@ function ModuleOverview({
 
   const handleDelete = async () => {
     try {
-      // Update the endpoint URL and headers as needed
-      const response = await fetch(
-        `https://jcmg-api.herokuapp.com/api/course/module/delete?courseID=${courseId}&moduleID=${moduleId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
+        // Update the endpoint URL and headers as needed
+        const response = await fetch(`https://jcmg-api.herokuapp.com/api/course/module/delete?courseID=${courseId}&moduleID=${moduleId}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        if (response.ok) {
+            onModuleRemoved(moduleId);
+            handleSuccessOpen();
+        } else {
+            console.error('Failed to delete module. Status:', response.status);
         }
       );
       if (response.ok) {
@@ -150,14 +159,16 @@ function ModuleOverview({
             </Typography>
           </CardContent>
           <CardActions>
-            <NextLink href={`/courses/${moduleId}`} passHref>
-              <Button
-                variant="contained"
-                color="suncorpgreen"
-                className={styles.buttons}
-              >
-                {cms ? "Edit/View Module" : "View Module"}
-              </Button>
+            <NextLink href={`/courses/${courseId}/${moduleId}`} passHref>
+            <Link>
+                <Button
+                  variant="contained"
+                  color="suncorpgreen"
+                  className={styles.buttons}
+                >
+                  {cms ? "Edit/View Module" : "View Module"}
+                </Button>
+              </Link>
             </NextLink>
             {cms && (
               <Button
