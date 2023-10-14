@@ -3,9 +3,9 @@ const { isValidInt } = require("../utils/validation");
 
 const getCourse = async (req, res) => {
     // get course id from params
-    let ID;
+    let courseID;
     try {
-        ID = isValidInt(req.query.courseID);
+        courseID = isValidInt(req.query.courseID);
     } catch (err) {
         return res.status(400).json({
             error: true,
@@ -15,7 +15,7 @@ const getCourse = async (req, res) => {
 
     try {
         // get course from database
-        const course = await Course.getCourse(ID);
+        const course = await Course.getCourse(courseID);
 
         // return course
         return res.status(200).json(course);
@@ -39,11 +39,8 @@ const getCourse = async (req, res) => {
 }
 
 const createCourse = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
     const { course_name, category_type } = req.body;
     let data = {}
-    // let count = 1;
 
     if (!course_name) {
         return res.status(400).json({
@@ -120,9 +117,9 @@ const updateCourse = async (req, res) => {
     //update course table
     // get course id from url
     // get course id from params
-    let ID;
+    let courseID;
     try {
-        ID = isValidInt(req.query.courseID);
+        courseID = isValidInt(req.query.courseID);
     } catch (err) {
         return res.status(400).json({
             error: true,
@@ -134,7 +131,7 @@ const updateCourse = async (req, res) => {
     let { setValue } = req.body; //value is a list
 
     if (!set_data_type
-        || !setValue || !ID ) {
+        || !setValue || !courseID ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -143,9 +140,9 @@ const updateCourse = async (req, res) => {
     }
 
     setValue = isValidInt(setValue);
-    ID = isValidInt(ID);
+    ID = isValidInt(courseID);
 
-    const value = [ setValue, ID ];
+    const value = [ setValue, courseID ];
 
     try {
 

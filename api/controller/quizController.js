@@ -55,7 +55,18 @@ const getQuiz = async (req, res) => {
 }
 
 const createQuiz = async (req, res) => {
-    const { quiz_name, module_id, question_order, quiz_maxtries } = req.body;
+    //TODO: Fix the swagger doc for this! no more moduleID in body and now in query!
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    const { quiz_name, question_order, quiz_maxtries } = req.body;
     let data = {};
 
     if (!quiz_name) {

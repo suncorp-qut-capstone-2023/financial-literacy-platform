@@ -50,11 +50,20 @@ const getModule = async (req, res) => {
 }
 
 const createModule = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { course_id, module_name, module_order } = req.body;
+    //TODO: courseID needs to be a query and not a body!
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
 
-    if (!course_id || !module_name) {
+    const { module_name, module_order } = req.body;
+
+    if (!courseID || !module_name) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -64,7 +73,7 @@ const createModule = async (req, res) => {
 
     // Construct the data based off input
     const data = {
-        COURSE_ID: course_id,
+        COURSE_ID: courseID,
         MODULE_NAME: module_name
     };
 

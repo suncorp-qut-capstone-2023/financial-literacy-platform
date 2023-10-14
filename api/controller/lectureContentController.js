@@ -70,24 +70,42 @@ const getLectureContent = async (req, res) => {
 }
 
 const createLectureContent = async (req, res) => {
-    // Get lecture content information from request body
-    // const { lecture_id, material_id, material_order } = req.body;
 
-    const lecture_id = req.body.lecture_id;
-    const material_id = req.body.material_id;
+    //TODO: lectureID needs to be a query and not a body!
+    let lectureID;
+    try {
+        lectureID = isValidInt(req.query.lectureID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of lectureID"
+        });
+    }
+
+    //TODO: moduleID needs to be a query and not a body!
+    let materialID;
+    try {
+        materialID = isValidInt(req.query.materialID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of materialID"
+        });
+    }
+    
     const material_order = req.body.material_order;
 
     let data = {};
     
-    if (!lecture_id || !material_id) {
+    if (!lectureID || !materialID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
             message: "Bad request. Please specify the lecture ID and material ID."
         });
     } else {
-        data["LECTURE_ID"] = lecture_id;
-        data["MATERIAL_ID"] = material_id;
+        data["LECTURE_ID"] = lectureID;
+        data["MATERIAL_ID"] = materialID;
     }
 
     if (material_order) {
@@ -128,7 +146,6 @@ const createLectureContent = async (req, res) => {
 
 
 const updateLectureContent = async (req, res) => {
-    //update lecture content table
 
     let lectureContentID;
     try {

@@ -59,9 +59,18 @@ const getLecture = async (req, res) => {
 
 
 const createLecture = async (req, res) => {
-    // get course information from request body
-    //TODO: course_tag haven't been added
-    const { lecture_name, module_id, material_order, lecture_order } = req.body;
+    //TODO: moduleID needs to be a query and not a body!
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    const { lecture_name, material_order, lecture_order } = req.body;
     let data = {};
 
     if (!lecture_name) {
@@ -75,7 +84,7 @@ const createLecture = async (req, res) => {
     }
 
     if (module_id) {
-        data["MODULE_ID"] = module_id;
+        data["MODULE_ID"] = moduleID;
     }
 
     if (material_order) {
@@ -125,9 +134,6 @@ const createLecture = async (req, res) => {
 }
 
 const updateLecture = async (req, res) => {
-    //update course table
-    // get course id from url
-    // get course id from params
     let lectureID;
     try {
         lectureID = isValidInt(req.query.lectureID);
@@ -137,9 +143,21 @@ const updateLecture = async (req, res) => {
             message: "Bad request. Please specify the correct data type of lectureID"
         });
     }
-    const { lecture_name, module_id, lecture_order } = req.body;
 
-    if (!lectureID || !module_id) {
+    //TODO: moduleID needs to be a query and not a body!
+    let moduleID;
+    try {
+        moduleID = isValidInt(req.query.moduleID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of moduleID"
+        });
+    }
+
+    const { lecture_name, lecture_order } = req.body;
+
+    if (!lectureID || !moduleID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -152,7 +170,7 @@ const updateLecture = async (req, res) => {
     if (lecture_order) updateData["LECTURE_ORDER"] = lecture_order;
 
     try {
-        const result = await Lecture.updateLecture(module_id, lectureID, updateData);
+        const result = await Lecture.updateLecture(moduleID, lectureID, updateData);
         if (result > 0) {
             return res.status(200).json({ "message": `Lecture has been updated` });
         } else {

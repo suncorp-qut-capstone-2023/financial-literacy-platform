@@ -61,7 +61,18 @@ const getQuizQuestion = async (req, res) => {
 
 
 const createQuizQuestion = async (req, res) => {
-    const { question_text, question_option, question_answer, quiz_id, question_order } = req.body;
+    //TODO: update quiz ID as a query and not body on swagger!
+    let quizID;
+    try {
+        quizID = isValidInt(req.query.quizID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of quizID"
+        });
+    }
+
+    const { question_text, question_option, question_answer, question_order } = req.body;
 
     if (!question_text || !question_option) {
         return res.status(400).json({
@@ -75,7 +86,7 @@ const createQuizQuestion = async (req, res) => {
         QUESTION_TEXT: question_text,
         QUESTION_OPTION: JSON.stringify(question_option),
         QUESTION_ANSWER: question_answer,
-        QUIZ_ID: quiz_id,
+        QUIZ_ID: quizID,
         QUESTION_ORDER: question_order
     };
 
@@ -92,8 +103,28 @@ const createQuizQuestion = async (req, res) => {
 }
 
 const updateQuizQuestion = async (req, res) => {
-    const quizQuestionID = req.query.questionID;
-    const { question_text, question_option, question_answer, quiz_id, question_order } = req.body;
+    let quizQuestionID;
+    try {
+        quizQuestionID = isValidInt(req.query.questionID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of questionID"
+        });
+    }
+
+    //TODO: update quiz ID as a query and not body on swagger!
+    let quizID;
+    try {
+        quizID = isValidInt(req.query.quizID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of quizID"
+        });
+    }
+
+    const { question_text, question_option, question_answer, question_order } = req.body;
 
     if (!quizQuestionID) {
         return res.status(400).json({
@@ -107,7 +138,7 @@ const updateQuizQuestion = async (req, res) => {
     if (question_text) updateData["QUESTION_TEXT"] = question_text;
     if (question_option) updateData["QUESTION_OPTION"] = JSON.stringify(question_option);
     if (question_answer) updateData["QUESTION_ANSWER"] = question_answer;
-    if (quiz_id) updateData["QUIZ_ID"] = quiz_id;
+    if (quizID) updateData["QUIZ_ID"] = quizID;
     if (question_order) updateData["QUESTION_ORDER"] = question_order;
 
     try {
