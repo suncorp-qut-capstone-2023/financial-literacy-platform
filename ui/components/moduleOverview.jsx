@@ -10,7 +10,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+
 import { AuthContext } from '../app/auth.jsx';
+import styles from "../styles/page.module.css";
+
+import NextLink from 'next/link';
+import Link from "@mui/material/Link";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -55,7 +60,7 @@ function ModuleOverview({ courseId, moduleId, moduleName, onModuleRemoved, cms }
             onModuleRemoved(moduleId);
             handleSuccessOpen();
         } else {
-            console.error('Failed to delete the module. Status:', response.status);
+            console.error('Failed to delete module. Status:', response.status);
         }
     } catch (error) {
         console.error('An error occurred while deleting the module:', error);
@@ -108,16 +113,16 @@ function ModuleOverview({ courseId, moduleId, moduleName, onModuleRemoved, cms }
                     <Typography variant="h5" fontWeight="bold">{moduleName}</Typography>
                   </Grid>
                   <Grid xs={6}>
-                  <NextLink href={`/courses/${moduleIdId}`} passHref>
+                  <NextLink href={`/courses/${courseId}/${moduleId}`} passHref>
                         <Link>
                           <Button variant="contained" color="suncorpgreen" className={styles.buttons}>
-                            {cms ? 'Edit/View Course' : 'View Course'}
+                            {cms ? 'Edit/View Module' : 'View Module'}
                           </Button>
                         </Link>
                       </NextLink>
                         {cms && (
                           <Button onClick={handleClickOpen} variant="outlined" color="secondary">
-                            Delete Course
+                            Delete Module
                           </Button>)}
                   </Grid>
                 </Grid>   
