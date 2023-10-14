@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
 export default function CoursePage({ params }) {
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { authToken, userType } = useContext(AuthContext);  // Combine into one useContext call
+  const { authToken, userType } = useContext(AuthContext); // Combine into one useContext call
 
   const handleModuleRemoved = (removedModuleId) => {
     if (course && course.modules) {
@@ -22,10 +22,11 @@ export default function CoursePage({ params }) {
       }));
     }
   };
-  
+
   useEffect(() => {
     async function fetchData() {
       try {
+        console.log(params.courseId);
         const response = await fetch(
           `https://jcmg-api.herokuapp.com/api/course?courseID=${params.courseId}`,
           {
@@ -42,11 +43,10 @@ export default function CoursePage({ params }) {
         console.error("Error fetching course data:", error);
       }
     }
-  
+
     fetchData();
   }, [params.courseId, authToken]);
 
-  
   return (
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
@@ -54,10 +54,9 @@ export default function CoursePage({ params }) {
           <h1 className={styles.title}>{course && course.COURSE_NAME}</h1>
           {isLoading ? (
             <Loading />
-          ) : (
-            course && course.modules && course.modules.length > 0 ? (
-              <div className={styles.modulesSection}>
-                <h2 className={styles.subtitle}>Modules</h2>
+          ) : course && course.modules && course.modules.length > 0 ? (
+            <div className={styles.modulesSection}>
+              <h2 className={styles.subtitle}>Modules</h2>
               <Box
                 display="flex"
                 flexWrap="wrap"
@@ -75,14 +74,13 @@ export default function CoursePage({ params }) {
                     cms={userType === "admin"}
                   />
                 ))}
-                </Box>
-              </div>
-            ) : (
-              <p>No modules available</p>
-            )
+              </Box>
+            </div>
+          ) : (
+            <p>No modules available</p>
           )}
         </div>
       </div>
     </main>
-  );  
+  );
 }
