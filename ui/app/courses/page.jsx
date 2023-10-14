@@ -4,7 +4,8 @@ import { useEffect, useState, useContext } from "react";
 import styles from "@/styles/page.module.css";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
-import { AuthContext } from '../auth.jsx';
+import { AuthContext } from '@/app/auth.jsx';
+
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
