@@ -127,14 +127,22 @@ function ModuleOverview({
       </Dialog>
 
       {/* Module Display */}
-
-      <Card sx={{ margin: "20px", border: "#009877 solid 2px" }}>
+      <Card
+        sx={{
+          margin: "20px",
+          border: "#009877 solid 2px",
+          width: "250px",
+          height: "400px",
+        }}
+      >
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-between"
           alignItems="center"
-          justifyContent="center"
+          textAlign="center"
           padding="10px"
+          height="100%"
         >
           <CardContent>
             <Typography variant="h5" fontWeight="bold">
