@@ -1,11 +1,12 @@
 "use client";
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from "react";
 import Loading from "@/components/loading";
 import styles from "@/styles/page.module.css";
-import ModuleOverview from "@/components/ModuleOverview"; 
-import { AuthContext } from '@/app/auth.jsx';
+import ModuleOverview from "@/components/ModuleOverview"; // Import the new ModuleOverview component
+import { AuthContext } from "../../auth.jsx";
+import { Box } from "@mui/material";
 
-export default function CoursePage({ params }) { 
+export default function CoursePage({ params }) {
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { authToken, userType } = useContext(AuthContext);  // Combine into one useContext call
@@ -56,7 +57,14 @@ export default function CoursePage({ params }) {
           ) : (
             course && course.modules && course.modules.length > 0 ? (
               <div className={styles.modulesSection}>
-                <h2>Modules</h2>
+                <h2 className={styles.subtitle}>Modules</h2>
+              <Box
+                display="flex"
+                flexWrap="wrap"
+                alignItems="center"
+                justifyContent="center"
+                className={styles.courseCardBox}
+              >
                 {course.modules.map((module) => (
                   <ModuleOverview
                     key={module.MODULE_ID}
@@ -67,6 +75,7 @@ export default function CoursePage({ params }) {
                     cms={userType === "admin"}
                   />
                 ))}
+                </Box>
               </div>
             ) : (
               <p>No modules available</p>

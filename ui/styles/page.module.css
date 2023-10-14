@@ -30,14 +30,14 @@
   font-family: var(--font-mono);
 }
 
-.content_info{
+.content_info {
   align-items: center;
   text-align: center;
   display: flex;
   flex-direction: column;
 }
 
-.content_info p{
+.content_info p {
   margin: 0.5rem;
 }
 
@@ -65,7 +65,7 @@
 }
 
 .articleTitle p {
-font-size: 0.75rem;
+  font-size: 0.75rem;
 }
 
 .title {
@@ -76,11 +76,16 @@ font-size: 0.75rem;
   text-align: center;
 }
 
+.subtitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .buttons {
   font-weight: bold;
 }
 
-.contentPrevNext{
+.contentPrevNext {
   margin-top: 50px;
 }
 
@@ -102,6 +107,10 @@ font-size: 0.75rem;
 
 .f_socials {
   margin-left: 0.5rem;
+}
+
+.courseCardBox {
+  flex-direction: row;
 }
 
 .code {
@@ -209,6 +218,10 @@ font-size: 0.75rem;
     text-align: center;
   }
 
+  .courseCardBox {
+    flex-direction: column;
+  }
+
   .card {
     padding: 1rem 2.5rem;
   }
@@ -234,7 +247,7 @@ font-size: 0.75rem;
     padding: 1rem;
   }
 
-  .profile{
+  .profile {
     text-align: center;
     width: 120%;
     height: 15rem;
@@ -246,7 +259,7 @@ font-size: 0.75rem;
   }
 }
 
-.profilePic{
+.profilePic {
   width: 250px;
   height: 250px;
   border-radius: 50%;
@@ -257,7 +270,7 @@ font-size: 0.75rem;
   display: block;
 }
 
-.profileTitle{
+.profileTitle {
   border-bottom: 5px solid #24afb5;
   -webkit-box-shadow: 0 6px 6px -6px #000000;
   -moz-box-shadow: 0 6px 6px -6px #000000;
@@ -268,7 +281,7 @@ font-size: 0.75rem;
   margin: auto;
 }
 
-.login{
+.login {
   width: 60%;
   padding-top: 100px;
 }
@@ -280,7 +293,6 @@ font-size: 0.75rem;
   }
 }
 
-
 /* Report page */
 .report_label {
   display: block;
@@ -289,10 +301,10 @@ font-size: 0.75rem;
   font-size: 1rem;
 }
 
-.report_input, .report_textarea {
+.report_input,
+.report_textarea {
   width: 100%;
   padding: 1rem;
   font-family: var(--font-mono); /* Add this line */
   margin-bottom: 1rem;
 }
-
