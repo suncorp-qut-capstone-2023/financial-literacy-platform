@@ -3,11 +3,29 @@
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Button from '@mui/material/Button';
 import styles from "@/styles/page.module.css";
+import {useState} from "react";
 
 
 const src = "https://placehold.co/1400";
 
-export default function Profile(/* TODO: pass in some api call */) {
+const Profile = () => {
+    const [email, setEmail] = useState(localStorage.getItem('email'));
+    const [userType, setUserType] = useState(localStorage.getItem('userType'));
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    fetch("https://jcmg-api.herokuapp.com/api/user/me", {
+        method: "GET",
+        headers: {
+            Authorization : `Bearer ${localStorage.getItem('token')}`
+        }
+    }).then((res) => {
+        return res.json();
+    }).then((resp) => {
+        setEmail(resp.email);
+        setFirstName(resp.firstName);
+        setLastName(resp.lastName);
+        setUserType(resp.userType);
+    });
 
     return (
         <main className={styles.main}>
@@ -27,20 +45,13 @@ export default function Profile(/* TODO: pass in some api call */) {
                         <div
                             style={{position: "relative", paddingLeft: "100px",
                                     fontSize: "25px"}}>
-                            <p>E-mail Address: PLACEHOLDER</p>
+                            <p>E-mail Address: {email}</p>
                             <br></br>
-                            <p>First Name: PLACEHOLDER</p>
+                            <p>First Name: {firstName}</p>
                             <br></br>
-                            <p>Last Name: PLACEHOLDER</p>
+                            <p>Last Name: {lastName}</p>
                             <br></br>
-                            <p>Account Level: PLACEHOLDER</p>
-                        </div>
-                    </Grid>
-                    <Grid item xs md={6}>
-                        <div
-                            style={{position: "relative", paddingTop: "25px",
-                                fontSize: "25px", paddingLeft: "100px"}}>
-                            <p>Password: ******</p>
+                            <p>User Type: {userType}</p>
                         </div>
                     </Grid>
                     <Grid item xs md={6}>
@@ -52,3 +63,5 @@ export default function Profile(/* TODO: pass in some api call */) {
         </main>
     );
 }
+
+export default Profile;
