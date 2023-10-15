@@ -34,8 +34,13 @@ const pages = [
   { label: "Manage Site Content", path: "/cms" }, // TO DO - LINK TO ADMIN AUTHENTICATION
 ];
 
-// good potential candidate for varies items based on admin privlidges here.
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// good potential candidate for varies items based on admin privilege here.
+const settings = [
+  { label: "Profile", path: '/profile' },
+  { label: "Account", path: '/' },
+  { label: "Dashboard", path: '/' },
+  { label: "Logout", path: '/logout' },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -177,9 +182,12 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                  <Link href={setting.path} key={setting.label} passHref>
+                    <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting.label}</Typography>
+                    </MenuItem>
+                  </Link>
+
               ))}
             </Menu>
           </Box>
