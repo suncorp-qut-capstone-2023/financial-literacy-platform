@@ -6,6 +6,19 @@ import styles from "@/styles/page.module.css"
 import { useState, useEffect } from 'react'
 import {useRouter} from "next/navigation";
 import jwt_decode from 'jwt-decode';
+import {styled} from "@mui/material/styles";
+
+const ClickButton = styled(Button)({
+    padding: '6px 12px 6px 12px',
+    textAlign: "center",
+    borderColor: '#00987783',
+    backgroundColor: '#00987783',
+    '&:hover' : {
+        backgroundColor: '#00987783',
+    },
+    color: 'white',
+    margin: '2% 0 2% 0',
+})
 
 const Login = () => {
     const [email, setEmail]=useState("");
@@ -14,13 +27,11 @@ const Login = () => {
 
     const router= useRouter();
 
-    useEffect(() => {
-        localStorage.clear();
-    },[]);
+    localStorage.clear();
 
     const ProceedLogin = (e) => {
         e.preventDefault();
-        let item={"email": email,
+        let item= {"email": email,
             "password": password};
         fetch("https://jcmg-api.herokuapp.com/api/user/login", {
             method: "POST",
@@ -54,7 +65,7 @@ const Login = () => {
                         fullWidth
                         value={email}
                         id="outlined-basic"
-                        type="text"
+                        type="email"
                         onChange={(e)=>setEmail(e.target.value)}
                         label="E-mail Address"
                         helperText="Please enter your e-mail address"
@@ -74,30 +85,22 @@ const Login = () => {
                 </div>
             </Grid>
 
-            <Grid container xs={12} md={12} paddingRight="175px" paddingTop="10px"
-                  direction="row" alignItems="center" justifyContent="flex-end">
-                <Button variant="contained" type="submit">LOGIN</Button>
-            </Grid>
-            {flag === false && <p style={{color : "red"}}>
+            {flag === false && <p style={{margin : '2%', color : "red"}}>
                 Invalid Email Address or Password! </p>}
 
-
-            <Grid container xs={12} md={12}>
-                <Grid item xs={12} md={12} direction="column" display="flex"
-                      justifyContent="center" padding="20px">
-                    <Button variant="outlined" size="large">Continue With Google</Button>
-                </Grid>
-                <Grid item xs={12} md={12} direction="column" display="flex"
-                      justifyContent="center" >
-                    <Button variant="outlined" size="large">Continue With Apple</Button>
-                </Grid>
+            <Grid item xs={12} md={12} direction="column" display="flex"
+                  justifyContent="center" padding="20px">
+                <ClickButton variant="contained" type="submit">LOGIN</ClickButton>
             </Grid>
+
+
             <div style={{ paddingTop: "8px"}}>
                 <p>OR</p>
             </div>
+
             <Grid item xs={12} md={12} direction="column" display="flex"
                   justifyContent="center" padding="20px">
-                <Button variant="contained" size="large" href="/login/createAccount">Create An Account</Button>
+                <ClickButton variant="contained" size="large" href="/login/createAccount">Create An Account</ClickButton>
             </Grid>
         </form>
     );
