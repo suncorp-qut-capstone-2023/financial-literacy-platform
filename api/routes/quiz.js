@@ -11,7 +11,7 @@ const {
 } = require('../controller/quizController.js');
 
 // GET
-router.get('/', auth, getQuiz);
+router.get('/', getQuiz);
 
 // CREATE
 router.post('/create', auth, requireAdmin, createQuiz);

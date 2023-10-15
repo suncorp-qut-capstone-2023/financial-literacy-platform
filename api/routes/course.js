@@ -11,7 +11,7 @@ const {
 } = require('../controller/courseController');
 
 // GET
-router.get('/', auth, getCourse);
+router.get('/', getCourse);
 
 // CREATE
 router.post('/create', auth, requireAdmin, createCourse);

@@ -15,14 +15,14 @@ const {
     SearchForum
 } = require('../old-controller/SearchController.js'); //TODO
 
-router.get("/:forumID", auth, getForumComments);
-router.get("/:forumID/:commentID", auth, getForumComment);
+router.get("/:forumID", getForumComments);
+router.get("/:forumID/:commentID", getForumComment);
 
 router.post("/create", auth, requireAdmin, createForum);
 router.post("/:forumID/comment", auth, createForumComment);
 
 router.put("/:forumID/:commentID", auth, updateForumComment);
 
-router.post("/search", auth, SearchForum);
+router.post("/search", SearchForum);
 
 module.exports = router;

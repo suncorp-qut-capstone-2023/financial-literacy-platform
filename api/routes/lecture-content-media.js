@@ -11,7 +11,7 @@ const {
 } = require('../controller/lectureContentMediaController');
 
 // GET
-router.get('/', auth, getMaterial);
+router.get('/', getMaterial);
 
 // CREATE
 router.post('/create', auth, requireAdmin, createMaterial);
