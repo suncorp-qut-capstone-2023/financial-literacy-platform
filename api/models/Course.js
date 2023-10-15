@@ -58,7 +58,10 @@ class Course {
             throw err;
         }
     }
-    
+
+    static async getCourseByName(value) {
+        return knex('course').select('*').where('COURSE_NAME', '=', value);
+    }
 
     static createCourse(value) {
         return knex('course').insert(value);
