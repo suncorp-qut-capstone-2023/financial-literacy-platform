@@ -3,8 +3,10 @@ const { isValidInt } = require("../utils/validation");
 const { uploadThumbnailFileToAzure } = require('../services/blobService');
 const path = require("path");
 
-// for default thumbnail
+// AZURE Thumbnail Container connection
 const { azureThumbnailCredentials } = require("../db/container-connection");
+
+// A Default thumbnail image for course, if none provided while creating a course
 const DEFAULT_THUMBNAIL = `https://${azureThumbnailCredentials.accountName}.blob.core.windows.net/${azureThumbnailCredentials.containerName}/default_image.png`;
 
 const getCourse = async (req, res) => {
@@ -66,7 +68,17 @@ const createCourse = async (req, res) => {
 
     // Get the current date and time
     const currentDateTime = new Date();
-    const formattedDate = `${currentDateTime.getFullYear()}-${String(currentDateTime.getMonth() + 1).padStart(2, '0')}-${String(currentDateTime.getDate()).padStart(2, '0')} ${String(currentDateTime.getHours()).padStart(2, '0')}:${String(currentDateTime.getMinutes()).padStart(2, '0')}:${String(currentDateTime.getSeconds()).padStart(2, '0')}`;
+
+    // Format the current date and time
+    const year = currentDateTime.getFullYear();
+    const month = String(currentDateTime.getMonth() + 1).padStart(2, '0');
+    const date = String(currentDateTime.getDate()).padStart(2, '0');
+    const hours = String(currentDateTime.getHours()).padStart(2, '0');
+    const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDateTime.getSeconds()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+
 
     let data = {
         COURSE_NAME: course_name,
@@ -77,7 +89,17 @@ const createCourse = async (req, res) => {
 
     try {
         // create course in database
-        await Course.createCourse(data, "course");
+        const courseResponse = await Course.createCourse(data, "course");
+        const courseID = courseResponse[0];
+
+        if (thumbnail_file_name && thumbnail_file_type) {
+            const thumbnailName = `${courseID}_thumbnail.${thumbnail_file_type}`; // only allows png format, temp solution only
+            const localFilePath = path.resolve('assets', course_name, `${thumbnail_file_name}.${thumbnail_file_type}`);
+            data.COURSE_THUMBNAIL = await uploadThumbnailFileToAzure(thumbnailName, localFilePath, `image/${thumbnail_file_type}`);
+        }
+
+        // update course thumbnail
+        await Course.updateCourse("COURSE_THUMBNAIL", [data.COURSE_THUMBNAIL, courseID]);
 
         // return course
         return res.status(200).json({"message": "new course data has been successfully added!"});
@@ -100,12 +122,9 @@ const createCourse = async (req, res) => {
 }
 
 const updateCourse = async (req, res) => {
-    //update course table
-    // get course id from url
-    // get course id from params
-    let courseID;
+    let courseID = req.query['courseID'];
     try {
-        courseID = isValidInt(req.query.courseID);
+        courseID = isValidInt(courseID);
     } catch (err) {
         return res.status(400).json({
             error: true,
@@ -116,8 +135,7 @@ const updateCourse = async (req, res) => {
     const { set_data_type } = req.body; //value is a list
     let { setValue } = req.body; //value is a list
 
-    if (!set_data_type
-        || !setValue || !courseID ) {
+    if (!set_data_type || !setValue || !courseID ) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -129,6 +147,23 @@ const updateCourse = async (req, res) => {
     ID = isValidInt(courseID);
 
     const value = [ setValue, courseID ];
+
+    // Change the Course thumbnail
+    if (set_data_type === "COURSE_THUMBNAIL") {
+        const course = await Course.getCourse(courseID);
+        const course_name = course.COURSE_NAME;
+        const course_id = course.COURSE_ID;
+
+        try {
+            const { thumbnail_file_name, thumbnail_file_type } = setValue;
+            const thumbnailName = `${course_id}_thumbnail.${thumbnail_file_type}`; // only allows png format, temp solution only
+            const localFilePath = path.resolve('assets', course_name, `${thumbnail_file_name}.${thumbnail_file_type}`);
+            value[0] = await uploadThumbnailFileToAzure(thumbnailName, localFilePath, `image/${thumbnail_file_type}`);
+        } catch (err) {
+            console.log('Error uploading thumbnail:', err);
+        }
+    }
+
 
     try {
 

@@ -3,33 +3,33 @@ const fs = require('fs');
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const { azureMediaCredentials, azureThumbnailCredentials } = require("../db/container-connection");
 
-async function downloadBlobAsStream(containerClient, blobName, folderPath) {
-
-    const blobClient = containerClient.getBlobClient(blobName);
-
-    const downloadResponse = await blobClient.download();
-    const writableStream = fs.createWriteStream(folderPath);
-
-    downloadResponse.readableStreamBody.pipe(writableStream);
-    downloadResponse.readableStreamBody.on('end', () => {
-        console.log(`download of ${blobName} succeeded`);
-    });
-}
-
 async function uploadThumbnailFileToAzure(blobFile, localFilePath, blobContentType) {
-    const sharedKeyCredential = new StorageSharedKeyCredential(azureThumbnailCredentials.accountName, azureThumbnailCredentials.accountKey);
-    const blobServiceClient = new BlobServiceClient(`https://${azureThumbnailCredentials.accountName}.blob.core.windows.net`, sharedKeyCredential);
 
-    const containerClient = blobServiceClient.getContainerClient(azureThumbnailCredentials.containerName);
-    const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
+    if (!blobFile || !localFilePath || !blobContentType) {
+        throw new Error('Invalid parameters provided');
+    }
 
-    const blobHTTPHeaders = { blobContentType: blobContentType };
+    if (!fs.existsSync(localFilePath)) {
+        throw new Error(`File not found: ${localFilePath}`);
+    }
 
-    const response = await blockBlobClient.uploadFile(localFilePath, {
-        blobHTTPHeaders
-    });
+    try {
+        const sharedKeyCredential = new StorageSharedKeyCredential(azureThumbnailCredentials.accountName, azureThumbnailCredentials.accountKey);
+        const blobServiceClient = new BlobServiceClient(`https://${azureThumbnailCredentials.accountName}.blob.core.windows.net`, sharedKeyCredential);
 
-    return blockBlobClient.url;
+        const containerClient = blobServiceClient.getContainerClient(azureThumbnailCredentials.containerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
+
+        const blobHTTPHeaders = { blobContentType: blobContentType };
+
+        await blockBlobClient.uploadFile(localFilePath, {
+            blobHTTPHeaders
+        });
+
+        return blockBlobClient.url;
+    } catch (error) {
+        throw new Error(`Failed to upload thumbnail to Azure: ${error.message}`);
+    }
 }
 
 /**
@@ -38,23 +38,30 @@ async function uploadThumbnailFileToAzure(blobFile, localFilePath, blobContentTy
  * @param {*} blobFile : the name of the media file
  */
 async function uploadFileToAzure(blobFile) {
-    //create a local path to where the media file has been saved
+    if (!blobFile) {
+        throw new Error('Invalid blobFile parameter provided');
+    }
+
     const folderName = 'assets';
-    const folderPath = path.resolve(folderName);
-    const localPath = `${folderPath}\\${blobFile}`;
+    const localPath = path.join(folderName, blobFile);
 
-    // Create the BlobServiceClient object which will be used to create a container client
-    const sharedKeyCredential = new StorageSharedKeyCredential(azureMediaCredentials.accountName, azureMediaCredentials.accountKey);
-    const blobServiceClient = new BlobServiceClient(`https://${azureMediaCredentials.accountName}.blob.core.windows.net`, sharedKeyCredential);
+    if (!fs.existsSync(localPath)) {
+        throw new Error(`File not found: ${localPath}`);
+    }
 
-    // Get a reference to a container
-    const containerClient = blobServiceClient.getContainerClient(azureMediaCredentials.containerName);
+    try {
+        const sharedKeyCredential = new StorageSharedKeyCredential(azureMediaCredentials.accountName, azureMediaCredentials.accountKey);
+        const blobServiceClient = new BlobServiceClient(`https://${azureMediaCredentials.accountName}.blob.core.windows.net`, sharedKeyCredential);
 
-    // Get a reference to a blob
-    const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
+        const containerClient = blobServiceClient.getContainerClient(azureMediaCredentials.containerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
 
-    //upload the media file to the blob container
-    await blockBlobClient.uploadFile(localPath);
+        await blockBlobClient.uploadFile(localPath);
+
+        console.log(`File "${blobFile}" is uploaded`);
+    } catch (error) {
+        throw new Error(`Failed to upload file to Azure: ${error.message}`);
+    }
 }
 
 /**
@@ -65,24 +72,26 @@ async function uploadFileToAzure(blobFile) {
  * @returns
  */
 function getBlobUrl(azureInformation, blobName) {
-    // Create the BlobServiceClient object which will be used to create a container client
-    const blobServiceClient = new BlobServiceClient(
-        `https://${azureInformation.accountName}.blob.core.windows.net`,
-        new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey)
-    );
+    if (!azureInformation || !blobName) {
+        throw new Error('Invalid parameters provided');
+    }
 
-    // Get a reference to a container
-    const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
+    try {
+        const blobServiceClient = new BlobServiceClient(
+            `https://${azureInformation.accountName}.blob.core.windows.net`,
+            new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey)
+        );
 
-    // Get a reference to a blob
-    const blobClient = containerClient.getBlobClient(blobName);
+        const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
+        const blobClient = containerClient.getBlobClient(blobName);
 
-    // Return the blob URL
-    return blobClient.url;
+        return blobClient.url;
+    } catch (error) {
+        throw new Error(`Failed to get blob URL from Azure: ${error.message}`);
+    }
 }
 
 module.exports = {
-    downloadBlobAsStream,
     uploadThumbnailFileToAzure,
     getBlobUrl,
     uploadFileToAzure
