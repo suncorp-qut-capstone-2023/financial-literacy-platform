@@ -6,8 +6,19 @@ import styles from "@/styles/page.module.css";
 import TextField from '@mui/material/TextField';
 import { useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
+import {styled} from "@mui/material/styles";
 
-
+const ClickButton = styled(Button)({
+    padding: '6px 12px 6px 12px',
+    textAlign: "center",
+    borderColor: '#00987783',
+    backgroundColor: '#00987783',
+    '&:hover' : {
+        backgroundColor: '#00987783',
+    },
+    color: 'white',
+    margin: '2% 0 2% 0',
+})
 
 const createAccount = () => {
     const [firstName, setFirstName]=useState("")
@@ -24,7 +35,7 @@ const createAccount = () => {
 
     const proceedRego = (e) => {
         e.preventDefault();
-        if (password != confirm){
+        if (password !== confirm){
             console.log("Password is not matching!!!")
         }
         else{
@@ -88,7 +99,7 @@ const createAccount = () => {
                     <TextField
                         fullWidth
                         id="outlined-basic"
-                        type="text"
+                        type="email"
                         onChange={ (e) => setEmail(e.target.value)}
                         label="E-mail Address"
                         helperText="Please enter your e-mail address"
@@ -120,7 +131,7 @@ const createAccount = () => {
 
             <Grid item xs={12} md={12} direction="column" display="flex"
                   justifyContent="center" padding="20px">
-                <Button variant="contained" size="large" type="submit" >Create Account</Button>
+                <ClickButton variant="contained" size="large" type="submit" >Create Account</ClickButton>
             </Grid>
 
         </form>
