@@ -1,32 +1,8 @@
 const Material = require("../models/Material");
-const azureCredentials = require("../db/container-connection");
 const { isValidInt } = require("../utils/validation");
-const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const path = require('path');
-
-/**
- * retrieve the URL blob media file from Azure
- * 
- * @param {*} azureInformation : azure credentials that has the blob URL
- * @param {*} blobName : the name of the blob media file
- * @returns 
- */
-function getBlobUrl(azureInformation, blobName) {
-    // Create the BlobServiceClient object which will be used to create a container client
-    const blobServiceClient = new BlobServiceClient(
-      `https://${azureInformation.accountName}.blob.core.windows.net`,
-      new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey)
-    );
-  
-    // Get a reference to a container
-    const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
-  
-    // Get a reference to a blob
-    const blobClient = containerClient.getBlobClient(blobName);
-  
-    // Return the blob URL
-    return blobClient.url;
-  }
+const { getBlobUrl, uploadFileToAzure } = require("../services/blobService");
+const { azureMediaCredentials } = require("../db/container-connection");
 
 const getMaterial = async (req, res) => {
     // get course id from params
@@ -65,32 +41,6 @@ const getMaterial = async (req, res) => {
     }
 }
 
-/**
- * upload the URL media file to Azure
- * 
- * @param {*} azureInformation : azure credentials to upload the media file
- * @param {*} blobFile : the name of the media file
- */
-async function uploadFileToAzure(azureInformation, blobFile) {
-    //create a local path to where the media file has been saved
-    const folderName = 'assets';
-    const folderPath = path.resolve(folderName);
-    const localPath = `${folderPath}\\${blobFile}`;
-
-    // Create the BlobServiceClient object which will be used to create a container client
-    const sharedKeyCredential = new StorageSharedKeyCredential(azureInformation.accountName, azureInformation.accountKey);
-    const blobServiceClient = new BlobServiceClient(`https://${azureInformation.accountName}.blob.core.windows.net`, sharedKeyCredential);
-
-    // Get a reference to a container
-    const containerClient = blobServiceClient.getContainerClient(azureInformation.containerName);
-
-    // Get a reference to a blob
-    const blockBlobClient = containerClient.getBlockBlobClient(blobFile);
-
-    //upload the media file to the blob container
-    await blockBlobClient.uploadFile(localPath);
-}
-
 const createMaterial = async (req, res) => {
     // received request body information
     const { material_name, media_file_name } = req.body;
@@ -110,7 +60,7 @@ const createMaterial = async (req, res) => {
     if (media_file_name) {
         //upload the file to the Azure container
         try {
-            await uploadFileToAzure(azureCredentials, media_file_name);
+            await uploadFileToAzure(media_file_name);
         } catch (error) {
             console.error("Error uploading file:", error);
             return res.status(500).json({
@@ -120,7 +70,7 @@ const createMaterial = async (req, res) => {
         }
 
         //get the blob URL then used it as the input
-        data["MATERIAL_URL"] = getBlobUrl(azureCredentials, media_file_name);
+        data["MATERIAL_URL"] = getBlobUrl(azureMediaCredentials, media_file_name);
     }
 
     try {
@@ -195,7 +145,7 @@ const updateMaterial = async (req, res) => {
     if (new_media_file_name) {
         //upload the file to the Azure container
         try {
-            await uploadFileToAzure(azureCredentials, new_media_file_name);
+            await uploadFileToAzure(new_media_file_name);
         } catch (error) {
             console.error("Error uploading file:", error);
             return res.status(500).json({
@@ -205,7 +155,7 @@ const updateMaterial = async (req, res) => {
         }
 
         //get the blob URL then used it as the input
-        value["MATERIAL_URL"] = getBlobUrl(azureCredentials, new_media_file_name);
+        value["MATERIAL_URL"] = getBlobUrl(azureMediaCredentials, new_media_file_name);
     }
 
     try {

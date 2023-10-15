@@ -1,5 +1,11 @@
 const Course = require("../models/Course");
 const { isValidInt } = require("../utils/validation");
+const { uploadThumbnailFileToAzure } = require('../services/blobService');
+const path = require("path");
+
+// for default thumbnail
+const { azureThumbnailCredentials } = require("../db/container-connection");
+const DEFAULT_THUMBNAIL = `https://${azureThumbnailCredentials.accountName}.blob.core.windows.net/${azureThumbnailCredentials.containerName}/default_image.png`;
 
 const getCourse = async (req, res) => {
     // get course id from params
@@ -39,8 +45,8 @@ const getCourse = async (req, res) => {
 }
 
 const createCourse = async (req, res) => {
-    const { course_name, category_type } = req.body;
-    let data = {}
+    //TODO: course_tag haven't been added yet
+    const { course_name, thumbnail_file_name, thumbnail_file_type, category_type } = req.body; // get course information from request body
 
     if (!course_name) {
         return res.status(400).json({
@@ -48,30 +54,26 @@ const createCourse = async (req, res) => {
             error: true,
             message: "Bad request. Please specify the course name and category type."
         });
-    } else {
-        data["COURSE_NAME"] = course_name;
+    }
+
+    const courseExist = await Course.getCourseByName(course_name.toLowerCase());
+    if (courseExist.length > 0) {
+        return res.status(400).json({
+            error: true,
+            message: "Course name already exists!"
+        });
     }
 
     // Get the current date and time
     const currentDateTime = new Date();
+    const formattedDate = `${currentDateTime.getFullYear()}-${String(currentDateTime.getMonth() + 1).padStart(2, '0')}-${String(currentDateTime.getDate()).padStart(2, '0')} ${String(currentDateTime.getHours()).padStart(2, '0')}:${String(currentDateTime.getMinutes()).padStart(2, '0')}:${String(currentDateTime.getSeconds()).padStart(2, '0')}`;
 
-    // Convert the current date and time to a string
-    data["COURSE_LASTUPDATED"] = currentDateTime.getFullYear() +
-        '-' +
-        String(currentDateTime.getMonth() + 1).padStart(2, '0') +
-        '-' +
-        String(currentDateTime.getDate()).padStart(2, '0') +
-        ' ' +
-        String(currentDateTime.getHours()).padStart(2, '0') +
-        ':' +
-        String(currentDateTime.getMinutes()).padStart(2, '0') +
-        ':' +
-        String(currentDateTime.getSeconds()).padStart(2, '0');
-
-    //if category_type is provided
-    if (category_type) {
-        data["CATEGORY_TYPE"] = category_type;
-    }
+    let data = {
+        COURSE_NAME: course_name,
+        COURSE_LASTUPDATED: formattedDate,
+        CATEGORY_TYPE: category_type || null,
+        COURSE_THUMBNAIL: DEFAULT_THUMBNAIL
+    };
 
     try {
         // create course in database
@@ -80,36 +82,20 @@ const createCourse = async (req, res) => {
         // return course
         return res.status(200).json({"message": "new course data has been successfully added!"});
     }
-    catch (err) {
-        let data;
-    
-        if (err.sqlMessage) {
-            data = err.sqlMessage.match(/'([^']+)'/);
-        }
+    catch ({ errno, sqlMessage }) {
+        const data = sqlMessage ? sqlMessage.match(/'([^']+)'/) : [];
 
-        //error related to foreign key is not properly applied to
-        if (err.errno === 1452) {
-            return res.status(500).json({
-                error: true,
-                message: "foreign key constraint fails"
-            });
-        } else if (err.errno === 1292) {
-            return res.status(500).json({
-                error: true,
-                message: `Incorrect datetime value: ${data[0]}`
-            });
-        } else if (err.errno === 1406) {
-            return res.status(500).json({
-                error: true,
-                message: `data too long for ${data[0]}`
-            });
-        } else {
-            // return error
-            return res.status(500).json({
-                error: true,
-                message: err.message
-            });            
-        }
+        const errorMessages = {
+            1452: "foreign key constraint fails",
+            1292: `Incorrect datetime value: ${data[0]}`,
+            1406: `data too long for ${data[0]}`
+        };
+
+        // return error
+        return res.status(500).json({
+            error: true,
+            message: errorMessages[errno] || "An error occurred."
+        });
     }
 }
 
