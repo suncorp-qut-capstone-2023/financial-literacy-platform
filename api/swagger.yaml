@@ -46,7 +46,7 @@ info:
   description: This API has been created to support Capstone Project in IFB398, Capstone
     Unit. It exposes a number of REST endpoints. The API endpoints and their usage
     are described in detail below.
-  title: IFB398 - Capstone Project 2023
+  title: IFB398/IFB399 - Capstone Project 2023
   version: 2.0.0
 openapi: 3.0.3
 paths:
@@ -3925,3 +3925,64 @@ paths:
                   value:
                     error: true
                     message: An error occurred.
+
+# Material
+  /api/course/module/lecture/content/media:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve a material based on its ID'
+      description: 'Provide materialID in the query to get the details of the material.'
+      parameters:
+        - in: query
+          name: materialID
+          schema:
+            type: integer
+          required: true
+          description: ID of the material to retrieve.
+      responses:
+        200:
+          description: 'Successful response with the material details'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  MATERIAL_ID:
+                    type: integer
+                    description: The unique identifier for the material.
+                  MATERIAL_NAME:
+                    type: string
+                    maxLength: 45
+                    description: The name of the material.
+                  MATERIAL_URL:
+                    type: string
+                    maxLength: 255
+                    description: The URL pointing to the material resource, if available.
+                required:
+                  - MATERIAL_ID
+                  - MATERIAL_NAME
+        400:
+          description: 'Bad request. Incorrect data type for materialID or missing parameter.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error or foreign key constraint fails.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
