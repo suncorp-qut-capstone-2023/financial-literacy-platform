@@ -3742,6 +3742,14 @@ paths:
         description: Adds a new quiz question to the database.
         security:
           - bearerAuth: []
+        parameters: 
+        - in: query
+          name: quizID
+          required: true
+          description: ID of the quiz for which the question is to be added.
+          schema:
+            type: integer
+            example: 1
         requestBody:
           required: true
           content:
@@ -3749,10 +3757,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  quiz_id:
-                    type: integer
-                    description: ID of the quiz for which the question is to be added.
-                    example: 1
                   question_text:
                     type: string
                     description: Text of the quiz question.
