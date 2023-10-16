@@ -83,7 +83,7 @@ const createLecture = async (req, res) => {
         data["LECTURE_NAME"] = lecture_name;
     }
 
-    if (module_id) {
+    if (moduleID) {
         data["MODULE_ID"] = moduleID;
     }
 

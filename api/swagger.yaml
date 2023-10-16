@@ -2709,6 +2709,14 @@ paths:
       description: Endpoint to create a new lecture.
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the lecture belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -2720,10 +2728,6 @@ paths:
                   type: string
                   description: Name of the lecture.
                   example: "Introduction to Programming"
-                module_id:
-                  type: integer
-                  description: ID of the module that the lecture belongs to.
-                  example: 101
                 material_order:
                   type: integer
                   description: order from the module that the lecture belongs to.
