@@ -3044,14 +3044,14 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: lecture_id
+        - name: lectureID
           in: query
           description: ID of the lecture for which the content is to be added.
           required: true
           schema:
             type: integer
             example: 1
-        - name: material_id
+        - name: materialID
           in: query
           description: ID of the material being added to the lecture.
           required: true
