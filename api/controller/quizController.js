@@ -134,7 +134,6 @@ const updateQuiz = async (req, res) => {
         });
     }
 
-    //TODO: update module ID as a query and not body on swagger!
     let moduleID;
     try {
         moduleID = isValidInt(req.query.moduleID);

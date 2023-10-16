@@ -3478,6 +3478,13 @@ paths:
             type: integer
             example: 114
           description: ID of the quiz to be updated.
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -3485,10 +3492,6 @@ paths:
             schema:
               type: object
               properties:
-                module_id:
-                  type: integer
-                  description: ID of the module containing the quiz.
-                  example: 23
                 quiz_name:
                   type: string
                   description: Updated name of the quiz.
