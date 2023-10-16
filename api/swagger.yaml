@@ -46,7 +46,7 @@ info:
   description: This API has been created to support Capstone Project in IFB398, Capstone
     Unit. It exposes a number of REST endpoints. The API endpoints and their usage
     are described in detail below.
-  title: IFB398 - Capstone Project 2023
+  title: IFB398/IFB399 - Capstone Project 2023
   version: 2.0.0
 openapi: 3.0.3
 paths:
@@ -2408,6 +2408,13 @@ paths:
       description: Adds a new module for a given course. Optional module_order
       security:
         - bearerAuth: []
+      parameters: 
+      - in: query
+        name: courseID
+        required: true
+        description: ID of the associated course.
+        schema:
+          type: integer
       requestBody:
         description: Module data to create
         required: true
@@ -2416,12 +2423,8 @@ paths:
             schema:
               type: object
               required:
-                - course_id
                 - module_name
               properties:
-                course_id:
-                  type: integer
-                  description: ID of the associated course.
                 module_name:
                   type: string
                   description: Name of the module.
@@ -2479,6 +2482,12 @@ paths:
           required: true
           schema:
             type: integer
+        - name: courseID
+          in: query
+          description: ID of the module to update
+          required: true
+          schema:
+            type: integer
       requestBody:
         description: Module data to update
         required: true
@@ -2487,12 +2496,8 @@ paths:
             schema:
               type: object
               required:
-                - course_id
                 - module_name
               properties:
-                course_id:
-                  type: integer
-                  description: ID of the associated course.
                 module_name:
                   type: string
                   description: Name of the module.
@@ -2709,6 +2714,14 @@ paths:
       description: Endpoint to create a new lecture.
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the lecture belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -2720,10 +2733,6 @@ paths:
                   type: string
                   description: Name of the lecture.
                   example: "Introduction to Programming"
-                module_id:
-                  type: integer
-                  description: ID of the module that the lecture belongs to.
-                  example: 101
                 material_order:
                   type: integer
                   description: order from the module that the lecture belongs to.
@@ -2772,6 +2781,7 @@ paths:
                   message:
                     type: string
                     example: "foreign key constraint fails"
+
   /api/course/module/lecture/update:
     post:
       tags:
@@ -2788,6 +2798,13 @@ paths:
           schema:
             type: integer
             example: 113
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module containing the lecture.
+          schema:
+            type: integer
+            example: 23
       requestBody:
         required: true
         content:
@@ -2795,10 +2812,6 @@ paths:
             schema:
               type: object
               properties:
-                module_id:
-                  type: integer
-                  description: ID of the module containing the lecture.
-                  example: 23
                 lecture_name:
                   type: string
                   description: Updated name of the lecture.
@@ -2847,6 +2860,7 @@ paths:
                   message:
                     type: string
                     example: "unknown column: LECTURE_NAME"
+
 
   /api/course/module/lecture/delete:
     post:
@@ -3043,6 +3057,21 @@ paths:
       description: Adds a new lecture content to the database.
       security:
         - bearerAuth: []
+      parameters:
+        - name: lectureID
+          in: query
+          description: ID of the lecture for which the content is to be added.
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: materialID
+          in: query
+          description: ID of the material being added to the lecture.
+          required: true
+          schema:
+            type: integer
+            example: 1
       requestBody:
         required: true
         content:
@@ -3050,14 +3079,6 @@ paths:
             schema:
               type: object
               properties:
-                lecture_id:
-                  type: integer
-                  description: ID of the lecture for which the content is to be added.
-                  example: 1
-                material_id:
-                  type: integer
-                  description: ID of the material being added to the lecture.
-                  example: 1
                 material_order:
                   type: integer
                   description: Order of the material in the lecture.
@@ -3372,6 +3393,14 @@ paths:
       description: Endpoint to create a new quiz.
       security:
         - bearerAuth: []
+      parameters: 
+        - in: query
+          name: module_id
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -3381,17 +3410,10 @@ paths:
               properties:
                 quiz_name:
                   type: string
-                  in: query
                   description: Name of the quiz.
                   example: "Basics of Programming"
-                module_id:
-                  type: integer
-                  in: query
-                  description: ID of the module that the quiz belongs to.
-                  example: 101
                 question_order:
                   type: string
-                  in: query
                   description: Order of questions in the quiz.
                   example: ["Q1", "Q2", "Q3"]
                 quiz_maxtries:
@@ -3439,6 +3461,7 @@ paths:
                     type: string
                     example: "Foreign key constraint fails."
 
+
   /api/course/module/quiz/update:
     post:
       tags:
@@ -3455,6 +3478,13 @@ paths:
             type: integer
             example: 114
           description: ID of the quiz to be updated.
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -3462,10 +3492,6 @@ paths:
             schema:
               type: object
               properties:
-                module_id:
-                  type: integer
-                  description: ID of the module containing the quiz.
-                  example: 23
                 quiz_name:
                   type: string
                   description: Updated name of the quiz.
@@ -3716,6 +3742,14 @@ paths:
         description: Adds a new quiz question to the database.
         security:
           - bearerAuth: []
+        parameters: 
+        - in: query
+          name: quizID
+          required: true
+          description: ID of the quiz for which the question is to be added.
+          schema:
+            type: integer
+            example: 1
         requestBody:
           required: true
           content:
@@ -3723,10 +3757,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  quiz_id:
-                    type: integer
-                    description: ID of the quiz for which the question is to be added.
-                    example: 1
                   question_text:
                     type: string
                     description: Text of the quiz question.
@@ -3802,6 +3832,13 @@ paths:
           schema:
             type: integer
             example: 123
+        - in: query
+          name: quizID
+          required: true
+          description: Updated ID of the quiz for which the question belongs.
+          schema:
+            type: integer
+            example: 123
       requestBody:
         required: true
         content:
@@ -3809,10 +3846,6 @@ paths:
             schema:
               type: object
               properties:
-                quiz_id:
-                  type: integer
-                  description: Updated ID of the quiz for which the question belongs.
-                  example: 1
                 question_text:
                   type: string
                   description: Updated text of the quiz question.
@@ -3925,3 +3958,310 @@ paths:
                   value:
                     error: true
                     message: An error occurred.
+
+# Material
+  /api/course/module/lecture/content/media:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve a material based on its ID'
+      description: 'Provide materialID in the query to get the details of the material.'
+      parameters:
+        - in: query
+          name: materialID
+          schema:
+            type: integer
+          required: true
+          description: ID of the material to retrieve.
+      responses:
+        200:
+          description: 'Successful response with the material details'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  MATERIAL_ID:
+                    type: integer
+                    description: The unique identifier for the material.
+                  MATERIAL_NAME:
+                    type: string
+                    maxLength: 255
+                    description: The name of the material.
+                  MATERIAL_URL:
+                    type: string
+                    maxLength: 255
+                    description: The URL pointing to the material resource, if available.
+                required:
+                  - MATERIAL_ID
+                  - MATERIAL_NAME
+        400:
+          description: 'Bad request. Incorrect data type for materialID or missing parameter.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error or foreign key constraint fails.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/medias:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve all materials'
+      description: 'Fetches all the lecture content media available.'
+      responses:
+        200:
+          description: 'Successful response with the list of all materials'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    MATERIAL_ID:
+                      type: integer
+                      description: The unique identifier for the material.
+                    MATERIAL_NAME:
+                      type: string
+                      maxLength: 255
+                      description: The name of the material.
+                    MATERIAL_URL:
+                      type: string
+                      maxLength: 255
+                      description: The URL pointing to the material resource, if available.
+        500:
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/media/create:
+    post:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Create new material NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: 'Creates a new material. Optionally uploads a file to Azure if specified. Please add the file under /api/assets/ folder.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  maxLength: 255
+                  description: The name of the material.
+                media_file_name:
+                  type: string
+                  description: Local path to the media file to be uploaded to Azure.
+              required:
+                - material_name
+      responses:
+        200:
+          description: 'Successfully created material.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: 'Bad request. Possible missing or invalid data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error. Could be due to foreign key constraint failure, data length issue, or other problems.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/media/update:
+    post:
+      summary: 'Update Material Information NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: Updates the details of an existing material.
+      tags:
+        - Learning Content - Material/s
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: materialID
+          required: true
+          description: ID of the material to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  description: New name for the material.
+                new_media_file_name:
+                  type: string
+                  description: New media file name if there's a change.
+              required:
+                - material_name
+      responses:
+        200:
+          description: Material updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "table 'material' has been updated"
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Error message depending on the specific error"
+  /api/course/module/lecture/content/media/delete:
+    post:
+      summary: Delete Material [Broken for now]
+      description: Deletes a specific material using its ID and related course, module, lecture, and content identifiers.
+      security:
+        - bearerAuth: []
+      tags:
+        - Learning Content - Material/s
+      parameters:
+        - in: query
+          name: materialID
+          required: true
+          description: ID of the material to be deleted.
+          schema:
+            type: integer
+        - in: query
+          name: courseID
+          required: true
+          description: ID of the course related to the material.
+          schema:
+            type: integer
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module related to the material.
+          schema:
+            type: integer
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture related to the material.
+          schema:
+            type: integer
+        - in: query
+          name: contentID
+          required: true
+          description: ID of the content related to the material.
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Material deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 1 on table 'material' has been deleted"
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the materialID, courseID, moduleID, lectureID, and contentID."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Error message depending on the specific error"

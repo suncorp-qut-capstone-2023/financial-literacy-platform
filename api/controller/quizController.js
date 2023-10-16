@@ -79,8 +79,8 @@ const createQuiz = async (req, res) => {
         data["QUIZ_NAME"] = quiz_name;
     }
 
-    if (module_id) {
-        data["MODULE_ID"] = module_id;
+    if (moduleID) {
+        data["MODULE_ID"] = moduleID;
     }
 
     if (question_order) {
@@ -134,7 +134,6 @@ const updateQuiz = async (req, res) => {
         });
     }
 
-    //TODO: update module ID as a query and not body on swagger!
     let moduleID;
     try {
         moduleID = isValidInt(req.query.moduleID);
