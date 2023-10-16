@@ -4085,3 +4085,74 @@ paths:
                     type: string
       security:
         - bearerAuth: []
+
+  /api/course/module/lecture/content/media/update:
+    post:
+      summary: 'Update Material Information NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: Updates the details of an existing material.
+      tags:
+        - Learning Content - Material/s
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: materialID
+          required: true
+          description: ID of the material to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  description: New name for the material.
+                new_media_file_name:
+                  type: string
+                  description: New media file name if there's a change.
+              required:
+                - material_name
+      responses:
+        200:
+          description: Material updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "table 'material' has been updated"
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Error message depending on the specific error"
