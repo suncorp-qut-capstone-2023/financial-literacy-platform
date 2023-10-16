@@ -144,7 +144,6 @@ const updateLecture = async (req, res) => {
         });
     }
 
-    //TODO: moduleID needs to be a query and not a body!
     let moduleID;
     try {
         moduleID = isValidInt(req.query.moduleID);
@@ -176,7 +175,7 @@ const updateLecture = async (req, res) => {
         } else {
             return res.status(400).json({
                 error: true,
-                message: `Lecture with LECTURE_ID = ${lectureID} not found`
+                message: `Lecture with lectureID = ${lectureID} or moduleID not found`
             });
         }
     } catch (err) {

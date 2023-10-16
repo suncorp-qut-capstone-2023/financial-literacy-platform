@@ -2776,6 +2776,7 @@ paths:
                   message:
                     type: string
                     example: "foreign key constraint fails"
+
   /api/course/module/lecture/update:
     post:
       tags:
@@ -2792,6 +2793,13 @@ paths:
           schema:
             type: integer
             example: 113
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module containing the lecture.
+          schema:
+            type: integer
+            example: 23
       requestBody:
         required: true
         content:
@@ -2799,10 +2807,6 @@ paths:
             schema:
               type: object
               properties:
-                module_id:
-                  type: integer
-                  description: ID of the module containing the lecture.
-                  example: 23
                 lecture_name:
                   type: string
                   description: Updated name of the lecture.
@@ -2851,6 +2855,7 @@ paths:
                   message:
                     type: string
                     example: "unknown column: LECTURE_NAME"
+
 
   /api/course/module/lecture/delete:
     post:
