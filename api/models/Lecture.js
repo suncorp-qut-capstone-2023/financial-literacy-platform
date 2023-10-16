@@ -4,12 +4,12 @@ const Course = require("./Course");
 const knex = require("knex")(knexOptions);
 
 class Lecture{
-    static getAllLectures(courseID, moduleID) {
-        return knex('lecture').select("*").where('module_id', '=', moduleID);
+    static async getAllLectures(courseID, moduleID) {
+        return await knex('lecture').select("*").where('module_id', '=', moduleID);
     }
 
-    static getLecture(courseID, moduleID, lectureID) {
-        return knex("lecture")
+    static async getLecture(courseID, moduleID, lectureID) {
+        return await knex("lecture")
                .select('lecture.*')
                .innerJoin('module', 'lecture.MODULE_ID', '=', 'module.MODULE_ID')
                .innerJoin('course', 'module.COURSE_ID', '=', 'course.COURSE_ID')
@@ -21,8 +21,8 @@ class Lecture{
     }
     
     
-    static createLecture(data) {
-        return knex('lecture').insert({
+    static async createLecture(data) {
+        return await knex('lecture').insert({
             LECTURE_NAME: data["LECTURE_NAME"],
             MODULE_ID: data["MODULE_ID"],
             LECTURE_ORDER: data["LECTURE_ORDER"]
@@ -30,8 +30,8 @@ class Lecture{
     }
     
 
-    static updateLecture(moduleID, lectureID, data) {
-        return knex('lecture')
+    static async updateLecture(moduleID, lectureID, data) {
+        return await knex('lecture')
                .update(data)
                .where("LECTURE_ID", "=", lectureID)
                .andWhere("MODULE_ID", "=", moduleID);
@@ -47,7 +47,7 @@ class Lecture{
             this.deleteLectureContent(lectureID);
 
             //delete the actual lecture data
-            const result = knex('lecture').where("LECTURE_ID", "=", lectureID).del();
+            const result = await knex('lecture').where("LECTURE_ID", "=", lectureID).del();
             if (!result) throw new Error('Failed to delete lecture'); //fail deletion lead to an error
             
             return true;
