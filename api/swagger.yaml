@@ -3036,72 +3036,79 @@ paths:
                     type: string
 
   /api/course/module/lecture/content/create:
-    post:
-      tags:
-        - Learning Content - Lecture Content/s
-      summary: Create a new lecture content entry
-      description: Adds a new lecture content to the database.
-      security:
-        - bearerAuth: []
-      requestBody:
+  post:
+    tags:
+      - Learning Content - Lecture Content/s
+    summary: Create a new lecture content entry
+    description: Adds a new lecture content to the database.
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: lecture_id
+        in: query
+        description: ID of the lecture for which the content is to be added.
         required: true
+        schema:
+          type: integer
+          example: 1
+      - name: material_id
+        in: query
+        description: ID of the material being added to the lecture.
+        required: true
+        schema:
+          type: integer
+          example: 1
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              material_order:
+                type: integer
+                description: Order of the material in the lecture.
+                example: 1
+    responses:
+      '200':
+        description: Lecture content successfully added.
         content:
           application/json:
             schema:
               type: object
               properties:
-                lecture_id:
-                  type: integer
-                  description: ID of the lecture for which the content is to be added.
-                  example: 1
-                material_id:
-                  type: integer
-                  description: ID of the material being added to the lecture.
-                  example: 1
-                material_order:
-                  type: integer
-                  description: Order of the material in the lecture.
-                  example: 1
-      responses:
-        '200':
-          description: Lecture content successfully added.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "New lecture content data has been successfully added!"
-        '400':
-          description: Bad request (missing required fields).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success_addition:
-                    type: boolean
-                    example: false
-                  error:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: "Bad request. Please specify the lecture ID and material ID."
-        '500':
-          description: Internal server error, data length issue, or foreign key constraint fails.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
+                message:
+                  type: string
+                  example: "New lecture content data has been successfully added!"
+      '400':
+        description: Bad request (missing required fields).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success_addition:
+                  type: boolean
+                  example: false
+                error:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Bad request. Please specify the lecture ID and material ID."
+      '500':
+        description: Internal server error, data length issue, or foreign key constraint fails.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
 
   /api/course/module/lecture/content/update:
     post:
