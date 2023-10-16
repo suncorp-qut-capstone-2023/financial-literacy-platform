@@ -79,8 +79,8 @@ const createQuiz = async (req, res) => {
         data["QUIZ_NAME"] = quiz_name;
     }
 
-    if (module_id) {
-        data["MODULE_ID"] = module_id;
+    if (moduleID) {
+        data["MODULE_ID"] = moduleID;
     }
 
     if (question_order) {

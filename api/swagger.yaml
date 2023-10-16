@@ -3393,6 +3393,14 @@ paths:
       description: Endpoint to create a new quiz.
       security:
         - bearerAuth: []
+      parameters: 
+        - in: query
+          name: module_id
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
       requestBody:
         required: true
         content:
@@ -3402,17 +3410,10 @@ paths:
               properties:
                 quiz_name:
                   type: string
-                  in: query
                   description: Name of the quiz.
                   example: "Basics of Programming"
-                module_id:
-                  type: integer
-                  in: query
-                  description: ID of the module that the quiz belongs to.
-                  example: 101
                 question_order:
                   type: string
-                  in: query
                   description: Order of questions in the quiz.
                   example: ["Q1", "Q2", "Q3"]
                 quiz_maxtries:
@@ -3459,6 +3460,7 @@ paths:
                   message:
                     type: string
                     example: "Foreign key constraint fails."
+
 
   /api/course/module/quiz/update:
     post:
