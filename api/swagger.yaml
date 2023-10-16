@@ -2408,6 +2408,13 @@ paths:
       description: Adds a new module for a given course. Optional module_order
       security:
         - bearerAuth: []
+      parameters: 
+      - in: query
+        name: courseID
+        required: true
+        description: ID of the associated course.
+        schema:
+          type: integer
       requestBody:
         description: Module data to create
         required: true
@@ -2416,12 +2423,8 @@ paths:
             schema:
               type: object
               required:
-                - course_id
                 - module_name
               properties:
-                course_id:
-                  type: integer
-                  description: ID of the associated course.
                 module_name:
                   type: string
                   description: Name of the module.
