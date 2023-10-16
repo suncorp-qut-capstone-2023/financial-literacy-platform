@@ -3832,6 +3832,13 @@ paths:
           schema:
             type: integer
             example: 123
+        - in: query
+          name: quizID
+          required: true
+          description: Updated ID of the quiz for which the question belongs.
+          schema:
+            type: integer
+            example: 123
       requestBody:
         required: true
         content:
@@ -3839,10 +3846,6 @@ paths:
             schema:
               type: object
               properties:
-                quiz_id:
-                  type: integer
-                  description: Updated ID of the quiz for which the question belongs.
-                  example: 1
                 question_text:
                   type: string
                   description: Updated text of the quiz question.

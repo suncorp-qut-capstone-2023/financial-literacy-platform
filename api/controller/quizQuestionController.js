@@ -113,7 +113,6 @@ const updateQuizQuestion = async (req, res) => {
         });
     }
 
-    //TODO: update quiz ID as a query and not body on swagger!
     let quizID;
     try {
         quizID = isValidInt(req.query.quizID);
