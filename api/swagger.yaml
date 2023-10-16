@@ -2482,6 +2482,12 @@ paths:
           required: true
           schema:
             type: integer
+        - name: courseID
+          in: query
+          description: ID of the module to update
+          required: true
+          schema:
+            type: integer
       requestBody:
         description: Module data to update
         required: true
@@ -2490,12 +2496,8 @@ paths:
             schema:
               type: object
               required:
-                - course_id
                 - module_name
               properties:
-                course_id:
-                  type: integer
-                  description: ID of the associated course.
                 module_name:
                   type: string
                   description: Name of the module.
