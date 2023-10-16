@@ -3,14 +3,19 @@ const fs = require('fs');
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const { azureMediaCredentials, azureThumbnailCredentials } = require("../db/container-connection");
 
+// A Default thumbnail image for course, if none provided while creating a course
+const DEFAULT_THUMBNAIL = `https://${azureThumbnailCredentials.accountName}.blob.core.windows.net/${azureThumbnailCredentials.containerName}/default_image.png`;
+
 async function uploadThumbnailFileToAzure(blobFile, localFilePath, blobContentType) {
 
     if (!blobFile || !localFilePath || !blobContentType) {
-        throw new Error('Invalid parameters provided');
+        console.log('Invalid parameters provided');
+        return DEFAULT_THUMBNAIL;
     }
 
     if (!fs.existsSync(localFilePath)) {
-        throw new Error(`File not found: ${localFilePath}`);
+        console.log(`File not found: ${localFilePath}`);
+        return DEFAULT_THUMBNAIL;
     }
 
     try {
@@ -28,7 +33,8 @@ async function uploadThumbnailFileToAzure(blobFile, localFilePath, blobContentTy
 
         return blockBlobClient.url;
     } catch (error) {
-        throw new Error(`Failed to upload thumbnail to Azure: ${error.message}`);
+        console.log(`Failed to upload file to Azure: ${error.message}`);
+        return DEFAULT_THUMBNAIL;
     }
 }
 
