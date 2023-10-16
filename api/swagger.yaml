@@ -3986,3 +3986,44 @@ paths:
                     type: string
       security:
         - bearerAuth: []
+
+  /api/course/module/lecture/content/medias:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve all materials'
+      description: 'Fetches all the lecture content media available.'
+      responses:
+        200:
+          description: 'Successful response with the list of all materials'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    MATERIAL_ID:
+                      type: integer
+                      description: The unique identifier for the material.
+                    MATERIAL_NAME:
+                      type: string
+                      maxLength: 45
+                      description: The name of the material.
+                    MATERIAL_URL:
+                      type: string
+                      maxLength: 255
+                      description: The URL pointing to the material resource, if available.
+        500:
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
