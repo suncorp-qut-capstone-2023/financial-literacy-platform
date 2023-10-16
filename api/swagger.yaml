@@ -2198,7 +2198,7 @@ paths:
       tags:
         - Learning Content - Course/s
       summary: Update an existing course
-      description: Updates a specific course in the database based on the given course ID.
+      description: "Updates a specific course in the database based on the given course ID. Note: if you want to upload a thumbnail; Please use Postman instead"
       security:
         - bearerAuth: []
       parameters:
