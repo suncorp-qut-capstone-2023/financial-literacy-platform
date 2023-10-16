@@ -1140,9 +1140,6 @@ paths:
   #               lecture_name:
   #                 example: week 1
   #                 type: string
-  #               lecture_order:
-  #                 example: 1
-  #                 type: integer
   #               module_id:
   #                 example: 1
   #                 type: integer
@@ -2740,10 +2737,6 @@ paths:
                   type: integer
                   description: order from the module that the lecture belongs to.
                   example: 1
-                lecture_order:
-                  type: integer
-                  description: Order of the lecture in the module.
-                  example: 1
       responses:
         200:
           description: Successfully created a new lecture.
@@ -2819,10 +2812,6 @@ paths:
                   type: string
                   description: Updated name of the lecture.
                   example: "Advanced Programming Concepts"
-                lecture_order:
-                  type: integer
-                  description: Updated order of the lecture within the module.
-                  example: 3
       responses:
         200:
           description: Successfully updated the lecture.

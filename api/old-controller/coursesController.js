@@ -393,7 +393,7 @@ const createLecture = async (req, res) => {
 const createLectureContent = async (req, res) => {
     // get course information from request body
     //TODO: course_tag haven't been added
-    const { lecture_id, material_id, material_order } = req.body;
+    const { lecture_id, material_id } = req.body;
     data = {};
 
     if (!lecture_id || !material_id) {
@@ -405,10 +405,6 @@ const createLectureContent = async (req, res) => {
     } else {
         data["LECTURE_ID"] = lecture_id;
         data["MATERIAL_ID"] = material_id;
-    }
-
-    if (material_order) {
-        data["MATERIAL_ORDER"] = material_order;   
     }
     
     try {
