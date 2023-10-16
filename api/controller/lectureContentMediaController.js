@@ -217,47 +217,7 @@ const deleteMaterial = async (req, res) => {
         });
     }
 
-    let courseID;
-    try {
-        courseID = isValidInt(req.query.courseID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of courseID"
-        });
-    }
-
-    let moduleID;
-    try {
-        moduleID = isValidInt(req.query.moduleID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of moduleID"
-        });
-    }
-
-    let lectureID;
-    try {
-        lectureID = isValidInt(req.query.lectureID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of lectureID"
-        });
-    }
-
-    let contentID;
-    try {
-        contentID = isValidInt(req.query.contentID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of contentID"
-        });
-    }
-
-    if (!materialID || !courseID || !moduleID || !lectureID || !contentID) {
+    if (!materialID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -267,7 +227,7 @@ const deleteMaterial = async (req, res) => {
 
     try {
 
-        const result = await Material.deleteMaterial(courseID, moduleID, lectureID, contentID, materialID);
+        const result = await Material.deleteMaterial(materialID);
 
         // return course
         if (result === true) {

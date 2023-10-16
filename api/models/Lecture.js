@@ -36,35 +36,15 @@ class Lecture{
                .where("LECTURE_ID", "=", lectureID)
                .andWhere("MODULE_ID", "=", moduleID);
     }
-    
-    static async deleteCourse(courseID) {
-        //delete all related data in course table prior to deleting the lecture data
-        return await knex('course').where('COURSE_ID', '=', courseID).del();    
-    }
-
-    static async deleteModule(moduleID) {
-        //delete all related data in module table prior to deleting the lecture data
-        return await knex('module').where('MODULE_ID', '=', moduleID).del();    
-    }
 
     static async deleteLectureContent(lectureID) {
         //delete all related data in lecture content table prior to deleting the lecture data
         return await knex('lecture_content').where('LECTURE_ID', '=', lectureID).del();    
     }
 
-    static async deleteLecture(courseID, moduleID, lectureID) {
+    static async deleteLecture(lectureID) {
         try {
             this.deleteLectureContent(lectureID);
-
-            //find module data
-            if (Module.getModule(courseID, moduleID) !== 0) {
-                this.deleteModule(moduleID);
-            }
-            
-            //find course data
-            if (Course.getCourse(courseID) !== null) {
-                this.deleteCourse(courseID);
-            }
 
             //delete the actual lecture data
             const result = knex('lecture').where("LECTURE_ID", "=", lectureID).del();
