@@ -729,103 +729,106 @@ paths:
       - Search function (Migrating to learning Content)
       security:
       - bearerAuth: []
-  /api/learningModules/search:
-    post:
-      description: Search for modules
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                search_query:
-                  example: c
-                  type: string
-              type: object
-        description: An object containing the search queries to be search to. Match
-          modules will appear if found.
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  message:
-                    example: User deleted
-                    type: string
-                  module:
-                    properties:
-                      category_type:
-                        example: basic/intermediate/advance
-                        type: string
-                      course_id:
-                        example: 1
-                        type: integer
-                      course_name:
-                        example: C# course
-                        type: string
-                    type: object
-                type: object
-          description: Module search result has been found
-        '400':
-          content:
-            application/json:
-              schema:
-                properties:
-                  error:
-                    example: 'true'
-                    type: boolean
-                  message:
-                    example: Learning modules endpoint is not working
-                    type: string
-                type: object
-          description: Other URL issue
-        '404':
-          content:
-            application/json:
-              schema:
-                properties:
-                  error:
-                    example: 'true'
-                    type: boolean
-                  message:
-                    example: no module with the provided module name has been found
-                    type: string
-                type: object
-          description: Module not found
-      tags:
-      - Search function (Migrating to learning Content)
-  /api/learningModules/search/tags:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                search_query:
-                  example: C
-                  type: string
-              type: object
-        description: An object containing the search queries to be search to. Match
-          modules will appear if found.
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Search course based on the most related tags to the lowest related
-        tags. Not include modules with unrelated tags.
-      tags:
-      - Search function (Migrating to learning Content)
+
+
+      # Commented as frontend team implemented their own solution
+  # /api/learningModules/search:
+  #   post:
+  #     description: Search for modules
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             properties:
+  #               search_query:
+  #                 example: c
+  #                 type: string
+  #             type: object
+  #       description: An object containing the search queries to be search to. Match
+  #         modules will appear if found.
+  #       required: true
+  #     responses:
+  #       '200':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               properties:
+  #                 message:
+  #                   example: User deleted
+  #                   type: string
+  #                 module:
+  #                   properties:
+  #                     category_type:
+  #                       example: basic/intermediate/advance
+  #                       type: string
+  #                     course_id:
+  #                       example: 1
+  #                       type: integer
+  #                     course_name:
+  #                       example: C# course
+  #                       type: string
+  #                   type: object
+  #               type: object
+  #         description: Module search result has been found
+  #       '400':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               properties:
+  #                 error:
+  #                   example: 'true'
+  #                   type: boolean
+  #                 message:
+  #                   example: Learning modules endpoint is not working
+  #                   type: string
+  #               type: object
+  #         description: Other URL issue
+  #       '404':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               properties:
+  #                 error:
+  #                   example: 'true'
+  #                   type: boolean
+  #                 message:
+  #                   example: no module with the provided module name has been found
+  #                   type: string
+  #               type: object
+  #         description: Module not found
+  #     tags:
+  #     - Search function (Migrating to learning Content)
+  # /api/learningModules/search/tags:
+    # post:
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           properties:
+    #             search_query:
+    #               example: C
+    #               type: string
+    #           type: object
+    #     description: An object containing the search queries to be search to. Match
+    #       modules will appear if found.
+    #     required: true
+    #   responses:
+    #     '200':
+    #       content:
+    #         application/json: {}
+    #       description: OK
+    #     '400':
+    #       content:
+    #         application/json: {}
+    #       description: Bad Request
+    #     '404':
+    #       content:
+    #         application/json: {}
+    #       description: Not Found
+    #   summary: Search course based on the most related tags to the lowest related
+    #     tags. Not include modules with unrelated tags.
+    #   tags:
+    #   - Search function (Migrating to learning Content)
   /api/media/download:
     post:
       requestBody:
