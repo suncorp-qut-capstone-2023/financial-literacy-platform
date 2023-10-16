@@ -4027,3 +4027,61 @@ paths:
                     type: string
       security:
         - bearerAuth: []
+
+  /api/course/module/lecture/content/media/create:
+    post:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Create new material NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: 'Creates a new material. Optionally uploads a file to Azure if specified. Please add the file under /api/assets/ folder.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  maxLength: 45
+                  description: The name of the material.
+                media_file_name:
+                  type: string
+                  description: Local path to the media file to be uploaded to Azure.
+              required:
+                - material_name
+      responses:
+        200:
+          description: 'Successfully created material.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: 'Bad request. Possible missing or invalid data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error. Could be due to foreign key constraint failure, data length issue, or other problems.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
