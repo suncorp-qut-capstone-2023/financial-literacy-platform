@@ -2940,12 +2940,6 @@ paths:
       security:
       - bearerAuth: []
       parameters:
-      - name: courseID
-        in: query
-        description: ID of the course.
-        required: true
-        schema:
-          type: integer
       - name: lectureID
         in: query
         description: ID of the lecture.
