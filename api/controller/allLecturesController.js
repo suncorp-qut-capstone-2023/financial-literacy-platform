@@ -1,11 +1,10 @@
 const Lecture = require('../models/Lecture');
 
 const getAllLectures = async (req, res) => {
-    const courseID = req.query.courseID;
     const moduleID = req.query.moduleID;
 
     // Validate courseID and moduleID before making the database call.
-    if (!Number.isInteger(Number(courseID)) || !Number.isInteger(Number(moduleID))) {
+    if (!Number.isInteger(Number(moduleID))) {
         return res.status(400).json({
             error: true,
             message: "Invalid courseID or moduleID."
@@ -14,7 +13,7 @@ const getAllLectures = async (req, res) => {
 
     try {
         // get lectures from database
-        const allLectures = await Lecture.getAllLectures(courseID, moduleID);
+        const allLectures = await Lecture.getAllLectures(moduleID);
 
         // return lectures
         return res.status(200).json(allLectures);

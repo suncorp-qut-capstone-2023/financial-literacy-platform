@@ -2552,12 +2552,6 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: courseID
-          in: query
-          description: ID of the course containing the module to delete.
-          required: true
-          schema:
-            type: integer
         - name: moduleID
           in: query
           description: ID of the module to delete.

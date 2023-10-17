@@ -58,7 +58,7 @@ class Module {
         .del(); 
     }
 
-    static async deleteModule(courseID, moduleID) {
+    static async deleteModule(moduleID) {
         try {
             this.deleteLectureContent(moduleID);
             this.deleteLecture(moduleID);
@@ -66,7 +66,7 @@ class Module {
             this.deleteQuiz(moduleID);
 
             //delete the actual module data
-            const result = await knex('module').where('COURSE_ID', '=', courseID).andWhere('MODULE_ID', '=', moduleID).del();
+            const result = await knex('module').where('MODULE_ID', '=', moduleID).del();
             if (!result) throw new Error('Failed to delete module'); //fail deletion lead to an error
             
             return true;
