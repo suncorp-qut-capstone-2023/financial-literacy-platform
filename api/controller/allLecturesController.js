@@ -3,7 +3,7 @@ const Lecture = require('../models/Lecture');
 const getAllLectures = async (req, res) => {
     const moduleID = req.query.moduleID;
 
-    // Validate courseID and moduleID before making the database call.
+    // Validate moduleID before making the database call.
     if (!Number.isInteger(Number(moduleID))) {
         return res.status(400).json({
             error: true,
