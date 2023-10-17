@@ -2736,10 +2736,6 @@ paths:
                   type: string
                   description: Name of the lecture.
                   example: "Introduction to Programming"
-                material_order:
-                  type: integer
-                  description: order from the module that the lecture belongs to.
-                  example: 1
                 lecture_order:
                   type: integer
                   description: Order of the lecture in the module.
@@ -2930,12 +2926,6 @@ paths:
       security:
       - bearerAuth: []
       parameters:
-      - name: courseID
-        in: query
-        description: ID of the course.
-        required: true
-        schema:
-          type: integer
       - name: lectureID
         in: query
         description: ID of the lecture.

@@ -84,7 +84,7 @@ app.use('/api/forums', forumsRouter);                                           
 app.use('/api/courses', coursesRouter);                                             // FETCH ALL COURSES
 app.use('/api/course/modules', modulesRouter);                                      // FETCH ALL MODULES
 app.use('/api/course/module/lectures', lecturesRouter);                             // FETCH ALL LECTURES
-app.use('/api/course/module/lecture/contents', lectureContentsRouter);              // FETCH ALL QUIZ QUESTIONS
+app.use('/api/course/module/lecture/contents', lectureContentsRouter);              // FETCH ALL LECTURE CONTENTS
 app.use('/api/course/module/quizzes', quizzesRouter);                               // FETCH ALL QUIZZES
 app.use('/api/course/module/quiz/questions', quizQuestionsRouter);                  // FETCH ALL QUIZ QUESTIONS
 app.use('/api/course/module/lecture/content/medias', mediasRouter);                 // FETCH ALL LECTURE CONTENT MEDIA

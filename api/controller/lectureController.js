@@ -59,7 +59,6 @@ const getLecture = async (req, res) => {
 
 
 const createLecture = async (req, res) => {
-    //TODO: moduleID needs to be a query and not a body!
     let moduleID;
     try {
         moduleID = isValidInt(req.query.moduleID);
@@ -70,7 +69,7 @@ const createLecture = async (req, res) => {
         });
     }
 
-    const { lecture_name, material_order, lecture_order } = req.body;
+    const { lecture_name, lecture_order } = req.body;
     let data = {};
 
     if (!lecture_name) {
@@ -87,9 +86,6 @@ const createLecture = async (req, res) => {
         data["MODULE_ID"] = moduleID;
     }
 
-    if (material_order) {
-        data["MATERIAL_ORDER"] = material_order;
-    }
 
     if (lecture_order) {
         data["LECTURE_ORDER"] = lecture_order;
