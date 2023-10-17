@@ -7,6 +7,7 @@ const knex = require("knex")(knexOptions);
 class LectureContent{
 
     static getAllLectureContents(lectureID) {
+        console.log(lectureID)
         return knex('lecture_content').select("*").where('LECTURE_ID', '=', lectureID);
     }
 
