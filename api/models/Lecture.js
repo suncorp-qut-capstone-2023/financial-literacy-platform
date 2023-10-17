@@ -4,7 +4,7 @@ const Course = require("./Course");
 const knex = require("knex")(knexOptions);
 
 class Lecture{
-    static async getAllLectures(courseID, moduleID) {
+    static async getAllLectures(moduleID) {
         return await knex('lecture').select("*").where('module_id', '=', moduleID);
     }
 
