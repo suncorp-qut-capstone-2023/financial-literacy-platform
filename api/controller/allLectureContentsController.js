@@ -3,8 +3,6 @@ const LectureContent = require('../models/LectureContent');
 const getAllLectureContents = async (req, res) => {
     const lectureID = req.query['lectureID'];
 
-    console.log(lectureID);
-
     try {
         // get courses from database
         const all_lecture_contents = await LectureContent.getAllLectureContents(lectureID);
