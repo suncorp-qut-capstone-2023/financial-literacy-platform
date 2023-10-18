@@ -14,8 +14,29 @@ export default function Courses() {
   const { authToken } = useContext(AuthContext);
   const { userType } = useContext(AuthContext);
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://jcmg-api.herokuapp.com/api/courses",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      const data = await response.json();
+      setCourses(data.course);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching courses data:", error);
+    }
+  };
+
   // A function to handle when a course is removed.
-  const handleCourseRemoved = (removedCourseId) => {
+  const handleCourseRemoved = async (removedCourseId) => {
     const updatedCourses = courses.filter(
       (course) => course.course_id !== removedCourseId
     );
@@ -23,28 +44,12 @@ export default function Courses() {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(
-          "https://jcmg-api.herokuapp.com/api/courses",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        const data = await response.json();
-        setCourses(data.course);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching courses data:", error);
-      }
-    }
-    fetchData();
-  }, [authToken, userType]);
+    fetchData();  // Call fetchData during initial render
+  }, [authToken, userType]);  // ... (rest of your component)
+
+  useEffect(() => {
+    console.log('Courses updated:', courses);
+  }, [courses]);
 
   return (
     <main className={styles.main}>
@@ -70,6 +75,7 @@ export default function Courses() {
                 courseName={course.COURSE_NAME || course.course_name}
                 cms={userType === "admin"}
                 onCourseRemoved={handleCourseRemoved}
+                refreshCourses={fetchData}  // Pass fetchData as a prop
               />
             ))
           ) : (

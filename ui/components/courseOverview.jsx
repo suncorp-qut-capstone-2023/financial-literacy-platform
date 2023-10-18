@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   createTheme,
   ThemeProvider,
@@ -12,6 +12,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import { AuthContext } from '@/app/auth.jsx';
 import { Box } from "@mui/material";
 
 import NextLink from "next/link";
@@ -42,12 +43,15 @@ function CourseOverview({
   thumbnail,
   cms,
   onCourseRemoved,
+  refreshCourses
 }) {
   var defaultSrc = "https://placehold.co/1024x1024";
   const thumbnailURL =
     thumbnail && thumbnail !== "no_thumbnail" ? thumbnail : defaultSrc;
   const [open, setOpen] = useState(false); // for delete dialog box
   const [successOpen, setSuccessOpen] = useState(false);
+  const { authToken } = useContext(AuthContext); // Combine into one useContext call
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,33 +67,36 @@ function CourseOverview({
 
   const handleSuccessClose = () => {
     setSuccessOpen(false);
+    refreshCourses();  // Call refreshCourses when the success popup is closed
   };
 
   const handleDelete = async () => {
     try {
+      console.log('Attempting to delete course with ID:', courseId);  // Added log
       const response = await fetch(
         `https://jcmg-api.herokuapp.com/api/course/delete?courseID=${courseId}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
+      console.log('Delete response:', response);  // Added log
+  
       if (response.ok) {
-        // Delete was successful
         onCourseRemoved(courseId);
-        setTimeout(() => handleSuccessOpen(), 500); // Delay by 500ms
         handleSuccessOpen();
       } else {
-        // Handle error response. Possibly add another dialog.
         console.error("Failed to delete the course. Status:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while deleting the course:", error);
     }
   };
+  
   return (
     <ThemeProvider theme={theme}>
       <Dialog
