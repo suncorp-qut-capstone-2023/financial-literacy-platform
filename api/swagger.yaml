@@ -3012,7 +3012,7 @@ paths:
                     example: "Error message depending on the specific error"
   /api/course/module/lecture/content/media/delete:
     post:
-      summary: Delete Material [Broken for now]
+      summary: Delete Material
       description: Deletes a specific material using its ID and related course, module, lecture, and content identifiers.
       security:
         - bearerAuth: []
