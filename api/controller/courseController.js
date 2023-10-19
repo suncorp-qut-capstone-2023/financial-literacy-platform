@@ -144,6 +144,7 @@ const updateCourse = async (req, res) => {
     }
 
     setValue = isValidInt(setValue);
+
     const value = [ setValue, courseID ];
 
     // Change the Course thumbnail
@@ -185,55 +186,62 @@ const updateCourse = async (req, res) => {
                 error: true,
                 message: `unknown column: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1366) {
+        } else if (err.errno === 1366) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect integer value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
-        }
-
-        if (err.errno === 3140) {
+        } else if (err.errno === 3140) {
             return res.status(500).json({
                 error: true,
                 message: `Incorrect JSON text value`
             });
+        } else {
+            // return error
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });            
         }
-
-        // return error
-        return res.status(500).json({
-            error: true,
-            message: err.message
-        });
     }
 }
 
 const deleteCourse = async (req, res) => {
     // get course id from params
-    let ID = req.query.courseID;
+    let courseID;
+    try {
+        courseID = isValidInt(req.query.courseID);
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the correct data type of courseID"
+        });
+    }
+    
 
-    //receive ID in integer type
-    const newID = isValidInt(ID);
+    if ( !courseID ) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the courseID"
+        });
+    }
 
     try {
 
-        const result = await Course.deleteCourse(newID);
+        const result = await Course.deleteCourse(courseID);
 
         // return course
-        if (result > 0) {
-            return res.status(200).json({"message": `data with the condition ID = ${newID} on table 'course' has been deleted`});
+        if (result === true) {
+            return res.status(200).json({"message": `data with the condition ID = ${courseID} on table 'course' has been deleted`});
         } else {
             return res.status(400).json({
                 error: true,
-                message:  `data on 'course' table with condition ID = ${newID} has not been found`
+                message:  `data on 'course' table with condition ID = ${courseID} has not been found`
             });
         }
 
@@ -249,34 +257,33 @@ const deleteCourse = async (req, res) => {
                 error: true,
                 message: "foreign key constraint fails. Delete all foreign key used with the related primary key."
             });
-        }
-
-        if (err.errno === 1264) {
+        } else if (err.errno === 1451) {
+            return res.status(500).json({
+                error: true,
+                message: "foreign key constraint fails. The foreign key used with the related primary key has not been found."
+            });
+        } else if (err.errno === 1264) {
             return res.status(500).json({
                 error: true,
                 message: `${data[0]} integer value is too large`
             });
-        }
-
-        if (err.errno === 1292) {
+        } else if (err.errno === 1292) {
             return res.status(500).json({
                 error: true,
                 message: `incorrect double value: ${data[0]}`
             });
-        }
-
-        if (err.errno === 1406) {
+        } else if (err.errno === 1406) {
 
             return res.status(500).json({
                 error: true,
                 message: `data too long for ${data[0]}`
             });
+        } else {
+            return res.status(500).json({
+                error: true,
+                message: err
+            });            
         }
-
-        return res.status(500).json({
-            error: true,
-            message: err
-        });
     }
 }
 
