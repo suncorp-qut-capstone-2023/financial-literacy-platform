@@ -10,45 +10,67 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Box } from "@mui/material";
+import NextLink from "next/link";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import styles from "@/styles/page.module.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-function QuizOverview({ quizId, quizName, cms }) {
-  // const [open, setOpen] = useState(false);
-  // const [successOpen, setSuccessOpen] = useState(false);
-  // const { authToken } = useContext(AuthContext);
+let theme = createTheme({
+  palette: {
+    suncorpgreen: {
+      main: "#009877",
+      contrastText: "#ffffff",
+    },
+  },
+});
+
+function MaterialOverview({
+  courseId,
+  moduleId,
+  lectureId,
+  lectureContentId,
+  materialId,
+  materialName,
+  materialOrder,
+  cms,
+}) {
+  const [open, setOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const { authToken } = useContext(AuthContext);
 
   const handleClickOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-  // const handleSuccessOpen = () => setSuccessOpen(true);
-  // const handleSuccessClose = () => setSuccessOpen(false);
+  const handleClose = () => setOpen(false);
+  const handleSuccessOpen = () => setSuccessOpen(true);
+  const handleSuccessClose = () => setSuccessOpen(false);
 
-  // const handleDelete = async () => {
-  //   try {
-  //     // Update with the actual endpoint and headers
-  //     const response = await fetch(
-  //       `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}&courseID=${courseId}&moduleID=${moduleId}`,
-  //       {
-  //         method: "DELETE",
-  //         headers: {
-  //           Authorization: `Bearer ${authToken}`,
-  //         },
-  //       }
-  //     );
+  const handleDelete = async () => {
+    try {
+      // Update with the actual endpoint and headers
+      const response = await fetch(
+        `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}&courseID=${courseId}&moduleID=${moduleId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
-  //     if (response.ok) {
-  //       onLectureRemoved(lectureId);
-  //       handleSuccessOpen();
-  //     } else {
-  //       console.error("Failed to delete lecture. Status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while deleting the lecture:", error);
-  //   }
-  // };
+      if (response.ok) {
+        onLectureRemoved(lectureId);
+        handleSuccessOpen();
+      } else {
+        console.error("Failed to delete lecture. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the lecture:", error);
+    }
+  };
 
   return (
-    <div>
-      {/* Delete Confirmation Dialog
+    <ThemeProvider theme={theme}>
+      {/* Delete Confirmation Dialog */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -80,7 +102,7 @@ function QuizOverview({ quizId, quizName, cms }) {
       </Dialog>
 
       {/* Deletion Success Dialog */}
-      {/* <Dialog
+      <Dialog
         open={successOpen}
         onClose={handleSuccessClose}
         aria-labelledby="success-dialog-title"
@@ -97,9 +119,9 @@ function QuizOverview({ quizId, quizName, cms }) {
             Close
           </Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
 
-      {/* Quiz Display */}
+      {/* Lecture Display */}
       <Card
         sx={{
           margin: "20px",
@@ -119,24 +141,38 @@ function QuizOverview({ quizId, quizName, cms }) {
         >
           <CardContent>
             <Typography variant="h5" fontWeight="bold">
-              {quizName}
+              {materialName}
             </Typography>
           </CardContent>
           <CardActions>
+            <NextLink
+              href={`/courses/${courseId}/${moduleId}/${lectureId}/${materialId}`}
+              passHref
+            >
+              <Link>
+                <Button
+                  variant="contained"
+                  color="suncorpgreen"
+                  className={styles.buttons}
+                >
+                  {cms ? "Edit/View Material" : "View Material"}
+                </Button>
+              </Link>
+            </NextLink>
             {cms && (
               <Button
                 onClick={handleClickOpen}
                 variant="outlined"
                 color="secondary"
               >
-                Delete Quiz
+                Delete Material
               </Button>
             )}
           </CardActions>
         </Box>
       </Card>
-    </div>
+    </ThemeProvider>
   );
 }
 
-export default QuizOverview;
+export default MaterialOverview;

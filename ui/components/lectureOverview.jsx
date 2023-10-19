@@ -10,9 +10,29 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Box } from "@mui/material";
+import NextLink from "next/link";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import styles from "@/styles/page.module.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-function LectureOverview({ lectureId, lectureName, onLectureRemoved, cms }) {
+let theme = createTheme({
+  palette: {
+    suncorpgreen: {
+      main: "#009877",
+      contrastText: "#ffffff",
+    },
+  },
+});
+
+function LectureOverview({
+  courseId,
+  moduleId,
+  lectureId,
+  lectureName,
+  onLectureRemoved,
+  cms,
+}) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const { authToken } = useContext(AuthContext);
@@ -47,7 +67,7 @@ function LectureOverview({ lectureId, lectureName, onLectureRemoved, cms }) {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={open}
@@ -112,7 +132,7 @@ function LectureOverview({ lectureId, lectureName, onLectureRemoved, cms }) {
           display="flex"
           flexDirection="column"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent="space-around"
           textAlign="center"
           padding="10px"
           height="100%"
@@ -123,6 +143,20 @@ function LectureOverview({ lectureId, lectureName, onLectureRemoved, cms }) {
             </Typography>
           </CardContent>
           <CardActions>
+            <NextLink
+              href={`/courses/${courseId}/${moduleId}/${lectureId}`}
+              passHref
+            >
+              <Link>
+                <Button
+                  variant="contained"
+                  color="suncorpgreen"
+                  className={styles.buttons}
+                >
+                  {cms ? "Edit/View Lecture" : "View Lecture"}
+                </Button>
+              </Link>
+            </NextLink>
             {cms && (
               <Button
                 onClick={handleClickOpen}
@@ -135,7 +169,7 @@ function LectureOverview({ lectureId, lectureName, onLectureRemoved, cms }) {
           </CardActions>
         </Box>
       </Card>
-    </div>
+    </ThemeProvider>
   );
 }
 
