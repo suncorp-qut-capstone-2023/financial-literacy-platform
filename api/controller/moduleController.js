@@ -195,16 +195,6 @@ const updateModule = async (req, res) => {
 }
 
 const deleteModule = async (req, res) => {
-    let courseID;
-    try {
-        courseID = isValidInt(req.query.courseID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of courseID"
-        });
-    }
-
     let moduleID;
     try {
         moduleID = isValidInt(req.query.moduleID);
@@ -215,17 +205,17 @@ const deleteModule = async (req, res) => {
         });
     }
 
-    if (!courseID || !moduleID) {
+    if (!moduleID) {
         return res.status(400).json({
             error: true,
-            message: "Bad request. Please specify both courseID and moduleID in the query parameters."
+            message: "Bad request. Please specify moduleID in the query parameters."
         });
     }
 
     try {
-        const result = await Module.deleteModule(courseID, moduleID);
+        const result = await Module.deleteModule(moduleID);
         if (result === true) {
-            return res.status(200).json({ "message": `Module with ID = ${moduleID} in course with ID = ${courseID} has been deleted` });
+            return res.status(200).json({ "message": `Module with ID = ${moduleID} has been deleted` });
         } else {
             return res.status(400).json({
                 error: true,

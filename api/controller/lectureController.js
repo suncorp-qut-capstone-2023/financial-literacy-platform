@@ -209,26 +209,6 @@ const updateLecture = async (req, res) => {
 
 const deleteLecture = async (req, res) => {
     // get course id from params
-    let courseID;
-    try {
-        courseID = isValidInt(req.query.courseID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of courseID"
-        });
-    }
-    
-    let moduleID;
-    try {
-        moduleID = isValidInt(req.query.moduleID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of moduleID"
-        });
-    }
-
     let lectureID;
     try {
         lectureID = isValidInt(req.query.lectureID);
@@ -239,7 +219,7 @@ const deleteLecture = async (req, res) => {
         });
     }
 
-    if (!lectureID || !courseID || ! moduleID) {
+    if (!lectureID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -249,7 +229,7 @@ const deleteLecture = async (req, res) => {
 
     try {
 
-        const result = await Lecture.deleteLecture(courseID, moduleID, lectureID);
+        const result = await Lecture.deleteLecture(lectureID);
 
         // return course
         if (result === true) {

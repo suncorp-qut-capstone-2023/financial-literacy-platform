@@ -1,22 +1,21 @@
 const knexOptions = require('../db/mydb-connection');
-const Course = require("./Course");
 const knex = require("knex")(knexOptions);
 
 class Module {
-    static getModule(courseID, moduleID) {
-        return knex('module').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID);
+    static async getModule(courseID, moduleID) {
+        return await knex('module').select("*").where('course_id', '=', courseID).andWhere('module_id', '=', moduleID);
     }
 
-    static getAllModules(courseID) {
-        return knex('module').select("*").where('course_id', '=', courseID);
+    static async getAllModules(courseID) {
+        return await knex('module').select("*").where('course_id', '=', courseID);
     }
 
-    static createModule(moduleData) {
-        return knex('module').insert(moduleData);
+    static async createModule(moduleData) {
+        return await knex('module').insert(moduleData);
     }
 
-    static updateModule(courseID, moduleID, moduleData) {
-        return knex('module')
+    static async updateModule(courseID, moduleID, moduleData) {
+        return await knex('module')
             .where('COURSE_ID', '=', courseID)
             .andWhere('MODULE_ID', '=', moduleID)
             .update(moduleData);
@@ -59,7 +58,7 @@ class Module {
         .del(); 
     }
 
-    static async deleteModule(courseID, moduleID) {
+    static async deleteModule(moduleID) {
         try {
             this.deleteLectureContent(moduleID);
             this.deleteLecture(moduleID);
@@ -67,7 +66,7 @@ class Module {
             this.deleteQuiz(moduleID);
 
             //delete the actual module data
-            const result = await knex('module').where('COURSE_ID', '=', courseID).andWhere('MODULE_ID', '=', moduleID).del();
+            const result = await knex('module').where('MODULE_ID', '=', moduleID).del();
             if (!result) throw new Error('Failed to delete module'); //fail deletion lead to an error
             
             return true;

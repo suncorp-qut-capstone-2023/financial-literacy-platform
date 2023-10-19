@@ -187,26 +187,6 @@ const updateQuiz = async (req, res) => {
 }
 
 const deleteQuiz = async (req, res) => {
-    let courseID;
-    try {
-        courseID = isValidInt(req.query.courseID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of courseID"
-        });
-    }
-    
-    let moduleID;
-    try {
-        moduleID = isValidInt(req.query.moduleID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of moduleID"
-        });
-    }
-
     let quizID;
     try {
         quizID = isValidInt(req.query.quizID);
@@ -217,7 +197,7 @@ const deleteQuiz = async (req, res) => {
         });
     }
 
-    if (!quizID || !courseID || ! moduleID) {
+    if (!quizID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -226,7 +206,7 @@ const deleteQuiz = async (req, res) => {
     }
 
     try {
-        const result = await Quiz.deleteQuiz(courseID, moduleID, quizID);
+        const result = await Quiz.deleteQuiz(quizID);
         if (result === true) {
             return res.status(200).json({ "message": `Quiz with QUIZ_ID = ${quizID} has been deleted` });
         } else {
