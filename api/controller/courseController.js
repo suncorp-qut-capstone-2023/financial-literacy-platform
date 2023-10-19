@@ -144,8 +144,6 @@ const updateCourse = async (req, res) => {
     }
 
     setValue = isValidInt(setValue);
-    ID = isValidInt(courseID);
-
     const value = [ setValue, courseID ];
 
     // Change the Course thumbnail
@@ -166,7 +164,6 @@ const updateCourse = async (req, res) => {
 
 
     try {
-
         const result = await Course.updateCourse(set_data_type, value);
 
         // return course
@@ -284,7 +281,78 @@ const deleteCourse = async (req, res) => {
             return res.status(500).json({
                 error: true,
                 message: err
-            });            
+            });
+        }
+    }
+}
+
+const getTags = async (req, res) => {
+    const { courseID } = req.query;
+    try {
+        const tags = await Course.getTags(courseID);
+
+        return res.status(200).json(tags[0]);
+
+    }
+    catch (err) {
+        return res.status(500).json({
+            error: true,
+            message: err.message
+        });
+    }
+}
+
+const addTag = async (req, res) => {
+    const { courseID } = req.query;
+    const { tag_name } = req.body;
+
+    if (!tag_name) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the tag name."
+        });
+    }
+
+    // if multiple tags and split with comma, then create an array of tags
+    const tags = tag_name.split(",");
+    if (tags.length >= 1) {
+        try {
+            await Course.addTag(courseID, tags);
+
+            return res.status(200).json({"message": "new tags have been successfully added!"});
+        }
+        catch (err) {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });
+        }
+    }
+}
+
+const deleteTag = async (req, res) => {
+    const { courseID } = req.query;
+    const { tag_name } = req.body;
+
+    if (!tag_name) {
+        return res.status(400).json({
+            error: true,
+            message: "Bad request. Please specify the tag id."
+        });
+    }
+
+    // if multiple tags and split with comma, then create an array of tags
+    const tags = tag_name.split(",");
+    if (tags.length >= 1) {
+        try {
+            await Course.deleteTag(courseID, tags);
+
+            return res.status(200).json({"message": "tag has been successfully deleted!"});
+        } catch (err) {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });
         }
     }
 }
@@ -293,5 +361,8 @@ module.exports = {
     getCourse,
     createCourse,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    getTags,
+    addTag,
+    deleteTag
 }
