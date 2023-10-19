@@ -144,55 +144,6 @@ class Course {
 
 
     }
-
-    static async getTags(course_id) {
-        return knex('course')
-            .select('COURSE_TAGS')
-            .where('COURSE_ID', '=', course_id);
-    }
-
-    // TAGS AVAILABLE: ('Budgeting', 'Investing', 'DebtManagement', 'RetirementPlanning', 'TaxBasics', 'CreditScore', 'Insurance', 'FinancialGoals', 'EmergencyFunds', 'HomeOwnership')
-    // max tags allowed 64 for datatype SET()
-    static async addTag(course_id, tag_name) {
-        // If tag_name is an array of tags, join them into a single comma-separated string
-        if (Array.isArray(tag_name)) {
-            for (const tag of tag_name) {
-                const trimmedTag = tag.trim();
-                await knex.raw(
-                    `UPDATE course SET COURSE_TAGS = CONCAT_WS(',', COURSE_TAGS, ?) WHERE COURSE_ID = ?`,
-                    [trimmedTag, course_id]
-                );
-            }
-        } else {
-            // If tag_name is a single tag, add only that tag
-            const trimmedTag = tag_name.trim();
-            return knex.raw(
-                `UPDATE course SET COURSE_TAGS = CONCAT_WS(',', COURSE_TAGS, ?) WHERE COURSE_ID = ?`,
-                [trimmedTag, course_id]
-            );
-        }
-    }
-
-    static async deleteTag(course_id, tag_to_delete) {
-        // If tag_to_delete is an array of tags, join them into a single comma-separated string
-        if (Array.isArray(tag_to_delete)) {
-            for (const tag of tag_to_delete) {
-                const trimmedTag = tag.trim();
-                await knex.raw(
-                    `UPDATE course SET COURSE_TAGS = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', COURSE_TAGS, ','), ?, ',')) WHERE COURSE_ID = ?`,
-                    [`,` + trimmedTag + `,`, course_id]
-                );
-            }
-        } else {
-            // If tag_to_delete is a single tag, remove only that tag
-            const trimmedTag = tag.trim();
-            return knex.raw(
-                `UPDATE course SET COURSE_TAGS = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', COURSE_TAGS, ','), ?, ',')) WHERE COURSE_ID = ?`,
-                [`,` + trimmedTag + `,`, course_id]
-            );
-        }
-    }
-
 }
 
 module.exports = Course;

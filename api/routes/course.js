@@ -8,9 +8,6 @@ const {
     createCourse,
     updateCourse,
     deleteCourse,
-    getTags,
-    addTag,
-    deleteTag
 } = require('../controller/courseController');
 
 // GET
@@ -27,14 +24,5 @@ router.post('/delete', auth, requireAdmin, deleteCourse);
 
 // SORT
 // router.get('/sort', auth, requireAdmin, sortNewestCourse);
-
-// GET TAGS
-router.get('/tags', auth, getTags);
-
-// ADD TAGS
-router.post('/tag/add', auth, requireAdmin, addTag);
-
-// DELETE TAGS
-router.post('/tag/delete', auth, requireAdmin, deleteTag);
 
 module.exports = router;
