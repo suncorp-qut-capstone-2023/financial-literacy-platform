@@ -90,7 +90,7 @@ paths:
 
   /api/enrolment/course/register:
       post:
-        summary: Register for a course (Migrating)
+        summary: Register for a course
         tags:
         - User Interactions
         security:
@@ -128,99 +128,6 @@ paths:
                       description: ID of the new registration.
           '400':
             description: Invalid input or user already registered.
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    error:
-                      type: boolean
-                    message:
-                      type: string
-          default:
-            description: Unexpected error
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    error:
-                      type: string
-  
-  /api/enrolment/quizzes/attempted:
-      post:
-        summary: Attempt a quiz for a course (Migrating)
-        security:
-        - bearerAuth: []
-        tags:
-        - User Interactions
-        description: Record a user's quiz attempt for a course. If all quizzes attempted, course marked completed
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - user_id
-                  - course_id
-                  - quiz_id
-                properties:
-                  user_id:
-                    type: integer
-                    description: ID of the user.
-                  course_id:
-                    type: integer
-                    description: ID of the course.
-                  quiz_id:
-                    type: integer
-                    description: ID of the quiz.
-                  score:
-                    type: integer
-                    description: Score of the quiz attempt.
-                  feedback:
-                    type: string
-                    description: Feedback for the quiz attempt.
-        responses:
-          '201':
-            description: Quiz attempt recorded successfully.
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      example: "User attempted quiz"
-                    registration_id:
-                      type: integer
-                      description: ID of the new quiz attempt.
-          '200':
-            description: Course completed.
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      example: "Congratulations on finishing the course!"
-                    registration_id:
-                      type: integer
-                      description: ID of the course registration.
-          '400':
-            description: Invalid input.
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    error:
-                      type: boolean
-                    message:
-                      type: string
-          '404':
-            description: User not registered for the course.
             content:
               application/json:
                 schema:
@@ -1147,7 +1054,7 @@ paths:
                   message:
                     type: string
 
-    /api/course/tags:
+  /api/course/tags:
     get:
       summary: Get tags for a course
       tags:
