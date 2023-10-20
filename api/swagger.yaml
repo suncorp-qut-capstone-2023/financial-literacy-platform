@@ -665,72 +665,6 @@ paths:
           description: Module not found
       tags:
       - Forum
-  /api/learningModules/add/tags:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                search_query:
-                  example: C#
-                  type: new_tag
-              type: object
-        description: Add a new tag
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-      summary: Add new tag to an existing course
-      tags:
-      - Search function (Migrating to learning Content)
-      security:
-      - bearerAuth: []
-  /api/learningModules/delete/tags:
-    delete:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                course_id:
-                  example: 1
-                  type: integer
-                delete_tag:
-                  example: C#
-                  type: string
-              type: object
-        description: An object containing the course ID and the tag to be deleted
-        required: true
-      responses:
-        '200':
-          content:
-            application/json: {}
-          description: OK
-        '400':
-          content:
-            application/json: {}
-          description: Bad Request
-        '404':
-          content:
-            application/json: {}
-          description: Not Found
-      summary: Delete a course tag on a course
-      tags:
-      - Search function (Migrating to learning Content)
-      security:
-      - bearerAuth: []
-
-
       # Commented as frontend team implemented their own solution
   # /api/learningModules/search:
   #   post:
@@ -2311,6 +2245,114 @@ paths:
                     type: boolean
                   message:
                     type: string
+
+    /api/course/tags:
+    get:
+      summary: Get tags for a course
+      tags:
+        - Learning Content - Course/s
+      description: Fetches all tags associated with a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course for which to fetch tags.
+      responses:
+        200:
+          description: Successfully retrieved tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  COURSE_TAGS:
+                    type: string
+                    description: Comma-separated list of tags.
+        500:
+          description: Server error or failed to fetch tags.
+
+  /api/course/tag/add:
+    post:
+      summary: Add tags to a course
+      tags:
+        - Learning Content - Course/s
+      description: Adds one or more tags to a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course to which tags should be added.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag_name:
+                  type: string
+                  description: Name of the tag or comma-separated list of tag names to add.
+      responses:
+        200:
+          description: Successfully added tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+        400:
+          description: Bad request. Missing or incorrect parameters.
+        500:
+          description: Server error or failed to add tags.
+
+  /api/course/tag/delete:
+    post:
+      summary: Delete tags from a course
+      tags:
+        - Learning Content - Course/s
+      description: Removes one or more tags from a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course from which tags should be deleted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag_name:
+                  type: string
+                  description: Name of the tag or comma-separated list of tag names to delete.
+      responses:
+        200:
+          description: Successfully deleted tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+        400:
+          description: Bad request. Missing or incorrect parameters.
+        500:
+          description: Server error or failed to delete tags.
 
   # Modules
   /api/course/modules:
