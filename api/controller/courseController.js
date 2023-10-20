@@ -47,7 +47,6 @@ const getCourse = async (req, res) => {
 }
 
 const createCourse = async (req, res) => {
-    //TODO: course_tag haven't been added yet
     const { course_name, thumbnail_file_name, thumbnail_file_type, category_type } = req.body; // get course information from request body
 
     if (!course_name) {
