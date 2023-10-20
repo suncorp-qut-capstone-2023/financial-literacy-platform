@@ -24,7 +24,6 @@ class Forum {
 
     // Get all comments for a specific forum.
     static getForumComments(identifier) {
-        console.log(identifier)
         if (identifier) {
             return knex('forumcomments').where({ ForumID : identifier }).select();
         } 
