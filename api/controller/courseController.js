@@ -144,7 +144,6 @@ const updateCourse = async (req, res) => {
     }
 
     setValue = isValidInt(setValue);
-    ID = isValidInt(courseID);
 
     const value = [ setValue, courseID ];
 
