@@ -1,10 +1,10 @@
 const forumModel = require("../models/Forum.js");
 
 const getForumComments = async (req, res) => {
-  const { forumID, courseID } = req.params;
-
+  const { forumID } = req.params;
   try {
-    const comments = await forumModel.getForumComments(forumID || courseID);
+    const comments = await forumModel.getForumComments(forumID);
+    console.log(comments);
     res.status(200).json(comments);
   } catch (error) {
     console.error(error);
@@ -13,25 +13,24 @@ const getForumComments = async (req, res) => {
 };
 
 const createForumComment = async (req, res) => {
-  const { body, forumID, courseID } = req.body;
+  const { commentbody, forumID } = req.body;
 
+  console.log("body:", commentbody, "forumID:", forumID)
   // Validate input fields
-  if (!body || (!forumID && !courseID)) {
+  if (!commentbody || (!forumID)) {
     return res
       .status(400)
-      .json({ message: "body and either forumID or courseID are required!" });
+      .json({ message: "body and forumID are required!" });
   }
 
   const forumCommentData = {
-    Body: body,
+    Body: commentbody,
     DateCommented: new Date().toISOString().slice(0, 19).replace("T", " "), // Format to 'YYYY-MM-DD HH:MM:SS'
     UserID: req.userId,
   };
 
   if (forumID) {
     forumCommentData.ForumID = forumID;
-  } else if (courseID) {
-    forumCommentData.CourseID = courseID;
   }
 
   try {
@@ -41,7 +40,7 @@ const createForumComment = async (req, res) => {
       forumComment: forumCommentData,
     });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     res.status(500).json({ message: "Database error!", error: error.message });
   }
 };
