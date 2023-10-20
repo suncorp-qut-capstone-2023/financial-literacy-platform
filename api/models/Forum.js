@@ -24,12 +24,10 @@ class Forum {
 
     // Get all comments for a specific forum.
     static getForumComments(identifier) {
-        if (identifier.forumID) {
-            return knex('forumcomments').where({ ForumID: identifier.forumID }).select();
-        }
-        if (identifier.courseID) {
-            return knex('forumcomments').where({ CourseID: identifier.courseID }).select();
-        }
+        console.log(identifier)
+        if (identifier) {
+            return knex('forumcomments').where({ ForumID : identifier }).select();
+        } 
         throw new Error('Invalid identifier provided');
     }
 
