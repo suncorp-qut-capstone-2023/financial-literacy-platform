@@ -1,5 +1,3 @@
-"use client";
-
 import "@/styles/globals.css";
 import AppBar from "@/components/appbar";
 import Footer from "@/components/footer";
