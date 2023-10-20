@@ -2552,12 +2552,6 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: courseID
-          in: query
-          description: ID of the course containing the module to delete.
-          required: true
-          schema:
-            type: integer
         - name: moduleID
           in: query
           description: ID of the module to delete.
@@ -2877,20 +2871,6 @@ paths:
           schema:
             type: integer
             example: 113
-        - in: query
-          name: courseID
-          required: true
-          description: ID of the course to be deleted.
-          schema:
-            type: integer
-            example: 113
-        - in: query
-          name: moduleID
-          required: true
-          description: ID of the module to be deleted.
-          schema:
-            type: integer
-            example: 113
       responses:
         200:
           description: Successfully deleted the lecture.
@@ -3206,27 +3186,6 @@ paths:
           name: contentID
           required: true
           description: ID of the lecture content to be deleted.
-          schema:
-            type: integer
-            example: 123
-        - in: query
-          name: courseID
-          required: true
-          description: ID of the course to be deleted.
-          schema:
-            type: integer
-            example: 123
-        - in: query
-          name: moduleID
-          required: true
-          description: ID of the module to be deleted.
-          schema:
-            type: integer
-            example: 123
-        - in: query
-          name: lectureID
-          required: true
-          description: ID of the lecture to be deleted.
           schema:
             type: integer
             example: 123
@@ -3556,20 +3515,6 @@ paths:
             type: integer
             example: 114
           description: ID of the quiz to be deleted.
-        - in: query
-          name: courseID
-          required: true
-          schema:
-            type: integer
-            example: 114
-          description: ID of the course to be deleted.
-        - in: query
-          name: moduleID
-          required: true
-          schema:
-            type: integer
-            example: 114
-          description: ID of the module to be deleted.
       responses:
         200:
           description: Successfully deleted the quiz.
@@ -3892,24 +3837,6 @@ paths:
         - bearerAuth: []
       description: Delete a Quiz Question by specifying courseID, moduleID, quizID, and quizQuestionID.
       parameters:
-        - name: courseID
-          in: query
-          description: The ID of the course.
-          required: true
-          schema:
-            type: integer
-        - name: moduleID
-          in: query
-          description: The ID of the module.
-          required: true
-          schema:
-            type: integer
-        - name: quizID
-          in: query
-          description: The ID of the quiz.
-          required: true
-          schema:
-            type: integer
         - name: quizQuestionID
           in: query
           description: The ID of the quiz question to delete.
@@ -4195,30 +4122,6 @@ paths:
           name: materialID
           required: true
           description: ID of the material to be deleted.
-          schema:
-            type: integer
-        - in: query
-          name: courseID
-          required: true
-          description: ID of the course related to the material.
-          schema:
-            type: integer
-        - in: query
-          name: moduleID
-          required: true
-          description: ID of the module related to the material.
-          schema:
-            type: integer
-        - in: query
-          name: lectureID
-          required: true
-          description: ID of the lecture related to the material.
-          schema:
-            type: integer
-        - in: query
-          name: contentID
-          required: true
-          description: ID of the content related to the material.
           schema:
             type: integer
       responses:

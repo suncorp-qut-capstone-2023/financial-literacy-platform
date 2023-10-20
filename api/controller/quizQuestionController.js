@@ -160,36 +160,6 @@ const updateQuizQuestion = async (req, res) => {
 }
 
 const deleteQuizQuestion = async (req, res) => {
-    let quizID;
-    try {
-        quizID = isValidInt(req.query.quizID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of quizID"
-        });
-    }
-
-    let courseID;
-    try {
-        courseID = isValidInt(req.query.courseID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of courseID"
-        });
-    }
-
-    let moduleID;
-    try {
-        moduleID = isValidInt(req.query.moduleID);
-    } catch (err) {
-        return res.status(400).json({
-            error: true,
-            message: "Bad request. Please specify the correct data type of moduleID"
-        });
-    }
-
     let quizQuestionID;
     try {
         quizQuestionID = isValidInt(req.query.quizQuestionID);
@@ -200,7 +170,7 @@ const deleteQuizQuestion = async (req, res) => {
         });
     }
  
-    if (!quizID || !courseID || ! moduleID || !quizQuestionID) {
+    if (!quizQuestionID) {
         return res.status(400).json({
             success_addition: false,
             error: true,
@@ -209,7 +179,7 @@ const deleteQuizQuestion = async (req, res) => {
     }
 
     try {
-        const result = await QuizQuestion.deleteQuizQuestion(courseID, moduleID, quizID, quizQuestionID);
+        const result = await QuizQuestion.deleteQuizQuestion(quizQuestionID);
         if (result > 0) {
             return res.status(200).json({"message": `Quiz Question with ID = ${quizQuestionID} has been deleted`});
         } else {
@@ -220,7 +190,6 @@ const deleteQuizQuestion = async (req, res) => {
         }
     }
     catch (err) {
-
         //error related to foreign key is not properly applied to
         if (err.errno === 1452) {
             return res.status(500).json({

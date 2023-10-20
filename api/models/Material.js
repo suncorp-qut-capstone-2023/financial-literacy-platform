@@ -1,14 +1,13 @@
 const knexOptions = require('../db/mydb-connection.js');
-const LectureContent = require("./LectureContent");
 const knex = require("knex")(knexOptions);
 
 class Material{
-    static getALLMaterial() {
-        return knex('material').select();
+    static async getALLMaterial() {
+        return await knex('material').select("*");
     }
 
-    static getMaterial(materialID) {
-        return knex('material').select("*").where('MATERIAL_ID', '=', materialID);
+    static async getMaterial(materialID) {
+        return await knex('material').select("*").where('MATERIAL_ID', '=', materialID);
     }
 
     static async createMaterial(materialData) {
@@ -39,16 +38,14 @@ class Material{
         return await knex('lecture_content').where("MATERIAL_ID", "=", materialID).del();
     }
 
-    static async deleteMaterial(courseID, moduleID, lectureID, contentID, materialID) {
+    static async deleteMaterial(materialID) {
         try {
+            //find lecture content data
+            this.deleteLectureContent(materialID);
+
             //delete the actual material data
             const result = await knex('material').where("MATERIAL_ID", "=", materialID).del();
             if (!result) throw new Error('Failed to delete material'); //fail deletion lead to an error
-
-            //find lecture content data
-            if (LectureContent.getLectureContent(courseID, moduleID, lectureID, contentID) !== 0) {
-                this.deleteLectureContent(materialID);
-            }
             
             return true;
         } catch (err) {
