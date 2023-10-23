@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useContext } from "react";
-import {
-  createTheme,
-  ThemeProvider,
-  styled,
-  responsiveFontSizes,
-} from "@mui/material/styles";
+import { createTheme, ThemeProvider} from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -50,7 +45,7 @@ function CourseOverview({
     thumbnail && thumbnail !== "no_thumbnail" ? thumbnail : defaultSrc;
   const [open, setOpen] = useState(false); // for delete dialog box
   const [successOpen, setSuccessOpen] = useState(false);
-  const { authToken } = useContext(AuthContext); // Combine into one useContext call
+  const { authToken, userType } = useContext(AuthContext); // Combine into one useContext call
 
 
   const handleClickOpen = () => {
@@ -72,7 +67,6 @@ function CourseOverview({
 
   const handleDelete = async () => {
     try {
-      console.log('Attempting to delete course with ID:', courseId);  // Added log
       const response = await fetch(
         `https://jcmg-api.herokuapp.com/api/course/delete?courseID=${courseId}`,
         {
