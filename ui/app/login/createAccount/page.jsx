@@ -27,6 +27,9 @@ const createAccount = () => {
     const [password, setPassword]=useState("");
     const [confirm, setConfirm]=useState("");
 
+    const [flag, setFlag] = useState(true);
+    const [errMsg, setErrMsg] = useState('');
+
     const router = useRouter();
 
     useEffect( () => {
@@ -36,7 +39,7 @@ const createAccount = () => {
     const proceedRego = (e) => {
         e.preventDefault();
         if (password !== confirm){
-            console.log("Password is not matching!!!")
+            console.log("Password is not matching!")
         }
         else{
             let item = {"firstName": firstName,
@@ -51,12 +54,15 @@ const createAccount = () => {
                 return res.json();
             }).then((resp) => {
                 if(resp.error){
-                    console.log(resp.message);
+                    setFlag(false);
+                    setErrMsg(resp.message);
                 }
                 else{
                     router.push("/login");
                 }
             }).catch((error) => {
+                setFlag(false);
+                setErrMsg('Unable to create account');
             });
 
         }
@@ -128,6 +134,9 @@ const createAccount = () => {
                         variant="outlined" />
                 </div>
             </Grid>
+
+            {!flag && <p style={{margin : '2%', color : "red"}}>
+                {errMsg}</p>}
 
             <Grid item xs={12} md={12} direction="column" display="flex"
                   justifyContent="center" padding="20px">

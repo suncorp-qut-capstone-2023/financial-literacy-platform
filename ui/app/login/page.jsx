@@ -3,10 +3,10 @@
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import {Button, Alert, TextField, Snackbar} from '@mui/material'
 import styles from "@/styles/page.module.css"
-import { useState, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import {useRouter} from "next/navigation";
-import jwt_decode from 'jwt-decode';
 import {styled} from "@mui/material/styles";
+import {AuthContext} from "@/app/auth.jsx";
 
 const ClickButton = styled(Button)({
     padding: '6px 12px 6px 12px',
@@ -21,8 +21,11 @@ const ClickButton = styled(Button)({
 })
 
 const Login = () => {
+    const { setAuthToken } = useContext(AuthContext)
+
     const [email, setEmail]=useState("");
     const [password, setPassword]=useState("");
+
     const [flag, setFlag]=useState(true);
 
     const router= useRouter();
@@ -36,16 +39,18 @@ const Login = () => {
         fetch("https://jcmg-api.herokuapp.com/api/user/login", {
             method: "POST",
             headers: {"content-type":"application/json"},
-            body:JSON.stringify(item)
+            body:JSON.stringify(item),
         }).then((res) => {
             return res.json();
         }).then((resp) => {
-            let decode = jwt_decode(resp.token);
-            localStorage.setItem('userType', decode.userType);
-            localStorage.setItem('token', resp.token);
-            localStorage.setItem('email',email);
-            localStorage.setItem('password', password);
-            router.push("/");
+            if(resp.error){
+                setFlag(false);
+            }
+            else {
+                setAuthToken(resp.token);
+                window.localStorage.setItem('token', resp.token);
+                router.push("/");
+            }
         }).catch((error) => {
             setFlag(false);
         });
@@ -85,7 +90,7 @@ const Login = () => {
                 </div>
             </Grid>
 
-            {flag === false && <p style={{margin : '2%', color : "red"}}>
+            {!flag && <p style={{margin : '2%', color : "red"}}>
                 Invalid Email Address or Password! </p>}
 
             <Grid item xs={12} md={12} direction="column" display="flex"

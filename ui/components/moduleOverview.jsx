@@ -34,6 +34,7 @@ function ModuleOverview({
   moduleName,
   onModuleRemoved,
   cms,
+  refreshModules
 }) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -42,7 +43,10 @@ function ModuleOverview({
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleSuccessOpen = () => setSuccessOpen(true);
-  const handleSuccessClose = () => setSuccessOpen(false);
+  const handleSuccessClose = () => {
+    setSuccessOpen(false);
+    refreshModules();  // Call refreshModules when the success popup is closed
+};
 
   const handleDelete = async () => {
     try {
@@ -50,7 +54,7 @@ function ModuleOverview({
       const response = await fetch(
         `https://jcmg-api.herokuapp.com/api/course/module/delete?courseID=${courseId}&moduleID=${moduleId}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -63,13 +67,6 @@ function ModuleOverview({
         handleSuccessOpen();
       } else {
         console.error("Failed to delete module. Status:", response.status);
-      }
-
-      if (response.ok) {
-        onModuleRemoved(moduleId);
-        handleSuccessOpen();
-      } else {
-        console.error("Failed to delete the module. Status:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while deleting the module:", error);

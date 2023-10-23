@@ -3,7 +3,7 @@
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Button from '@mui/material/Button';
 import styles from "@/styles/page.module.css";
-import {useState} from "react";
+import { useState, useContext } from "react";
 import {Divider} from "@mui/joy";
 import {styled} from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -12,6 +12,8 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import {useRouter} from "next/navigation";
+
+import { AuthContext } from '@/app/auth.jsx';
 
 
 const ChangeButton = styled(Button)({
@@ -32,8 +34,10 @@ const DivideLine = styled(Divider)({
 })
 
 const Profile = () => {
-    const [email, setEmail] = useState(localStorage.getItem('email'));
-    const [userType, setUserType] = useState(localStorage.getItem('userType'));
+    const {authToken} = useContext(AuthContext);
+
+    const [email, setEmail] = useState('');
+    const [userType, setUserType] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
@@ -65,19 +69,17 @@ const Profile = () => {
     const ChangeInfo = (e) => {
         e.preventDefault();
         let item = {[`${change}`] : content};
-        console.log(JSON.stringify(item))
-        console.log(localStorage.getItem('token'))
         fetch("https://jcmg-api.herokuapp.com/api/user/me", {
             method: "PUT",
             headers: {
-                Authorization : `Bearer ${localStorage.getItem('token')}`,
+                Authorization : `Bearer ${authToken}`,
                 "content-type":"application/json",
             },
             body:JSON.stringify(item)
         }).then((res) => {
             return res.json();
         }).then((resp) => {
-            window.location.reload();
+            handleClose();
         }).catch((error) => {
         });
     }
@@ -89,12 +91,12 @@ const Profile = () => {
         fetch("https://jcmg-api.herokuapp.com/api/user/me", {
             method: "DELETE",
             headers: {
-                Authorization : `Bearer ${localStorage.getItem('token')}`
+                Authorization : `Bearer ${authToken}`
             },
         }).then((res) => {
             return res.json();
         }).then((resp) => {
-            router.push("/");
+            router.push("/logout");
         }).catch((error) => {
         });
     }
@@ -102,7 +104,7 @@ const Profile = () => {
     fetch("https://jcmg-api.herokuapp.com/api/user/me", {
         method: "GET",
         headers: {
-            Authorization : `Bearer ${localStorage.getItem('token')}`
+            Authorization : `Bearer ${authToken}`,
         }
     }).then((res) => {
         return res.json();

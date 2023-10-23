@@ -3,146 +3,91 @@
 import styles from "@/styles/page.module.css";
 import SearchBar from "@/components/searchBar";
 import CourseOverview from "@/components/courseOverview";
+import Loading from "@/components/loading";
 import { CircularProgress, Paper } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "@/app/auth.jsx";
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
-  const [courses, setCourses] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   let q = searchParams.get("q");
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { authToken } = useContext(AuthContext);
+  const { userType } = useContext(AuthContext);
+  let regex = new RegExp(q, "i"); // "i" makes the search case insensitive
+
+  // A function to handle when a course is removed.
+  const handleCourseRemoved = (removedCourseId) => {
+    const updatedCourses = courses.filter(
+      (course) => course.course_id !== removedCourseId
+    );
+    setCourses(updatedCourses);
+  };
 
   useEffect(() => {
-    setIsLoading(true);
-    setCourses([]);
-    const searchQuery = {
-      search_query: q,
-    };
     async function fetchData() {
       try {
         const response = await fetch(
-          "https://jcmg-api.herokuapp.com/api/learningModules/search",
+          "https://jcmg-api.herokuapp.com/api/courses",
           {
-            method: "POST",
-            mode: "cors",
             headers: {
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
             },
-            body: JSON.stringify(searchQuery),
           }
         );
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
         const data = await response.json();
-        setErrorMessage(data.message);
-
-        setCourses(data.module);
+        setCourses(data.course);
         setIsLoading(false);
-      } catch (e) {
-        console.error("Error fetching courses data:", e);
-        setErrorMessage(e);
-        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses data:", error);
       }
     }
     fetchData();
-  }, [q]);
+  }, [authToken, userType]);
+
+  let filteredCourses = courses.filter((course) => {
+    let courseName = course.COURSE_NAME || course.course_name;
+    return courseName && regex.test(courseName);
+  });
 
   return (
-      <main className={styles.main}>
-        <div className={styles.contentWrapper}>
-          <div className={styles.description}>
-            <h1 className={styles.title}>Search Results</h1>
-          </div>
-          <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={q} />
-          {isLoading ? (
-            <div
-              styles={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress
-                color="#00454a"
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                }}
-              />
-            </div>
-          ) : courses ? (
-            courses.map((course) => {
-              // Look for a thumbnail in the materials array
-              const thumbnailItem = course.material.find(
-                (m) => m.material_type === "thumbnail"
-              );
-
-              // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
-              const thumbnailURL = thumbnailItem
-                ? thumbnailItem.material_media
-                : "no_thumbnail"; // replace with default or fallback URL if needed
-
-              return (
-                <CourseOverview
-                  key={course.course_id}
-                  courseId={course.course_id}
-                  courseName={course.course_name}
-                  lastUpdated={course.course_last_updated.value}
-                  materialsCount={course.material.length}
-                  lecturesCount={course.lectures.length}
-                  thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
-                />
-              );
-            })
-          ) : (
-            <div
-              styles={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Paper
-                sx={{
-                  marginTop: "25px",
-                  textAlign: "center",
-                }}
-                elevation={0}
-              >
-                {errorMessage}
-              </Paper>
-            </div>
-          )}
+    <main className={styles.main}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.description}>
+          <h1 className={styles.title}>Search Results</h1>
         </div>
-        <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={query} />
-        {isLoading ? (
-          <Loading />
-        ) : (
-          courses.map((course) => {
-            // Look for a thumbnail in the materials array
-            const thumbnailItem = course.material.find(
-              (m) => m.material_type === "thumbnail"
-            );
-
-            // If a thumbnail is found, use its URL, otherwise use a default or fallback URL
-            const thumbnailURL = thumbnailItem
-              ? thumbnailItem.material_media
-              : "no_thumbnail"; // replace with default or fallback URL if needed
-
-            return (
+        <SearchBar sx={{ marginTop: "2rem", marginBottom: 0 }} query={q} />
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          alignItems="center"
+          justifyContent="center"
+          className={styles.courseCardBox}
+        >
+          {isLoading ? (
+            <Loading />
+          ) : Array.isArray(filteredCourses) && filteredCourses.length > 0 ? (
+            filteredCourses.map((course) => (
+              // CMS functionality conditionally rendered here
               <CourseOverview
-                key={course.course_id}
-                courseId={course.course_id}
-                courseName={course.course_name}
-                lastUpdated={course.course_last_updated.value}
-                materialsCount={course.material.length}
-                lecturesCount={course.lectures.length}
-                thumbnail={thumbnailURL} // Passing the thumbnail URL as a prop
+                key={course.COURSE_ID || course.course_id}
+                courseId={course.COURSE_ID || course.course_id}
+                courseName={course.COURSE_NAME || course.course_name}
+                cms={userType === "admin"}
+                onCourseRemoved={handleCourseRemoved}
               />
-            );
-          })
-        )}
-      </main>
+            ))
+          ) : (
+            <p>No courses available</p>
+          )}
+        </Box>
+      </div>
+    </main>
   );
 }
