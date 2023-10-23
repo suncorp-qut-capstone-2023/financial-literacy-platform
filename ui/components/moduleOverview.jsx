@@ -1,10 +1,6 @@
 "use client";
 import { useState, useContext } from "react";
-import {
-  createTheme,
-  ThemeProvider,
-  responsiveFontSizes,
-} from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -31,8 +27,6 @@ let theme = createTheme({
     },
   },
 });
-
-theme = responsiveFontSizes(theme);
 
 function ModuleOverview({
   courseId,
@@ -144,7 +138,7 @@ function ModuleOverview({
         <Box
           display="flex"
           flexDirection="column"
-          justifyContent="space-between"
+          justifyContent="space-around"
           alignItems="center"
           textAlign="center"
           padding="10px"

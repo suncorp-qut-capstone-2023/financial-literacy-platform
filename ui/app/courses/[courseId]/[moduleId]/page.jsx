@@ -108,6 +108,8 @@ export default function ModulePage({ params }) {
                     {lectures.map((lecture) => (
                       <LectureOverview
                         key={lecture.LECTURE_ID}
+                        courseId={params.courseId}
+                        moduleId={params.moduleId}
                         lectureId={lecture.LECTURE_ID}
                         lectureName={lecture.LECTURE_NAME}
                         // onLectureRemoved={handleLectureRemoved} // make sure this function is defined

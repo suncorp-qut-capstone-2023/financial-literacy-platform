@@ -5,6 +5,7 @@ import styles from "@/styles/page.module.css";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
 import { Box } from "@mui/material";
+
 import { AuthContext } from '@/app/auth.jsx';
 
 // imports for create pop up
@@ -14,8 +15,6 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-
-
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -156,6 +155,7 @@ export default function Courses() {
                 key={course.COURSE_ID || course.course_id}
                 courseId={course.COURSE_ID || course.course_id}
                 courseName={course.COURSE_NAME || course.course_name}
+                thumbnail={course.COURSE_THUMBNAIL}
                 cms={userType === "admin"}
                 onCourseRemoved={handleCourseRemoved}
                 refreshCourses={fetchData}  // Pass fetchData as a prop

@@ -74,6 +74,7 @@
   -moz-box-shadow: 0 6px 6px -6px #000000;
   box-shadow: 0 6px 6px -6px #000000;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .subtitle {
@@ -85,8 +86,17 @@
   font-weight: bold;
 }
 
-.contentPrevNext {
-  margin-top: 50px;
+.blobWrapper {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  vertical-align: middle;
+}
+
+.reactPlayer {
+  max-width: 100% ;
+  height: auto !important;
+  aspect-ratio: 16/9;
 }
 
 .footer {

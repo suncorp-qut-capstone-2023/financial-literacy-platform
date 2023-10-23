@@ -152,7 +152,7 @@ function CourseOverview({
         <Box
           display="flex"
           flexDirection="column"
-          justifyContent="space-between"
+          justifyContent="space-around"
           alignItems="center"
           textAlign="center"
           padding="10px"
