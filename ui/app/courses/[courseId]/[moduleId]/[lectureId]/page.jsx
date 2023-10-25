@@ -78,18 +78,6 @@ export default function LecturePage({ params }) {
     return <div>Module not found</div>;
   }
 
-  // Return early if the module hasn't been fetched yet
-  if (isLoading)
-    return (
-      <main className={styles.main}>
-        <div className={styles.contentWrapper}>
-          <div className={styles.description}>
-            <Loading />
-          </div>
-        </div>
-      </main>
-    );
-
   return (
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
@@ -98,7 +86,17 @@ export default function LecturePage({ params }) {
             {lectureContents && lectureContents.COURSE_NAME}
           </h1>
           {/* Updated Section for Lectures */}
-          {lectureContents && lectureContents.length > 0 ? (
+          {isLoading ? (
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+              className={styles.courseCardBox}
+            >
+              <Loading />
+            </Box>
+          ) : lectureContents && lectureContents.length > 0 ? (
             <div className={styles.modulesSection}>
               <h2 className={styles.subtitle}>Lecture Materials</h2>
               <Box
@@ -125,7 +123,15 @@ export default function LecturePage({ params }) {
               </Box>
             </div>
           ) : (
-            "No Materials for this Lecture"
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+              className={styles.courseCardBox}
+            >
+              No Materials for this Lecture
+            </Box>
           )}
         </div>
       </div>

@@ -6,7 +6,7 @@ import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
 import { Box } from "@mui/material";
 
-import { AuthContext } from '@/app/auth.jsx';
+import { AuthContext } from "@/app/auth.jsx";
 
 // imports for create pop up
 import Dialog from "@mui/material/Dialog";
@@ -58,24 +58,27 @@ export default function Courses() {
 
   const handleCreateCourse = async () => {
     try {
-      const response = await fetch("https://jcmg-api.herokuapp.com/api/course/create", {
-        method: "POST",
-        headers: {
-          "accept": "application/json",
-          "Authorization": `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          course_name: courseName, // fetch values from some input field or form
-          category_type: categoryType,
-        }),
-      });
-  
+      const response = await fetch(
+        "https://jcmg-api.herokuapp.com/api/course/create",
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            course_name: courseName, // fetch values from some input field or form
+            category_type: categoryType,
+          }),
+        }
+      );
+
       if (response.ok) {
         const data = await response.json();
         console.log(data);
         // If you wish, you can add the new course to your courses array using setCourses
-        fetchData();  // Refresh the course list
+        fetchData(); // Refresh the course list
       } else {
         console.error("Failed to create course. Status:", response.status);
       }
@@ -83,7 +86,7 @@ export default function Courses() {
       console.error("Error creating course:", error);
     }
     // close dialog after attempting course creation
-    setOpen(false)
+    setOpen(false);
   };
 
   const handleClickOpen = () => {
@@ -91,11 +94,11 @@ export default function Courses() {
   };
 
   useEffect(() => {
-    fetchData();  // Call fetchData during initial render
+    fetchData(); // Call fetchData during initial render
   }, [authToken, userType]);
 
   useEffect(() => {
-    console.log('Courses updated:', courses);
+    console.log("Courses updated:", courses);
   }, [courses]);
 
   return (
@@ -105,7 +108,11 @@ export default function Courses() {
           <h1 className={styles.title}>Courses</h1>
           {userType === "admin" && (
             <>
-              <Button variant="contained" color="primary" onClick={handleClickOpen}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleClickOpen}
+              >
                 Create
               </Button>
               <Dialog open={open} onClose={() => setOpen(false)}>
@@ -158,11 +165,19 @@ export default function Courses() {
                 thumbnail={course.COURSE_THUMBNAIL}
                 cms={userType === "admin"}
                 onCourseRemoved={handleCourseRemoved}
-                refreshCourses={fetchData}  // Pass fetchData as a prop
+                refreshCourses={fetchData} // Pass fetchData as a prop
               />
             ))
           ) : (
-            <p>No courses available</p>
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+              className={styles.courseCardBox}
+            >
+              No Courses Available
+            </Box>
           )}
         </Box>
       </div>

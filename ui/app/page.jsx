@@ -54,6 +54,7 @@ export default function Home() {
                 key={course.COURSE_ID}
                 courseId={course.COURSE_ID}
                 courseName={course.COURSE_NAME}
+                thumbnail={course.COURSE_THUMBNAIL}
               />
             ))
           ) : (
