@@ -143,7 +143,7 @@ const createAccount = () => {
                     <TextField
                         fullWidth
                         id="outlined-basic"
-                        type="password"
+                        type="text"
                         onChange={ (e) => setAdminToken(e.target.value)}
                         label="Optional Admin Token"
                         helperText="Please enter special token if you are registering an admin account. Please leave blank if not"
