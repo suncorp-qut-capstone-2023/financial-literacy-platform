@@ -26,6 +26,7 @@ const createAccount = () => {
     const [email, setEmail]=useState("");
     const [password, setPassword]=useState("");
     const [confirm, setConfirm]=useState("");
+    const [adminToken, setAdminToken]=useState('');
 
     const [flag, setFlag] = useState(true);
     const [errMsg, setErrMsg] = useState('');
@@ -39,13 +40,17 @@ const createAccount = () => {
     const proceedRego = (e) => {
         e.preventDefault();
         if (password !== confirm){
-            console.log("Password is not matching!")
+            setFlag(false);
+            setErrMsg("Password is not matching!")
         }
         else{
             let item = {"firstName": firstName,
-                        "lastName": lastName,
-                        "email": email,
-                        "password": confirm};
+                "lastName": lastName,
+                "email": email,
+                "password": confirm,
+                "createAdminToken": adminToken,
+            };
+
             fetch("https://jcmg-api.herokuapp.com/api/user/register", {
                 method: "POST",
                 headers: {"content-type":"application/json"},
@@ -131,6 +136,17 @@ const createAccount = () => {
                         onChange={ (e) => setConfirm(e.target.value)}
                         label="Comfirm Password"
                         helperText="Please re-enter your password to confirm"
+                        variant="outlined" />
+                </div>
+                <div style={{paddingTop: "15px"}}>
+                    <h3 style={{paddingBottom: "5px"}}>Admin Token</h3>
+                    <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        type="text"
+                        onChange={ (e) => setAdminToken(e.target.value)}
+                        label="Optional Admin Token"
+                        helperText="Please enter special token if you are registering an admin account. Please leave blank if not"
                         variant="outlined" />
                 </div>
             </Grid>

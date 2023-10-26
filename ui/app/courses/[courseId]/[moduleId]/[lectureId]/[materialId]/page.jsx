@@ -112,7 +112,15 @@ export default function MaterialPage({ params }) {
             mediaType === "webp" ? (
             <Infographic heading={material[0].MATERIAL_NAME} src={content} />
           ) : (
-            "Error: Material Unable to be Loaded"
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+              className={styles.courseCardBox}
+            >
+              Media Unable to be Loaded
+            </Box>
           )}
         </div>
       </div>

@@ -113,23 +113,6 @@ export default function ModulePage({ params }) {
     fetchQuizzes();
   }, [params.courseId, params.moduleId, authToken]);
 
-  // Check if course is defined, if not then render loading or some other content
-  if (!lectures) {
-    return <div>Module not found</div>;
-  }
-
-  // Return early if the module hasn't been fetched yet
-  if (isLoading)
-    return (
-      <main className={styles.main}>
-        <div className={styles.contentWrapper}>
-          <div className={styles.description}>
-            <Loading />
-          </div>
-        </div>
-      </main>
-    );
-
   return (
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
@@ -173,7 +156,17 @@ export default function ModulePage({ params }) {
           <Grid container>
             <Grid xs={12} md={6}>
               {/* Updated Section for Lectures */}
-              {lectures && lectures.length > 0 ? (
+              {isLoading ? (
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  justifyContent="center"
+                  className={styles.courseCardBox}
+                >
+                  <Loading />
+                </Box>
+              ) : lectures && lectures.length > 0 ? (
                 <div className={styles.modulesSection}>
                   <h2 className={styles.subtitle}>Lectures</h2>
                   <Box
@@ -197,12 +190,30 @@ export default function ModulePage({ params }) {
                   </Box>
                 </div>
               ) : (
-                "No Lectures for this Module"
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  justifyContent="center"
+                  className={styles.courseCardBox}
+                >
+                  No Lectures for this Module
+                </Box>
               )}
             </Grid>
             <Grid xs={12} md={6}>
               {/* Updated Section for Quizzes */}
-              {quizzes && quizzes.length > 0 ? (
+              {isLoading ? (
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  justifyContent="center"
+                  className={styles.courseCardBox}
+                >
+                  <Loading />
+                </Box>
+              ) : quizzes && quizzes.length > 0 ? (
                 <div className={styles.modulesSection}>
                   <h2 className={styles.subtitle}>Quizzes</h2>
                   <Box
@@ -224,7 +235,15 @@ export default function ModulePage({ params }) {
                   </Box>
                 </div>
               ) : (
-                "No Quizzes for this module"
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  justifyContent="center"
+                  className={styles.courseCardBox}
+                >
+                  No Quizzes for this Module
+                </Box>
               )}
             </Grid>
           </Grid>
