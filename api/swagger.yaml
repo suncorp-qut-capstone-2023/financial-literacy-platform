@@ -1,0 +1,3013 @@
+# Swagger File
+
+components:
+  schemas:
+    InvalidJWT:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Invalid JWT token
+          type: string
+      type: object
+    MalformedAuthHeader:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Authorization header is malformed
+          type: string
+      type: object
+    MissingAuthHeader:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: Authorization header ('Bearer token') not found
+          type: string
+      type: object
+    TokenExpired:
+      properties:
+        error:
+          example: 'true'
+          type: boolean
+        message:
+          example: JWT token has expired
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      description: Enter JWT Bearer token **_only_**
+      scheme: bearer
+      type: http
+info:
+  description: This API has been created to support Capstone Project in IFB398, Capstone
+    Unit. It exposes a number of REST endpoints. The API endpoints and their usage
+    are described in detail below.
+  title: IFB398/IFB399 - Capstone Project 2023
+  version: 2.0.0
+openapi: 3.0.3
+paths:
+  /api/about:
+    get:
+      description: A route to know more about the project team.
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  company:
+                    example: Company Name
+                    type: string
+                  description:
+                    example: Project Team Description
+                    type: string
+                  members:
+                    items:
+                      properties:
+                        email:
+                          example: Member Email
+                          type: string
+                        name:
+                          example: Member Name
+                          type: string
+                        student_id:
+                          example: Member Student ID
+                          type: string
+                      type: object
+                    type: array
+                  name:
+                    example: Project Team Name
+                    type: string
+                type: object
+          description: An object containing information about the project.
+      tags:
+      - Administration
+
+  /api/enrolment/course/register:
+      post:
+        summary: Register for a course
+        tags:
+        - User Interactions
+        security:
+        - bearerAuth: []
+        description: Enroll a user in a course.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - course_id
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  course_id:
+                    type: integer
+                    description: ID of the course.
+        responses:
+          '201':
+            description: User registered successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User Enrolled"
+                    registration_id:
+                      type: integer
+                      description: ID of the new registration.
+          '400':
+            description: Invalid input or user already registered.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+  /api/enrolment/interests/add:
+    post:
+      summary: Add interest for a user
+      tags: 
+      - User Interactions
+      security:
+      - bearerAuth: []
+      description: Add an interest for a given user ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - interest
+              properties:
+                user_id:
+                  type: integer
+                  description: ID of the user.
+                interest:
+                  type: string
+                  description: Interest to be added.
+      responses:
+        '200':
+          description: Interest added successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Interest {interest} added for user ID {user_id}."
+        '400':
+          description: Interest already exists or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/enrolment/interests/remove:
+      post:
+        summary: Remove interest for a user
+        tags:
+          - User Interactions
+        description: Remove an interest for a given user ID.
+        security:
+        - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - user_id
+                  - interest
+                properties:
+                  user_id:
+                    type: integer
+                    description: ID of the user.
+                  interest:
+                    type: string
+                    description: Interest to be removed.
+        responses:
+          '200':
+            description: Interest removed successfully.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Interest {interest} removed for user ID {user_id}."
+          '400':
+            description: Interest doesn't exist or invalid input.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+          '500':
+            description: Internal Server Error.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                    message:
+                      type: string
+
+
+
+
+
+
+  /api/forum/{forumID}:
+    get:
+      summary: Get forum comments
+      security:
+      - bearerAuth: []
+      tags:
+      - Forum
+      parameters:
+        - name: forumID
+          in: path
+          required: false
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of forum comments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    # Define properties based on the structure of a comment
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/comment:
+    post:
+      summary: Create a forum comment
+      security:
+      - bearerAuth: []
+      tags:
+      - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentbody:
+                  type: string
+                  description: Comment content.
+                forumID:
+                  type: integer
+                  description: ID of the forum.
+      responses:
+        '201':
+          description: Comment created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumComment:
+                    type: object
+                    properties:
+                      # Define properties based on the structure of a comment
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/create:
+    post:
+      summary: Create a forum 
+      security:
+      - bearerAuth: []
+      tags:
+      - Forum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ForumTitle:
+                  type: string
+                  description: Title of the forum.
+                CourseID:
+                  type: integer
+                  description: ID of the course, if related. Optional
+      responses:
+        '201':
+          description: Forum created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  forumID:
+                    type: integer
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Not authorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forums:
+    get:
+      summary: Get all forums
+      security:
+      - bearerAuth: []
+      tags:
+      - Forum
+      responses:
+        '200':
+          description: Successful retrieval of forums.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/forum/{forumID}/{commentID}:
+    get:
+      summary: Get a specific forum comment
+      security:
+      - bearerAuth: []
+      tags:
+      - Forum
+      parameters:
+        - name: commentID
+          in: path
+          required: true
+          description: ID of the comment.
+          schema:
+            type: integer
+        - name: forumID
+          in: path
+          required: true
+          description: ID of the forum.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of the comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+        '404':
+          description: Comment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/media/download:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: '1'
+                  type: string
+                file_name:
+                  example: image1.jpeg
+                  type: string
+              type: object
+        description: ''
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      summary: ''
+      tags:
+      - Media
+  /api/media/upload:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                course_id:
+                  example: '1'
+                  type: string
+                file_name:
+                  example: image1.jpeg
+                  type: string
+              type: object
+        description: ''
+        required: true
+      responses:
+        '200':
+          content:
+            application/json: {}
+          description: OK
+        '400':
+          content:
+            application/json: {}
+          description: Bad Request
+        '404':
+          content:
+            application/json: {}
+          description: Not Found
+      security:
+      - bearerAuth: []
+      summary: ''
+      tags:
+      - Media
+  /api/user/login:
+    post:
+      description: Log in to an existing user account. A request body containing the
+        user credentials must be sent.
+      summary: Authenticate a user
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address.
+                password:
+                  type: string
+                  description: User's password.
+      responses:
+        '200':
+          description: Authentication successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                    example: Bearer
+                  token:
+                    type: string
+                    description: JWT token for the authenticated session.
+                  expires_in:
+                    type: integer
+                    description: Token expiration time in seconds.
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Authentication failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /api/user/register:
+    post:
+      description: Creates a new user account. A request body containing the user
+        to be registered must be sent.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address.
+                password:
+                  type: string
+                  description: User's password.
+                firstName:
+                  type: string
+                  description: User's first name.
+                lastName:
+                  type: string
+                  description: User's last name.
+      responses:
+        '201':
+          description: User registration successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User created"
+                  userId:
+                    type: integer
+                    description: ID of the newly created user.
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        '409':
+          description: User already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/user/me:
+    get:
+      tags:
+        - Authentication
+      summary: Retrieve user info based on JWT token
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: User data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  userType:
+                    type: string
+                  email:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+        400:
+          description: Bad request due to invalid token
+        404:
+          description: User not found
+    put:
+      tags:
+        - Authentication
+      summary: Update user info based on JWT token and provided data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User updated"
+        400:
+          description: Bad request due to incomplete body
+        404:
+          description: User not found
+    delete:
+      tags:
+        - Authentication
+      summary: Delete a user based on JWT token
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User deleted"
+        400:
+          description: Bad request due to invalid token
+        404:
+          description: User not found
+
+
+
+
+# Courses
+  /api/courses:
+    get:
+      tags:
+        - Learning Content - Course/s
+      summary: Retrieve all courses
+      description: Fetches and returns all courses.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: An array of all courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course:
+    get:
+      tags:
+        - Learning Content - Course/s
+      summary: Retrieve a course
+      description: Fetches and returns all data for a specific course by its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course to retrieve.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns the requested course.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+        500:
+          description: Server error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/create:
+    post:
+      tags:
+        - Learning Content - Course/s
+      summary: Create a new course
+      description: Adds a new course to the database.
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_name:
+                  type: string
+                category_type:
+                  type: string
+      responses:
+        200:
+          description: Returns a success message for the course creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request or validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error, foreign key constraint fails, or other errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/update:
+    post:
+      tags:
+        - Learning Content - Course/s
+      summary: Update an existing course
+      description: "Updates a specific course in the database based on the given course ID. Note: if you want to upload a thumbnail; Please use Postman instead"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course to retrieve.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                set_data_type:
+                  type: string
+                  description: The column/field name in the course table that you want to update.
+                  example: "COURSE_NAME"  # Example column name
+                setValue:
+                  type: integer
+                  description: The new value to set for the specified column/field.
+                  example: "Advanced Mathematics"  # Example course name
+      responses:
+        200:
+          description: Returns a success message for the course update.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Course updated successfully."
+        400:
+          description: Bad request or validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Invalid input data."
+        500:
+          description: Server error, unknown column, or other errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Internal server error."
+
+
+  /api/course/delete:
+    post:
+      tags:
+        - Learning Content - Course/s
+      summary: Delete a course
+      description: Deletes a specific course from the database.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns a success message for the course deletion.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request or course not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error, foreign key constraint fails, or other errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/tags:
+    get:
+      summary: Get tags for a course
+      tags:
+        - Learning Content - Course/s
+      description: Fetches all tags associated with a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course for which to fetch tags.
+      responses:
+        200:
+          description: Successfully retrieved tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  COURSE_TAGS:
+                    type: string
+                    description: Comma-separated list of tags.
+        500:
+          description: Server error or failed to fetch tags.
+
+  /api/course/tag/add:
+    post:
+      summary: Add tags to a course
+      tags:
+        - Learning Content - Course/s
+      description: Adds one or more tags to a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course to which tags should be added.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag_name:
+                  type: string
+                  description: Name of the tag or comma-separated list of tag names to add.
+      responses:
+        200:
+          description: Successfully added tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+        400:
+          description: Bad request. Missing or incorrect parameters.
+        500:
+          description: Server error or failed to add tags.
+
+  /api/course/tag/delete:
+    post:
+      summary: Delete tags from a course
+      tags:
+        - Learning Content - Course/s
+      description: Removes one or more tags from a specific course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: courseID
+          schema:
+            type: integer
+          description: The ID of the course from which tags should be deleted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag_name:
+                  type: string
+                  description: Name of the tag or comma-separated list of tag names to delete.
+      responses:
+        200:
+          description: Successfully deleted tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+        400:
+          description: Bad request. Missing or incorrect parameters.
+        500:
+          description: Server error or failed to delete tags.
+
+  # Modules
+  /api/course/modules:
+    get:
+      tags:
+        - Learning Content - Module/s
+      summary: Retrieve all modules associated with a course
+      description: Fetches and returns all modules for a given course.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course to retrieve modules.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: An array of all modules for the specified course.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module:
+    get:
+      tags:
+        - Learning Content - Module/s
+      summary: Retrieve a module
+      description: Fetches and returns a specific module by its course ID and module ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course.
+          required: true
+          schema:
+            type: integer
+        - name: moduleID
+          in: query
+          description: ID of the module to retrieve.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns the requested module.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+        500:
+          description: Server error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/create:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Create a new module for a course
+      description: Adds a new module for a given course. Optional module_order
+      security:
+        - bearerAuth: []
+      parameters: 
+      - in: query
+        name: courseID
+        required: true
+        description: ID of the associated course.
+        schema:
+          type: integer
+      requestBody:
+        description: Module data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - module_name
+              properties:
+                module_name:
+                  type: string
+                  description: Name of the module.
+                module_order:
+                  type: integer
+                  description: Order of the module in the course (optional).
+      responses:
+        200:
+          description: Module successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request (e.g., missing required parameters).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error (e.g., foreign key constraint fails, integer value too large, data too long).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+
+  /api/course/module/update:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Update an existing module for a course
+      description: Updates a module for a given course using the module ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: moduleID
+          in: query
+          description: ID of the module to update
+          required: true
+          schema:
+            type: integer
+        - name: courseID
+          in: query
+          description: ID of the module to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Module data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - module_name
+              properties:
+                module_name:
+                  type: string
+                  description: Name of the module.
+                module_order:
+                  type: integer
+                  description: Order of the module in the course (optional).
+      responses:
+        200:
+          description: Module successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request (e.g., missing required parameters).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error (e.g., unknown column, incorrect integer value, data too long, incorrect JSON text value).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+
+  /api/course/module/delete:
+    post:
+      tags:
+        - Learning Content - Module/s
+      summary: Delete a module
+      description: Deletes a specific module from the database.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: moduleID
+          in: query
+          description: ID of the module to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns a success message for the module deletion.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request (e.g., missing required parameters).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+# Lectures
+
+  /api/course/module/lectures:
+    get:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Retrieve all lectures based on course and module.
+      description: Retrieves a list of all lectures for a given course and module.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          description: ID of the course.
+          required: true
+          schema:
+            type: integer
+        - name: moduleID
+          in: query
+          description: ID of the module.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A list of lectures.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    LECTURE_ID:
+                      type: integer
+                    LECTURE_NAME:
+                      type: string
+                    MATERIAL_ORDER:
+                      type: string # this may need to be adjusted based on your data type
+                    MODULE_ID:
+                      type: integer
+                    LECTURE_ORDER:
+                      type: integer
+        400:
+          description: Bad request, possibly due to invalid courseID or moduleID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture:
+    get:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Get lecture details
+      security:
+        - bearerAuth: []
+      description: Retrieve lecture details based on courseID, moduleID, and lectureID.
+      parameters:
+        - name: courseID
+          in: query
+          required: true
+          type: integer
+          description: ID of the course.
+        - name: moduleID
+          in: query
+          required: true
+          type: integer
+          description: ID of the module.
+        - name: lectureID
+          in: query
+          required: true
+          type: integer
+          description: ID of the lecture.
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              LECTURE_ID:
+                type: integer
+              LECTURE_NAME:
+                type: string
+              MATERIAL_ORDER:
+                type: string
+              MODULE_ID:
+                type: integer
+              LECTURE_ORDER:
+                type: integer
+        '404':
+          description: Lecture not found
+        '500':
+          description: Internal server error
+
+
+  /api/course/module/lecture/create:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Create a new lecture
+      description: Endpoint to create a new lecture.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the lecture belongs to.
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_name:
+                  type: string
+                  description: Name of the lecture.
+                  example: "Introduction to Programming"
+                lecture_order:
+                  type: integer
+                  description: Order of the lecture in the module.
+                  example: 1
+      responses:
+        200:
+          description: Successfully created a new lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "new lecture data has been successfully added!"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the course name and category type."
+        500:
+          description: Internal Server Error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails"
+
+  /api/course/module/lecture/update:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Update an existing lecture
+      description: Endpoint to update an existing lecture using its ID and specific field.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture to be updated.
+          schema:
+            type: integer
+            example: 113
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module containing the lecture.
+          schema:
+            type: integer
+            example: 23
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_name:
+                  type: string
+                  description: Updated name of the lecture.
+                  example: "Advanced Programming Concepts"
+                lecture_order:
+                  type: integer
+                  description: Updated order of the lecture within the module.
+                  example: 3
+      responses:
+        200:
+          description: Successfully updated the lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lecture has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "unknown column: LECTURE_NAME"
+
+
+  /api/course/module/lecture/delete:
+    post:
+      tags:
+        - Learning Content - Lecture/s
+      summary: Delete a lecture
+      description: Endpoint to delete an existing lecture using its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: lectureID
+          required: true
+          description: ID of the lecture to be deleted.
+          schema:
+            type: integer
+            example: 113
+      responses:
+        200:
+          description: Successfully deleted the lecture.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 113 on table 'lecture' has been deleted"
+        400:
+          description: The lecture with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "data on 'lecture' table with condition ID = 113 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, incorrect double value, data too long, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails. Delete all foreign key used with the related primary key."
+
+# Lecture Content
+
+  /api/course/module/lecture/contents:
+    get:
+      tags:
+      - Learning Content - Lecture Content/s
+      summary: Retrieve all lecture contents for a specific lecture.
+      description: Returns a list of lecture contents based on courseID, moduleID, and lectureID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: lectureID
+        in: query
+        description: ID of the lecture.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved lecture contents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    lecture_id:
+                      type: integer
+        500:
+          description: Server error or invalid data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture/content:
+    get:
+      tags:
+      - Learning Content - Lecture Content/s
+      summary: Retrieve specific lecture content.
+      description: Returns lecture content based on courseID, moduleID, lectureID, and lectureContentID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: courseID
+        in: query
+        description: ID of the course.
+        required: true
+        schema:
+          type: integer
+      - name: moduleID
+        in: query
+        description: ID of the module.
+        required: true
+        schema:
+          type: integer
+      - name: lectureID
+        in: query
+        description: ID of the lecture.
+        required: true
+        schema:
+          type: integer
+      - name: lectureContentID
+        in: query
+        description: ID of the lecture content.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  LECTURE_CONTENT_ID:
+                    type: integer
+                  LECTURE_ID:
+                    type: integer
+                  MATERIAL_ID:
+                    type: integer
+                  MATERIAL_ORDER:
+                    type: integer
+        404:
+          description: Lecture content not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error or constraint violation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/lecture/content/create:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Create a new lecture content entry
+      description: Adds a new lecture content to the database.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: lectureID
+          in: query
+          description: ID of the lecture for which the content is to be added.
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: materialID
+          in: query
+          description: ID of the material being added to the lecture.
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_order:
+                  type: integer
+                  description: Order of the material in the lecture.
+                  example: 1
+      responses:
+        '200':
+          description: Lecture content successfully added.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "New lecture content data has been successfully added!"
+        '400':
+          description: Bad request (missing required fields).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the lecture ID and material ID."
+        '500':
+          description: Internal server error, data length issue, or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails. Ensure the referenced lecture or material exists."
+
+  /api/course/module/lecture/content/update:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Update an existing lecture content
+      description: Endpoint to update an existing lecture content using its ID and specific fields.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: contentID
+          required: true
+          description: ID of the lecture content to be updated.
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_id:
+                  type: integer
+                  description: Updated ID of the lecture for which the content belongs.
+                  example: 1
+                material_id:
+                  type: integer
+                  description: Updated ID of the material associated with the lecture content.
+                  example: 2
+                material_order:
+                  type: integer
+                  description: Updated order of the material in the lecture.
+                  example: 3
+      responses:
+        200:
+          description: Successfully updated the lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lecture content has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "unknown column: MATERIAL_ID"
+
+  /api/course/module/lecture/content/delete:
+    post:
+      tags:
+        - Learning Content - Lecture Content/s
+      summary: Delete a lecture content
+      description: Endpoint to delete an existing lecture content using its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: contentID
+          required: true
+          description: ID of the lecture content to be deleted.
+          schema:
+            type: integer
+            example: 123
+      responses:
+        200:
+          description: Successfully deleted the lecture content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 123 on table 'lecture_content' has been deleted"
+        400:
+          description: The lecture content with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "data on 'lecture_content' table with condition ID = 123 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "foreign key constraint fails. Delete all foreign keys associated with the related primary key."
+
+# Quiz
+
+  /api/course/module/quizzes:
+    get:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Retrieve all quizzes based on course and module.
+      description: Retrieves a list of all quizzes for a given course and module.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: moduleID
+          in: query
+          description: ID of the module.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A list of quizzes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    QUIZ_ID:
+                      type: integer
+                    QUIZ_NAME:
+                      type: string
+                    QUESTION_ORDER:
+                      type: string
+                    MODULE_ID:
+                      type: integer
+                    QUIZ_MAXTRIES:
+                      type: integer
+        400:
+          description: Bad request, possibly due to invalid courseID or moduleID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/quiz:
+    get:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Get quiz details
+      description: Retrieve quiz details based on courseID, moduleID, and quizID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: courseID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the course.
+        - name: moduleID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the module.
+        - name: quizID
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the quiz.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  QUIZ_ID:
+                    type: integer
+                  QUIZ_NAME:
+                    type: string
+                  QUESTION_ORDER:
+                    type: string
+                  MODULE_ID:
+                    type: integer
+                  QUIZ_MAXTRIES:
+                    type: integer
+        '404':
+          description: Quiz not found
+        '500':
+          description: Internal server error
+
+  /api/course/module/quiz/create:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Create a new quiz
+      description: Endpoint to create a new quiz.
+      security:
+        - bearerAuth: []
+      parameters: 
+        - in: query
+          name: module_id
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quiz_name:
+                  type: string
+                  description: Name of the quiz.
+                  example: "Basics of Programming"
+                question_order:
+                  type: string
+                  description: Order of questions in the quiz.
+                  example: ["Q1", "Q2", "Q3"]
+                quiz_maxtries:
+                  type: integer
+                  description: Maximum tries allowed for the quiz.
+                  example: 3
+      responses:
+        200:
+          description: Successfully created a new quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "New quiz data has been successfully added!"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error or foreign key constraint fails.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails."
+
+
+  /api/course/module/quiz/update:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Update an existing quiz
+      description: Endpoint to update an existing quiz using its ID and specific field.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: quizID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the quiz to be updated.
+        - in: query
+          name: moduleID
+          required: true
+          description: ID of the module that the quiz belongs to.
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quiz_name:
+                  type: string
+                  description: Updated name of the quiz.
+                  example: "Advanced Programming Quiz"
+                question_order:
+                  type: array
+                  items:
+                    type: string
+                  description: Updated order of questions within the quiz.
+                  example: ["Q1", "Q2", "Q3"]
+                quiz_maxtries:
+                  type: integer
+                  description: Updated maximum tries allowed for the quiz.
+                  example: 4
+      responses:
+        200:
+          description: Successfully updated the quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Quiz has been updated"
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Unknown column: QUIZ_NAME"
+
+  /api/course/module/quiz/delete:
+    post:
+      tags:
+        - Learning Content - Quiz/s
+      summary: Delete a quiz
+      description: Endpoint to delete an existing quiz using its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: quizID
+          required: true
+          schema:
+            type: integer
+            example: 114
+          description: ID of the quiz to be deleted.
+      responses:
+        200:
+          description: Successfully deleted the quiz.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Data with the condition ID = 114 on table 'quiz' has been deleted"
+        400:
+          description: The quiz with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Data on 'quiz' table with condition ID = 114 has not been found"
+        500:
+          description: Internal Server Error due to various reasons (foreign key constraint fails, integer value is too large, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Foreign key constraint fails. Delete all foreign keys used with the related primary key."
+
+# Quiz Questions
+
+  /api/course/module/quiz/questions:
+    get:
+      tags:
+      - Learning Content - Quiz Question/s
+      summary: Retrieve all quiz questions for a specific quiz.
+      description: Returns a list of quiz questions based on courseID, moduleID, and quizID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: courseID
+        in: query
+        description: ID of the course.
+        required: true
+        schema:
+          type: integer
+      - name: quizID
+        in: query
+        description: ID of the quiz.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved quiz questions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quiz_id:
+                      type: integer
+                    question_text:
+                      type: string
+        500:
+          description: Server error or invalid data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/quiz/question:
+    get:
+      tags:
+      - Learning Content - Quiz Question/s
+      summary: Retrieve specific quiz question.
+      description: Returns quiz question based on courseID, moduleID, quizID, and questionID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: courseID
+        in: query
+        description: ID of the course.
+        required: true
+        schema:
+          type: integer
+      - name: moduleID
+        in: query
+        description: ID of the module.
+        required: true
+        schema:
+          type: integer
+      - name: quizID
+        in: query
+        description: ID of the quiz.
+        required: true
+        schema:
+          type: integer
+      - name: questionID
+        in: query
+        description: ID of the quiz question.
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Successfully retrieved quiz question.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  QUESTION_ID:
+                    type: integer
+                  QUIZ_ID:
+                    type: integer
+                  QUESTION_TEXT:
+                    type: string
+        404:
+          description: Quiz question not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Server error or constraint violation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/course/module/quiz/question/create:
+      post:
+        tags:
+          - Learning Content - Quiz Question/s
+        summary: Create a new quiz question entry.
+        description: Adds a new quiz question to the database.
+        security:
+          - bearerAuth: []
+        parameters: 
+        - in: query
+          name: quizID
+          required: true
+          description: ID of the quiz for which the question is to be added.
+          schema:
+            type: integer
+            example: 1
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  question_text:
+                    type: string
+                    description: Text of the quiz question.
+                    example: "What is the capital of France?"
+                  question_option:
+                    type: array
+                    items: 
+                      type: string
+                    description: Options for the quiz question.
+                    example: ["Paris", "Berlin", "Rome", "Madrid"]
+                  question_answer:
+                    type: string
+                    description: The correct answer for the quiz question.
+                    example: "Paris"
+                  question_order:
+                    type: integer
+                    description: The order of the question within the quiz.
+                    example: 1
+        responses:
+          200:
+            description: Quiz question successfully added.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "New quiz question has been successfully added!"
+          400:
+            description: Bad request (missing required fields).
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success_addition:
+                      type: boolean
+                      example: false
+                    error:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      example: "Bad request. Please specify the quiz ID, question text, and question options."
+          500:
+            description: Internal server error, data length issue, or foreign key constraint fails.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      example: "Foreign key constraint fails. Ensure the referenced quiz exists."
+
+  /api/course/module/quiz/question/update:
+    post:
+      tags:
+        - Learning Content - Quiz Question/s
+      summary: Update an existing quiz question.
+      description: Endpoint to update an existing quiz question using its ID and specific fields.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: questionID
+          required: true
+          description: ID of the quiz question to be updated.
+          schema:
+            type: integer
+            example: 123
+        - in: query
+          name: quizID
+          required: true
+          description: Updated ID of the quiz for which the question belongs.
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question_text:
+                  type: string
+                  description: Updated text of the quiz question.
+                  example: "What is the capital of Germany?"
+      responses:
+        200:
+          description: Successfully updated the quiz question.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Quiz question has been updated."
+        400:
+          description: Bad request. Missing or invalid input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the required parameters."
+        500:
+          description: Internal Server Error due to various reasons (unknown column, incorrect integer, etc.).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Unknown column: QUESTION_TEXT"
+  /api/course/module/quiz/question/delete:
+    post:
+      summary: Delete a Quiz Question
+      tags:
+        - Learning Content - Quiz Question/s
+      security: 
+        - bearerAuth: []
+      description: Delete a Quiz Question by specifying courseID, moduleID, quizID, and quizQuestionID.
+      parameters:
+        - name: quizQuestionID
+          in: query
+          description: The ID of the quiz question to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Quiz Question deleted successfully.
+          content:
+            application/json:
+              example:
+                message: Quiz Question with ID = 123 has been deleted
+        400:
+          description: Bad request. Please specify the necessary parameters.
+          content:
+            application/json:
+              example:
+                success_addition: false
+                error: true
+                message: Bad request. Please specify the quizID, courseID, moduleID, and quizQuestionID.
+        500:
+          description: |
+            - Error: foreign key constraint fails. Delete all foreign keys used with the related primary key.
+            - Error: foreign key constraint fails. The foreign key used with the related primary key has not been found.
+            - Other internal server error.
+          content:
+            application/json:
+              examples:
+                foreign_key_constraint_1:
+                  value:
+                    error: true
+                    message: foreign key constraint fails. Delete all foreign keys used with the related primary key.
+                foreign_key_consntraint_2:
+                  value:
+                    error: true
+                    message: foreign key constraint fails. The foreign key used with the related primary key has not been found.
+                other_error:
+                  value:
+                    error: true
+                    message: An error occurred.
+
+# Material
+  /api/course/module/lecture/content/media:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve a material based on its ID'
+      description: 'Provide materialID in the query to get the details of the material.'
+      parameters:
+        - in: query
+          name: materialID
+          schema:
+            type: integer
+          required: true
+          description: ID of the material to retrieve.
+      responses:
+        200:
+          description: 'Successful response with the material details'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  MATERIAL_ID:
+                    type: integer
+                    description: The unique identifier for the material.
+                  MATERIAL_NAME:
+                    type: string
+                    maxLength: 255
+                    description: The name of the material.
+                  MATERIAL_URL:
+                    type: string
+                    maxLength: 255
+                    description: The URL pointing to the material resource, if available.
+                required:
+                  - MATERIAL_ID
+                  - MATERIAL_NAME
+        400:
+          description: 'Bad request. Incorrect data type for materialID or missing parameter.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error or foreign key constraint fails.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/medias:
+    get:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Retrieve all materials'
+      description: 'Fetches all the lecture content media available.'
+      responses:
+        200:
+          description: 'Successful response with the list of all materials'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    MATERIAL_ID:
+                      type: integer
+                      description: The unique identifier for the material.
+                    MATERIAL_NAME:
+                      type: string
+                      maxLength: 255
+                      description: The name of the material.
+                    MATERIAL_URL:
+                      type: string
+                      maxLength: 255
+                      description: The URL pointing to the material resource, if available.
+        500:
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/media/create:
+    post:
+      tags:
+        - "Learning Content - Material/s"
+      summary: 'Create new material NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: 'Creates a new material. Optionally uploads a file to Azure if specified. Please add the file under /api/assets/ folder.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  maxLength: 255
+                  description: The name of the material.
+                media_file_name:
+                  type: string
+                  description: Local path to the media file to be uploaded to Azure.
+              required:
+                - material_name
+      responses:
+        200:
+          description: 'Successfully created material.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: 'Bad request. Possible missing or invalid data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: 'Internal server error. Could be due to foreign key constraint failure, data length issue, or other problems.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+      security:
+        - bearerAuth: []
+
+  /api/course/module/lecture/content/media/update:
+    post:
+      summary: 'Update Material Information NOTE: This endpoint requires local file path to be specified in the request body.'
+      description: Updates the details of an existing material.
+      tags:
+        - Learning Content - Material/s
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: materialID
+          required: true
+          description: ID of the material to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                material_name:
+                  type: string
+                  description: New name for the material.
+                new_media_file_name:
+                  type: string
+                  description: New media file name if there's a change.
+              required:
+                - material_name
+      responses:
+        200:
+          description: Material updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "table 'material' has been updated"
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_addition:
+                    type: boolean
+                    example: false
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify set and where data type, set and where condition, set and where value, and the intended table"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Error message depending on the specific error"
+  /api/course/module/lecture/content/media/delete:
+    post:
+      summary: Delete Material
+      description: Deletes a specific material using its ID and related course, module, lecture, and content identifiers.
+      security:
+        - bearerAuth: []
+      tags:
+        - Learning Content - Material/s
+      parameters:
+        - in: query
+          name: materialID
+          required: true
+          description: ID of the material to be deleted.
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Material deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "data with the condition ID = 1 on table 'material' has been deleted"
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bad request. Please specify the materialID, courseID, moduleID, lectureID, and contentID."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Error message depending on the specific error"

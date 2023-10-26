@@ -3,6 +3,8 @@
 
 name: Node.js CI/CD
 
+run-name: Deployment of Swagger doc to Heroku App
+
 on:
   push:
     branches: [ "backend-main" ]
@@ -13,10 +15,26 @@ jobs:
 
   build: ## <-- Start the build process
     runs-on: ubuntu-latest
+    
+    # set up enviroment variables
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}      
+      SQL_USER: ${{ secrets.SQL_USER }}
+      SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      
+      SQL_DATABASE: ${{ vars.SQL_DATABASE }}
+      SQL_HOST: ${{ vars.SQL_HOST }}  
+      SQL_PORT: ${{ vars.SQL_PORT }}    
+    
+    # Change working directory
+    defaults:
+      run:
+        working-directory: ./api
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
     steps:
+    # checkout code
     # checkout code
     - uses: actions/checkout@v3
     
@@ -36,6 +54,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './api/package-lock.json'
+        
+    # Install dependencies
+    - run: npm install
     
     # Install dependencies
     - run: npm ci
@@ -54,5 +76,6 @@ jobs:
         - uses: akhileshns/heroku-deploy@v3.12.12
           with:
             heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-            heroku_app_name: ${{ github.HEROKU_APP_NAME }}
-            heroku_email: ${{ github.HEROKU_EMAIL }}
+            heroku_app_name: ${{ vars.HEROKU_APP_NAME }}
+            heroku_email: ${{ vars.HEROKU_EMAIL }}
+            appdir: "api"
