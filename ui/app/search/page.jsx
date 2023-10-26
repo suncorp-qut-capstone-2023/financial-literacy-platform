@@ -4,7 +4,6 @@ import styles from "@/styles/page.module.css";
 import SearchBar from "@/components/searchBar";
 import CourseOverview from "@/components/courseOverview";
 import Loading from "@/components/loading";
-import { CircularProgress, Paper } from "@mui/material";
 import { Box } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
@@ -18,6 +17,7 @@ export default function SearchResults() {
   const { authToken } = useContext(AuthContext);
   const { userType } = useContext(AuthContext);
 
+  // Escape any special charaters that may cause issues building the regex
   RegExp.quote = function (str) {
     return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
   };
