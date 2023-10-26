@@ -1,27 +1,20 @@
-"use client";
-
 import { useState, useContext } from "react";
-import { createTheme, ThemeProvider} from "@mui/material/styles";
+import { AuthContext } from "@/app/auth.jsx";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import { AuthContext } from '@/app/auth.jsx';
-import { Box } from "@mui/material";
-
-import NextLink from "next/link";
-import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-
-import styles from "../styles/page.module.css";
-
-// for delete/success feedback
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import { Box } from "@mui/material";
+import NextLink from "next/link";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import styles from "@/styles/page.module.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 let theme = createTheme({
   palette: {
@@ -32,77 +25,60 @@ let theme = createTheme({
   },
 });
 
-function CourseOverview({
+function LectureOverview({
   courseId,
-  courseName,
-  thumbnail,
+  moduleId,
+  lectureId,
+  lectureName,
+  onLectureRemoved,
   cms,
-  onCourseRemoved,
-  refreshCourses
 }) {
-  var defaultSrc = "https://placehold.co/1024x1024";
-  const thumbnailURL =
-    thumbnail && thumbnail !== "no_thumbnail" ? thumbnail : defaultSrc;
-  const [open, setOpen] = useState(false); // for delete dialog box
+  const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const { authToken, userType } = useContext(AuthContext); // Combine into one useContext call
+  const { authToken } = useContext(AuthContext);
 
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSuccessOpen = () => {
-    setSuccessOpen(true);
-  };
-
-  const handleSuccessClose = () => {
-    setSuccessOpen(false);
-    refreshCourses();  // Call refreshCourses when the success popup is closed
-  };
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleSuccessOpen = () => setSuccessOpen(true);
+  const handleSuccessClose = () => setSuccessOpen(false);
 
   const handleDelete = async () => {
     try {
+      console.log(lectureId)
       const response = await fetch(
-        `https://jcmg-api.herokuapp.com/api/course/delete?courseID=${courseId}`,
+        `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}`,
         {
           method: "POST",
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         }
       );
-      console.log('Delete response:', response);  // Added log
-  
+
       if (response.ok) {
-        onCourseRemoved(courseId);
+        onLectureRemoved(lectureId);
         handleSuccessOpen();
       } else {
-        console.error("Failed to delete the course. Status:", response.status);
+        console.error("Failed to delete lecture. Status:", response.status);
       }
     } catch (error) {
-      console.error("An error occurred while deleting the course:", error);
+      console.error("An error occurred while deleting the lecture:", error);
     }
   };
-  
+
   return (
     <ThemeProvider theme={theme}>
+      {/* Delete Confirmation Dialog */}
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete Course"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Delete Lecture"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this course? This action cannot be
+            Are you sure you want to delete this lecture? This action cannot be
             undone.
           </DialogContentText>
         </DialogContent>
@@ -122,6 +98,8 @@ function CourseOverview({
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Deletion Success Dialog */}
       <Dialog
         open={successOpen}
         onClose={handleSuccessClose}
@@ -131,7 +109,7 @@ function CourseOverview({
         <DialogTitle id="success-dialog-title">{"Success!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="success-dialog-description">
-            Course has been successfully deleted.
+            Lecture has been successfully deleted.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -140,47 +118,42 @@ function CourseOverview({
           </Button>
         </DialogActions>
       </Dialog>
-      {/* image container */}
+
+      {/* Lecture Display */}
       <Card
         sx={{
           margin: "20px",
           border: "#009877 solid 2px",
           width: "250px",
-          height: "400px",
+          height: "300px",
         }}
       >
         <Box
           display="flex"
           flexDirection="column"
-          justifyContent="space-around"
           alignItems="center"
+          justifyContent="space-around"
           textAlign="center"
           padding="10px"
           height="100%"
         >
-          <CardMedia
-            sx={{
-              width: "10rem",
-              height: "10rem",
-            }}
-            image={thumbnailURL}
-            title="Course Thumbnail"
-          />
-          {/* Course Info container */}
           <CardContent>
             <Typography variant="h5" fontWeight="bold">
-              {courseName}
+              {lectureName}
             </Typography>
           </CardContent>
           <CardActions>
-            <NextLink href={`/courses/${courseId}`} passHref>
+            <NextLink
+              href={`/courses/${courseId}/${moduleId}/${lectureId}`}
+              passHref
+            >
               <Link>
                 <Button
                   variant="contained"
                   color="suncorpgreen"
                   className={styles.buttons}
                 >
-                  {cms ? "Edit/View Course" : "View Course"}
+                  {cms ? "Edit/View Lecture" : "View Lecture"}
                 </Button>
               </Link>
             </NextLink>
@@ -190,7 +163,7 @@ function CourseOverview({
                 variant="outlined"
                 color="secondary"
               >
-                Delete Course
+                Delete Lecture
               </Button>
             )}
           </CardActions>
@@ -200,4 +173,4 @@ function CourseOverview({
   );
 }
 
-export default CourseOverview;
+export default LectureOverview;

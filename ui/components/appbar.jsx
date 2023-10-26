@@ -19,6 +19,8 @@ import SearchBar from "@/components/searchBar";
 import { SearchOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { usePathname, useSearchParams } from "next/navigation";
+import { AuthContext } from '@/app/auth.jsx';
+
 
 import logo from "../assets/logo.svg"; // Suncorp logo
 
@@ -31,11 +33,13 @@ const pages = [
   { label: "Home", path: "/" },
   { label: "Courses", path: "/courses" },
   { label: "Login", path: "/login" },
-  { label: "Manage Site Content", path: "/cms" }, // TO DO - LINK TO ADMIN AUTHENTICATION
 ];
 
-// good potential candidate for varies items based on admin privlidges here.
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// good potential candidate for varies items based on admin privilege here.
+const settings = [
+  { label: "Profile", path: '/profile' },
+  { label: "Logout", path: '/logout' },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,6 +48,16 @@ function ResponsiveAppBar() {
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const { auth } = React.useContext(AuthContext);
+
+  function checkLogin(item) {
+    if (auth){
+      return item.label !== "Login"
+    }
+    else return item;
+  }
+
 
   React.useEffect(() => {
     setIsSearchOpen(false);
@@ -69,6 +83,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+
   return (
     // add suncorp green color here
     <AppBar position="static" style={{ background: "#009877" }}>
@@ -88,6 +103,7 @@ function ResponsiveAppBar() {
             >
               <MenuIcon />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -106,7 +122,7 @@ function ResponsiveAppBar() {
                 display: "block",
               }}
             >
-              {pages.map((page) => (
+              {pages.filter(checkLogin).map((page) => (
                 <Link href={page.path} key={page.label} passHref>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page.label}</Typography>
@@ -116,7 +132,7 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.filter(checkLogin).map((page) => (
               <Link href={page.path} key={page.label} passHref>
                 <Button
                   onClick={handleCloseNavMenu}
@@ -155,12 +171,12 @@ function ResponsiveAppBar() {
                 <SearchOutlined />
               </IconButton>
             )}
-            <Tooltip title="Open settings">
+            {auth && <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar src="/broken-image.jpg" />
               </IconButton>
-            </Tooltip>
-            <Menu
+            </Tooltip>}
+            {auth && <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
@@ -177,11 +193,13 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                  <Link href={setting.path} key={setting.label} passHref>
+                    <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting.label}</Typography>
+                    </MenuItem>
+                  </Link>
               ))}
-            </Menu>
+            </Menu>}
           </Box>
         </Toolbar>
       </Container>
