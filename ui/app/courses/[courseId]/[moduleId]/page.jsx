@@ -29,6 +29,13 @@ export default function ModulePage({ params }) {
   const [lectureName, setLectureName] = useState("");
   const [lectureOrder, setLectureOrder] = useState("");
 
+  const handleLectureRemoved = (removedLectureId) => {
+    if (lectures) {
+      const updatedLectures = lectures.filter(lecture => lecture.LECTURE_ID !== removedLectureId);
+      setLectures(updatedLectures);
+    }
+  };
+
   const handleCreateLecture = async () => {
     try {
       const response = await fetch(`https://jcmg-api.herokuapp.com/api/course/module/lecture/create?moduleID=${params.moduleId}`, {
@@ -183,7 +190,7 @@ export default function ModulePage({ params }) {
                         moduleId={params.moduleId}
                         lectureId={lecture.LECTURE_ID}
                         lectureName={lecture.LECTURE_NAME}
-                        // onLectureRemoved={handleLectureRemoved} // make sure this function is defined
+                        onLectureRemoved={handleLectureRemoved} // make sure this function is defined
                         cms={userType === "admin"}
                       />
                     ))}

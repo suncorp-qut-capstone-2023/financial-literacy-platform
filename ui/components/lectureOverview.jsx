@@ -44,11 +44,11 @@ function LectureOverview({
 
   const handleDelete = async () => {
     try {
-      // Update with the actual endpoint and headers
+      console.log(lectureId)
       const response = await fetch(
-        `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}&courseID=${courseId}&moduleID=${moduleId}`,
+        `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
