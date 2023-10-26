@@ -17,7 +17,11 @@ export default function SearchResults() {
   const [isLoading, setIsLoading] = useState(true);
   const { authToken } = useContext(AuthContext);
   const { userType } = useContext(AuthContext);
-  let regex = new RegExp(q, "i"); // "i" makes the search case insensitive
+
+  RegExp.quote = function (str) {
+    return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+  };
+  let regex = new RegExp(RegExp.quote(q), "i"); // "i" makes the search case insensitive
 
   // A function to handle when a course is removed.
   const handleCourseRemoved = (removedCourseId) => {
@@ -79,12 +83,13 @@ export default function SearchResults() {
                 key={course.COURSE_ID || course.course_id}
                 courseId={course.COURSE_ID || course.course_id}
                 courseName={course.COURSE_NAME || course.course_name}
+                thumbnail={course.COURSE_THUMBNAIL}
                 cms={userType === "admin"}
                 onCourseRemoved={handleCourseRemoved}
               />
             ))
           ) : (
-            <p>No courses available</p>
+            <p>No courses matched that search query, please try again.</p>
           )}
         </Box>
       </div>
