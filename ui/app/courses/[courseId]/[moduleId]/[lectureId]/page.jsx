@@ -7,12 +7,39 @@ import MaterialOverview from "@/components/materialOverview"; // Import the new 
 import { AuthContext } from "@/app/auth.jsx";
 import { Box } from "@mui/material";
 
+// imports for lecture content upload button
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import DialogActions from "@mui/material/DialogActions";
+
+
 export default function LecturePage({ params }) {
   const [lectureContents, setLectureContents] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isComplete, setIsComplete] = useState(false);
   const { authToken } = useContext(AuthContext);
   const { userType } = useContext(AuthContext);
+
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [materialName, setMaterialName] = useState("");
+
+  const handleOpenUploadDialog = () => {
+    setUploadDialogOpen(true);
+  };
+  
+  const handleCloseUploadDialog = () => {
+    setUploadDialogOpen(false);
+  };
+  
+  const handleUploadSubmit = () => {
+    // API call to submit/upload material goes here...
+    // After a successful upload, you'd also likely want to update your lectureContents state
+    setUploadDialogOpen(false);
+  };
+
 
   useEffect(() => {
     async function fetchLectureMaterials() {
@@ -82,10 +109,37 @@ export default function LecturePage({ params }) {
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
         <div className={styles.description}>
-          <h1 className={styles.title}>
-            {lectureContents && lectureContents.COURSE_NAME}
+        <h1 className={styles.title}>
+          {lectureContents && lectureContents.COURSE_NAME}
           </h1>
-          {/* Updated Section for Lectures */}
+          {userType === "admin" && (
+            <Button variant="outlined" color="primary" onClick={handleOpenUploadDialog}>
+              Upload Materials
+            </Button>
+          )}
+          <Dialog open={uploadDialogOpen} onClose={handleCloseUploadDialog}>
+            <DialogTitle>Upload Material</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Material Name"
+                fullWidth
+                value={materialName}
+                onChange={(e) => setMaterialName(e.target.value)}
+              />
+              {/* Any other fields related to the material upload can go here */}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseUploadDialog} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleUploadSubmit} color="primary">
+                Upload
+              </Button>
+            </DialogActions>
+          </Dialog>
+
           {isLoading ? (
             <Box
               display="flex"
