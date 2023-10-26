@@ -14,6 +14,7 @@ import DialogActions from "@mui/material/DialogActions";
 import {useRouter} from "next/navigation";
 
 import { AuthContext } from '@/app/auth.jsx';
+import DialogContentText from "@mui/material/DialogContentText";
 
 
 const ChangeButton = styled(Button)({
@@ -47,6 +48,8 @@ const Profile = () => {
     const [type, setType] = useState('text');
     const [change, setChange] = useState('');
 
+    const [openAlert, setOpenAlert] = useState(false);
+
     const handleClickOpen = (field) => {
         setOpen(true);
         setTitle("New " + field);
@@ -64,6 +67,14 @@ const Profile = () => {
     }
     const handleClose = () => {
         setOpen(false);
+    }
+
+    const handleOpenAlert = () => {
+        setOpenAlert(true);
+    }
+
+    const handleCloseAlert = () => {
+        setOpenAlert(false);
     }
 
     const ChangeInfo = (e) => {
@@ -144,11 +155,12 @@ const Profile = () => {
                             <ChangeButton onClick={function() { handleClickOpen('Password'); setChange('password')}}>
                                 Change password</ChangeButton>
                         </div>
-                        <Button color="error" variant='contained' onClick={deleteAccount}>Delete Account</Button>
+                        <Button color="error" variant='contained' onClick={handleOpenAlert}>Delete Account</Button>
                     </Grid>
 
                 </Grid>
             </Grid>
+
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
@@ -164,6 +176,19 @@ const Profile = () => {
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={ChangeInfo}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={openAlert} onClose={handleCloseAlert}>
+                <DialogTitle>Delete Account</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this account? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert}>Cancel</Button>
+                    <Button onClick={deleteAccount}>Confirm</Button>
                 </DialogActions>
             </Dialog>
         </main>
