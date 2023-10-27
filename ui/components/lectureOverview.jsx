@@ -44,7 +44,7 @@ function LectureOverview({
 
   const handleDelete = async () => {
     try {
-      console.log(lectureId)
+      console.log(lectureId);
       const response = await fetch(
         `https://jcmg-api.herokuapp.com/api/course/module/lecture/delete?lectureID=${lectureId}`,
         {

@@ -34,7 +34,7 @@ function ModuleOverview({
   moduleName,
   onModuleRemoved,
   cms,
-  refreshModules
+  refreshModules,
 }) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -45,8 +45,8 @@ function ModuleOverview({
   const handleSuccessOpen = () => setSuccessOpen(true);
   const handleSuccessClose = () => {
     setSuccessOpen(false);
-    refreshModules();  // Call refreshModules when the success popup is closed
-};
+    refreshModules(); // Call refreshModules when the success popup is closed
+  };
 
   const handleDelete = async () => {
     try {

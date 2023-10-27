@@ -8,13 +8,26 @@ import { AuthContext } from "@/app/auth.jsx";
 import { Box } from "@mui/material";
 
 // imports for lecture content upload button
+import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export default function LecturePage({ params }) {
   const [lectureContents, setLectureContents] = useState(null);
@@ -25,21 +38,30 @@ export default function LecturePage({ params }) {
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [materialName, setMaterialName] = useState("");
+  // const [fileName, setFileName] = useState("");
 
   const handleOpenUploadDialog = () => {
-    setUploadDialogOpen(true);
+    alert(
+      "Unfortunately, uploading of any content is unable to be processed as there is no API endpoint that allows this frontend to interact with uploading files to the backend. Uploading of content is able to be done via Postman interacting directly with the backend service. Please refer to the documentation provided by the backend team on how to do this. We apologise for the inconvenience."
+    );
+    // setUploadDialogOpen(true);
   };
-  
+
   const handleCloseUploadDialog = () => {
     setUploadDialogOpen(false);
   };
-  
-  const handleUploadSubmit = () => {
-    // API call to submit/upload material goes here...
-    // After a successful upload, you'd also likely want to update your lectureContents state
-    setUploadDialogOpen(false);
-  };
 
+  // const handleUploadSubmit = () => {
+  //   // API call to submit/upload material goes here...
+  //   // After a successful upload, you'd also likely want to update your lectureContents state
+
+  //   setUploadDialogOpen(false);
+  // };
+
+  // const handleUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   setFileName(file.name);
+  // };
 
   useEffect(() => {
     async function fetchLectureMaterials() {
@@ -109,36 +131,61 @@ export default function LecturePage({ params }) {
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
         <div className={styles.description}>
-        <h1 className={styles.title}>
-          {lectureContents && lectureContents.COURSE_NAME}
+          <h1 className={styles.title}>
+            {lectureContents && lectureContents.COURSE_NAME}
           </h1>
           {userType === "admin" && (
-            <Button variant="outlined" color="primary" onClick={handleOpenUploadDialog}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleOpenUploadDialog}
+            >
               Upload Materials
             </Button>
           )}
-          <Dialog open={uploadDialogOpen} onClose={handleCloseUploadDialog}>
+          {/* <Dialog open={uploadDialogOpen} onClose={handleCloseUploadDialog}>
             <DialogTitle>Upload Material</DialogTitle>
             <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Material Name"
-                fullWidth
-                value={materialName}
-                onChange={(e) => setMaterialName(e.target.value)}
-              />
-              {/* Any other fields related to the material upload can go here */}
+              <form onSubmit={handleUploadSubmit}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Material Name"
+                  fullWidth
+                  value={materialName}
+                  onChange={(e) => setMaterialName(e.target.value)}
+                />
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload file
+                  <VisuallyHiddenInput type="file" onChange={handleUpload} />
+                </Button>
+                <TextField
+                  margin="dense"
+                  label="File to Upload"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  value={fileName}
+                />
+              </form>
+
+               Any other fields related to the material upload can go here 
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseUploadDialog} color="primary">
                 Cancel
               </Button>
               <Button onClick={handleUploadSubmit} color="primary">
-                Upload
+                Publish
               </Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
 
           {isLoading ? (
             <Box
