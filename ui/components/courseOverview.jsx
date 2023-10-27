@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useContext } from "react";
-import { createTheme, ThemeProvider} from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { AuthContext } from '@/app/auth.jsx';
+import { AuthContext } from "@/app/auth.jsx";
 import { Box } from "@mui/material";
 
 import NextLink from "next/link";
@@ -38,7 +38,7 @@ function CourseOverview({
   thumbnail,
   cms,
   onCourseRemoved,
-  refreshCourses
+  refreshCourses,
 }) {
   var defaultSrc = "https://placehold.co/1024x1024";
   const thumbnailURL =
@@ -46,7 +46,6 @@ function CourseOverview({
   const [open, setOpen] = useState(false); // for delete dialog box
   const [successOpen, setSuccessOpen] = useState(false);
   const { authToken, userType } = useContext(AuthContext); // Combine into one useContext call
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -62,7 +61,7 @@ function CourseOverview({
 
   const handleSuccessClose = () => {
     setSuccessOpen(false);
-    refreshCourses();  // Call refreshCourses when the success popup is closed
+    refreshCourses(); // Call refreshCourses when the success popup is closed
   };
 
   const handleDelete = async () => {
@@ -78,8 +77,8 @@ function CourseOverview({
           },
         }
       );
-      console.log('Delete response:', response);  // Added log
-  
+      console.log("Delete response:", response); // Added log
+
       if (response.ok) {
         onCourseRemoved(courseId);
         handleSuccessOpen();
@@ -90,7 +89,7 @@ function CourseOverview({
       console.error("An error occurred while deleting the course:", error);
     }
   };
-  
+
   return (
     <ThemeProvider theme={theme}>
       <Dialog

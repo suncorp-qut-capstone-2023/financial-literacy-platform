@@ -16,7 +16,6 @@ import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-
 export default function ModulePage({ params }) {
   const [lectures, setLectures] = useState(null);
   const [quizzes, setQuizzes] = useState(null);
@@ -31,26 +30,31 @@ export default function ModulePage({ params }) {
 
   const handleLectureRemoved = (removedLectureId) => {
     if (lectures) {
-      const updatedLectures = lectures.filter(lecture => lecture.LECTURE_ID !== removedLectureId);
+      const updatedLectures = lectures.filter(
+        (lecture) => lecture.LECTURE_ID !== removedLectureId
+      );
       setLectures(updatedLectures);
     }
   };
 
   const handleCreateLecture = async () => {
     try {
-      const response = await fetch(`https://jcmg-api.herokuapp.com/api/course/module/lecture/create?moduleID=${params.moduleId}`, {
-        method: "POST",
-        headers: {
-          "accept": "application/json",
-          "Authorization": `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          lecture_name: lectureName,
-          lecture_order: Number(lectureOrder),
-        }),
-      });
-  
+      const response = await fetch(
+        `https://jcmg-api.herokuapp.com/api/course/module/lecture/create?moduleID=${params.moduleId}`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lecture_name: lectureName,
+            lecture_order: Number(lectureOrder),
+          }),
+        }
+      );
+
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -124,10 +128,14 @@ export default function ModulePage({ params }) {
     <main className={styles.main}>
       <div className={styles.contentWrapper}>
         <div className={styles.description}>
-        <h1 className={styles.title}>{lectures && lectures.COURSE_NAME}</h1>
+          <h1 className={styles.title}>{lectures && lectures.COURSE_NAME}</h1>
           {userType === "admin" && (
             <>
-              <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpen(true)}
+              >
                 Create Lecture
               </Button>
               <Dialog open={open} onClose={() => setOpen(false)}>
